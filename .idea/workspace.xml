@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="39c97d00-8106-4cc9-bc28-c654bc9efa66" name="Changes" comment="" />
+    <list default="true" id="39c97d00-8106-4cc9-bc28-c654bc9efa66" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cli/cli.go" beforeDir="false" afterPath="$PROJECT_DIR$/cli/cli.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/http/httpServer.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/httpServer.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,10 +22,14 @@
     </option>
   </component>
   <component name="GOROOT" url="file://$PROJECT_DIR$/../../../../../Program Files/Go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2Fd5uEsIrP2U1XoukEpx9IUwiRx" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -51,7 +59,7 @@
       <recent name="C:\Users\yanng\go\Project_go\GoStager\kitten\basicKitten" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build GoStager/test">
+  <component name="RunManager" selected="Go Build.go build GoStager">
     <configuration name="go build GoStager" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="GoStager" />
       <working_directory value="$PROJECT_DIR$" />
@@ -99,8 +107,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Build.go build GoStager/test" />
         <item itemvalue="Go Build.go build GoStager" />
+        <item itemvalue="Go Build.go build GoStager/test" />
         <item itemvalue="Go Build.go build GoStager/kitten/basicKitten" />
         <item itemvalue="Go Build.go build GoStager/test/test2" />
         <item itemvalue="Go Build.go build GoStager/kitten/bananaKitten" />
@@ -110,6 +118,17 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
