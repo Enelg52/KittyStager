@@ -45,18 +45,27 @@ func Cli(conf config.General) error {
 		case "interact":
 			printTarget()
 			fmt.Printf("%s\n", color.Yellow("\n[*] Please enter the ip of the target"))
-			in, err := i.Read("Id: ")
+			id, err := i.Read("id: ")
 			if err != nil {
 				util.ErrPrint(err)
 				break
 			}
-			id, err := strconv.Atoi(in)
-			if util.Contains(http.Target, http.Target[id]) == false {
+			s, err := strconv.Atoi(id)
+			if err != nil {
+				util.ErrPrint(err)
+				break
+			}
+			ip, err := findId(s)
+			if err != nil {
+				util.ErrPrint(err)
+				break
+			}
+			if _, ok := http.M[ip]; !ok {
 				util.ErrPrint(fmt.Errorf("invalid id"))
 				break
 			}
 			fmt.Println()
-			err = interact.Interact(http.Target[id])
+			err = interact.Interact(http.M[ip].Target)
 			if err != nil {
 				return err
 			}
@@ -66,7 +75,16 @@ func Cli(conf config.General) error {
 
 func printTarget() {
 	fmt.Printf("%s\n", color.Green("[*] Targets:"))
-	for id, x := range http.Target {
-		fmt.Printf("%d - %s\n", id, color.Yellow(x))
+	for ip, x := range http.M {
+		fmt.Printf("%d - %s\n", x.Id, color.Yellow(ip))
 	}
+}
+
+func findId(id int) (string, error) {
+	for _, x := range http.M {
+		if x.Id == id {
+			return x.Target, nil
+		}
+	}
+	return "", fmt.Errorf("invalid id")
 }
