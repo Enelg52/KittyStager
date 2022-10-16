@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="39c97d00-8106-4cc9-bc28-c654bc9efa66" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/conf.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config/conf.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/httpServer.go" beforeDir="false" afterPath="$PROJECT_DIR$/http/httpServer.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kitten/bananaKitten/bananaKitten.go" beforeDir="false" afterPath="$PROJECT_DIR$/kitten/bananaKitten/bananaKitten.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kitten/bananaKitten/conf.txt" beforeDir="false" afterPath="$PROJECT_DIR$/kitten/bananaKitten/conf.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kitten/basicKitten/conf.txt" beforeDir="false" afterPath="$PROJECT_DIR$/kitten/basicKitten/conf.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shellcode.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/shellcode/scMSF" beforeDir="false" afterPath="$PROJECT_DIR$/shellcode/scMSF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/test/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/util.go" beforeDir="false" afterPath="$PROJECT_DIR$/util/util.go" afterDir="false" />
-    </list>
+    <list default="true" id="39c97d00-8106-4cc9-bc28-c654bc9efa66" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,7 +25,9 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2Fd5uEsIrP2U1XoukEpx9IUwiRx" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
