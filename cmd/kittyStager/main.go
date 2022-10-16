@@ -4,10 +4,10 @@ Copyright © 2022 Enelg
 package main
 
 import (
-	"GoStager/cli"
-	"GoStager/config"
-	"GoStager/http"
-	"GoStager/util"
+	"GoStager/cmd/cli"
+	"GoStager/cmd/config"
+	"GoStager/cmd/http"
+	"GoStager/cmd/util"
 	"errors"
 	"fmt"
 	color "github.com/logrusorgru/aurora"
@@ -29,7 +29,7 @@ func main() {
 	//generate config file for the malwares
 	err = util.GenerateConfig(conf)
 	if err != nil {
-		util.ErrPrint(errors.New("error while generating config file"))
+		util.ErrPrint(err)
 		return
 	}
 	fmt.Println(color.Green("[+] Config file generated"))
