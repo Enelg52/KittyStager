@@ -1,7 +1,7 @@
 package util
 
 import (
-	"GoStager/config"
+	"GoStager/cmd/config"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"

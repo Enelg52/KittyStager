@@ -1,7 +1,7 @@
 package main
 
 import (
-	"GoStager/util"
+	"GoStager/cmd/util"
 	_ "embed"
 	b64 "encoding/base64"
 	"encoding/hex"

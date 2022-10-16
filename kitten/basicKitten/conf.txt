@@ -1,1 +1,1 @@
-http://192.168.140.42:8080/legit,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/102.0
+http://127.0.0.1:8080/legit,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/102.0

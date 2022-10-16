@@ -1,8 +1,8 @@
 package interact
 
 import (
-	"GoStager/http"
-	"GoStager/util"
+	"GoStager/cmd/http"
+	"GoStager/cmd/util"
 	"fmt"
 	i "github.com/JoaoDanielRufino/go-input-autocomplete"
 	"github.com/c-bata/go-prompt"

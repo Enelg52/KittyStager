@@ -22,7 +22,7 @@ type Http struct {
 
 func GetConfig() (General, error) {
 	var c General
-	filename, _ := filepath.Abs("./config/conf.yml")
+	filename, _ := filepath.Abs("../config/conf.yml")
 	file, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return c, err

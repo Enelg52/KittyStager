@@ -1,8 +1,8 @@
 package http
 
 import (
-	"GoStager/config"
-	"GoStager/util"
+	"GoStager/cmd/config"
+	"GoStager/cmd/util"
 	b64 "encoding/base64"
 	"errors"
 	"fmt"
