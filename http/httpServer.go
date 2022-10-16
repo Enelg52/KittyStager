@@ -98,21 +98,7 @@ func logRequest(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				fmt.Println(color.Red("[!] Error decoding cookie"))
 			}
-			printCookie(out)
-		}
-	}
-}
-
-func printCookie(cookie []byte) {
-	j := util.UnmarshalJSON(cookie)
-	fmt.Printf("%s %s\n", color.Green("[+] Hostname:"), color.Yellow(j.Hostname))
-	fmt.Printf("%s %s\n", color.Green("[+] Username:"), color.Yellow(j.Username))
-	fmt.Print(color.Green("[+] Installed software : "))
-	for x := range j.Dir {
-		if x == len(j.Dir)-1 {
-			fmt.Printf("%v\n", color.Yellow(j.Dir[x]))
-		} else {
-			fmt.Printf("%v, ", color.Yellow(j.Dir[x]))
+			util.PrintCookie(out)
 		}
 	}
 }

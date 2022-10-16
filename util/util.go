@@ -138,12 +138,65 @@ func UnmarshalJSON(j []byte) InitChecks {
 	return iniCheck
 }
 
-// Contains check if a string is in a slice
-func Contains(s []string, e string) bool {
-	for _, a := range s {
-		if a == e {
-			return true
+func PrintCookie(cookie []byte) {
+	j := UnmarshalJSON(cookie)
+	fmt.Printf("%s %s\n", color.Green("[+] Hostname:"), color.Yellow(j.Hostname))
+	fmt.Printf("%s %s\n", color.Green("[+] Username:"), color.Yellow(j.Username))
+	fmt.Print(color.Green("[+] Installed software : "))
+	f := relevantFiles(j.Dir)
+	for x := range f {
+		if x == len(f)-1 {
+			fmt.Printf("%v\n", color.Yellow(f[x]))
+		} else {
+			fmt.Printf("%v, ", color.Yellow(f[x]))
 		}
 	}
-	return false
+}
+
+// relevantFiles get the relevant files
+func relevantFiles(s []string) []string {
+	//default files in c:\program files
+	defaultFiles := []string{
+		"Common Files",
+		"Internet Explorer",
+		"ModifiableWindowsApps",
+		"Windows Defender",
+		"Windows Defender Advanced Threat Protection",
+		"Windows Mail",
+		"Windows Media Player",
+		"Windows Multimedia Platform",
+		"Windows NT",
+		"Windows Photo Viewer",
+		"Windows Portable Devices",
+		"WindowsPowerShell",
+		"Windows Security",
+	}
+	// default files in c:\program files (x86)
+	/*defaultFiles86 := []string{
+		"Common Files",
+		"Internet Explorer",
+		"Micorosft.NET",
+		"Microsoft",
+		"Windows Defender",
+		"Windows Mail",
+		"Windows Media Player",
+		"Windows Multimedia Platform",
+		"Windows NT",
+		"Windows Photo Viewer",
+		"Windows Portable Devices",
+		"WindowsPowerShell",
+	}*/
+	// check if the default files are in the list
+	var out []string
+OUTER:
+	for _, file := range s {
+		for _, defaultFile := range defaultFiles {
+			if file == defaultFile {
+				continue OUTER
+			}
+		}
+		out = append(out, file)
+	}
+
+	return out
 }

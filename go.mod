@@ -8,6 +8,7 @@ require (
 	github.com/c-bata/go-prompt v0.2.6
 	github.com/inancgumus/prettyslice v0.0.0-20190305220808-d802ba58098f
 	github.com/logrusorgru/aurora v2.0.3+incompatible
+	github.com/nsf/termbox-go v1.1.1
 	golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab
 	gopkg.in/yaml.v3 v3.0.1
 )
