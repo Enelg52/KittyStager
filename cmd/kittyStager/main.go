@@ -21,7 +21,7 @@ func main() {
 		util.ErrPrint(err)
 	}
 	//check config
-	if conf.Conf.Host == "" || conf.Conf.Port == 0 || conf.Conf.EndPoint == "" || conf.Conf.UserAgent == "" || conf.Conf.MalPath == nil {
+	if conf.GetHost() == "" || conf.GetPort() == 0 || conf.GetEndpoint() == "" || conf.GetUserAgent() == "" || conf.GetMalPath() == nil {
 		util.ErrPrint(errors.New("please check your config file"))
 		return
 	}
@@ -34,7 +34,7 @@ func main() {
 	}
 	fmt.Println(color.Green("[+] Config file generated"))
 	fmt.Println(color.Green("[+] Starting http server"))
-	fmt.Printf("%s %d%s %s %s\n", color.Green("[+] Sleep set to"), color.Yellow(conf.Conf.Sleep), color.Yellow("s"), color.Green("on"), color.Yellow("all targets"))
+	fmt.Printf("%s %d%s %s %s\n", color.Green("[+] Sleep set to"), color.Yellow(conf.GetSleep()), color.Yellow("s"), color.Green("on"), color.Yellow("all targets"))
 	go http.CreateHttpServer(conf)
 	err = cli.Cli(conf)
 	if err != nil {

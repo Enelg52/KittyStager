@@ -32,7 +32,7 @@ func CreateHttpServer(conf config.General) {
 	address := fmt.Sprintf("%s:%d", conf.GetHost(), conf.GetPort())
 	userA = conf.GetUserAgent()
 	fmt.Printf("%s %s\n\n", color.Green("[+] Started http server on"), color.Yellow(address))
-	http.HandleFunc(conf.Conf.EndPoint, logRequest)
+	http.HandleFunc(conf.GetEndpoint(), logRequest)
 	err := http.ListenAndServe(address, nil)
 	if err != nil {
 		util.ErrPrint(err)
