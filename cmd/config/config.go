@@ -22,17 +22,17 @@ type Http struct {
 }
 
 func GetConfig() (General, error) {
-	var c General
+	var conf General
 	filename, _ := filepath.Abs("../config/conf.yml")
 	file, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return c, err
+		return conf, err
 	}
-	err = yaml.Unmarshal(file, &c)
+	err = yaml.Unmarshal(file, &conf)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return c, error(nil)
+	return conf, error(nil)
 }
 
 func (c *General) GetHost() string {
@@ -49,6 +49,10 @@ func (c *General) GetEndpoint() string {
 
 func (c *General) GetMalPath() []string {
 	return c.Conf.MalPath
+}
+
+func (c *General) GetMalPathWithId(i int) string {
+	return c.Conf.MalPath[i]
 }
 
 func (c *General) GetUserAgent() string {

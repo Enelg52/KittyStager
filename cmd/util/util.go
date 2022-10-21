@@ -48,12 +48,12 @@ func ScToAES(path string, key string) ([]byte, error) {
 // GenerateConfig generate the config file for all the kitten
 func GenerateConfig(conf config.General) error {
 	data := fmt.Sprintf("http://%s:%d%s,%s", conf.GetHost(), conf.GetPort(), conf.GetEndpoint(), conf.GetUserAgent())
-	for x := range conf.Conf.MalPath {
-		err := ioutil.WriteFile(conf.Conf.MalPath[x]+"conf.txt", []byte(data), 0644)
+	for x := range conf.GetMalPath() {
+		err := ioutil.WriteFile(conf.GetMalPathWithId(x)+"conf.txt", []byte(data), 0644)
 		if err != nil {
 			return err
 		}
-		fmt.Printf("%s %s\n", color.Green("[+] Generated conf file for"), color.Yellow(conf.Conf.MalPath[x]))
+		fmt.Printf("%s %s\n", color.Green("[+] Generated conf file for"), color.Yellow(conf.GetMalPathWithId(x)))
 	}
 	return nil
 }

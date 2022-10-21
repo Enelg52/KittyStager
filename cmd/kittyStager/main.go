@@ -22,6 +22,7 @@ func main() {
 	err = conf.CheckConfig()
 	if err != nil {
 		util.ErrPrint(err)
+
 		return
 	}
 	fmt.Println(color.Green("[+] Config loaded"))
@@ -34,7 +35,9 @@ func main() {
 	fmt.Println(color.Green("[+] Config file generated"))
 	fmt.Println(color.Green("[+] Starting http server"))
 	fmt.Printf("%s %d%s %s %s\n", color.Green("[+] Sleep set to"), color.Yellow(conf.GetSleep()), color.Yellow("s"), color.Green("on"), color.Yellow("all targets"))
+
 	// Start the http server
+
 	go http.CreateHttpServer(conf)
 	err = cli.Cli(conf)
 	if err != nil {
