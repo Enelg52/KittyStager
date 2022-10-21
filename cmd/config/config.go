@@ -23,7 +23,7 @@ type Http struct {
 
 func GetConfig() (General, error) {
 	var conf General
-	filename, _ := filepath.Abs("../config/conf.yml")
+	filename, _ := filepath.Abs("C:\\Users\\yanng\\go\\Project_go\\GoStager\\cmd\\config\\conf.yml")
 	file, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return conf, err

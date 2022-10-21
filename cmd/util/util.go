@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	color "github.com/logrusorgru/aurora"
+	"net/http"
 
 	"io/ioutil"
 	"log"
@@ -41,8 +42,17 @@ func ScToAES(path string, key string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	aesPayload, _ := cryptoUtil.Encrypt(sc, byteKey)
-	return aesPayload, nil
+	t := http.DetectContentType(sc)
+	fmt.Println(t)
+	if t == "text/plain; charset=utf-8" {
+		aesPayload, _ := cryptoUtil.Encrypt(sc, byteKey)
+		return aesPayload, nil
+	} else if t == "application/octet-stream" {
+		hexstring := fmt.Sprintf("%x ", sc)
+		aesPayload, _ := cryptoUtil.Encrypt([]byte(hexstring), byteKey)
+		return aesPayload, nil
+	}
+	return []byte{}, nil
 }
 
 // GenerateConfig generate the config file for all the kitten
