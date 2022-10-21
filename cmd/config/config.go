@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"log"
@@ -60,4 +61,11 @@ func (c *General) GetUserAgent() string {
 
 func (c *General) GetSleep() int {
 	return c.Conf.Sleep
+}
+
+func (c *General) CheckConfig() error {
+	if c.Conf.Host == "" || c.Conf.Port == 0 || c.Conf.EndPoint == "" || c.Conf.UserAgent == "" || c.Conf.MalPath == nil {
+		return errors.New("please check your config file")
+	}
+	return nil
 }

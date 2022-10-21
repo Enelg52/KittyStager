@@ -31,15 +31,7 @@ func Cli(conf config.General) error {
 		case "exit":
 			return nil
 		case "config":
-			fmt.Printf("\n%s\t\t%s\n", color.Green("Host:"), color.Yellow(conf.GetHost()))
-			fmt.Printf("%s\t\t%d\n", color.Green("Port:"), color.Yellow(conf.GetPort()))
-			fmt.Printf("%s\t%s\n", color.Green("Endpoint:"), color.Yellow(conf.GetEndpoint()))
-			fmt.Printf("%s\t%s\n", color.Green("UserAgent:"), color.Yellow(conf.GetUserAgent()))
-			fmt.Printf("%s\t\t%d\n", color.Green("Sleep:"), color.Yellow(conf.GetSleep()))
-			for _, v := range conf.GetMalPath() {
-				fmt.Printf("%s\t%s\n", color.Green("Malware path:"), color.Yellow(v))
-			}
-			fmt.Println()
+			printConfig(conf)
 		case "target":
 			printTarget()
 		case "interact":
@@ -52,7 +44,7 @@ func Cli(conf config.General) error {
 			}
 			s, err := strconv.Atoi(id)
 			if err != nil {
-				util.ErrPrint(err)
+				util.ErrPrint(fmt.Errorf("invalid input"))
 				break
 			}
 			ip, err := findId(s)
@@ -65,7 +57,7 @@ func Cli(conf config.General) error {
 				break
 			}
 			fmt.Println()
-			err = interact.Interact(http.M[ip].Target)
+			err = interact.Interact(http.M[ip].GetTarget())
 			if err != nil {
 				return err
 			}
@@ -76,15 +68,27 @@ func Cli(conf config.General) error {
 func printTarget() {
 	fmt.Printf("%s\n", color.Green("[*] Targets:"))
 	for ip, x := range http.M {
-		fmt.Printf("%d - %s\n", x.Id, color.Yellow(ip))
+		fmt.Printf("%d - %s\n", x.GetId(), color.Yellow(ip))
 	}
 }
 
 func findId(id int) (string, error) {
 	for _, x := range http.M {
-		if x.Id == id {
-			return x.Target, nil
+		if x.GetId() == id {
+			return x.GetTarget(), nil
 		}
 	}
 	return "", fmt.Errorf("invalid id")
+}
+
+func printConfig(conf config.General) {
+	fmt.Printf("\n%s\t\t%s\n", color.Green("Host:"), color.Yellow(conf.GetHost()))
+	fmt.Printf("%s\t\t%d\n", color.Green("Port:"), color.Yellow(conf.GetPort()))
+	fmt.Printf("%s\t%s\n", color.Green("Endpoint:"), color.Yellow(conf.GetEndpoint()))
+	fmt.Printf("%s\t%s\n", color.Green("UserAgent:"), color.Yellow(conf.GetUserAgent()))
+	fmt.Printf("%s\t\t%d\n", color.Green("Sleep:"), color.Yellow(conf.GetSleep()))
+	for _, v := range conf.GetMalPath() {
+		fmt.Printf("%s\t%s\n", color.Green("Malware path:"), color.Yellow(v))
+	}
+	fmt.Println()
 }
