@@ -76,7 +76,7 @@ KittyStager 🐈❯ interact
 0 - all targets
 1 - 127.0.0.1
 
-[*] Please enter the ip of the target
+[*] Please enter the id of the target
 id: 1
 
 KittyStager - 127.0.0.1 🐈❯ shellcode

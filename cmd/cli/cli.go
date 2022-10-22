@@ -36,7 +36,7 @@ func Cli(conf config.General) {
 			printTarget()
 		case "interact":
 			printTarget()
-			fmt.Printf("%s\n", color.Yellow("\n[*] Please enter the ip of the target"))
+			fmt.Printf("%s\n", color.Yellow("\n[*] Please enter the id of the target"))
 			id, err := i.Read("id: ")
 			if err != nil {
 				util.ErrPrint(err)
