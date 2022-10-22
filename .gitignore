@@ -18,4 +18,4 @@ go.work
 /.idea/
 /test/
 /kitten/heavenKitten/
-/cert/*
+/shellcode/
