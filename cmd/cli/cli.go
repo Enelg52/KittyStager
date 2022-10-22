@@ -24,12 +24,12 @@ func completer(d prompt.Document) []prompt.Suggest {
 	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 }
 
-func Cli(conf config.General) error {
+func Cli(conf config.General) {
 	for {
 		t := prompt.Input("KittyStager 🐈❯ ", completer)
 		switch t {
 		case "exit":
-			return nil
+			return
 		case "config":
 			printConfig(conf)
 		case "target":
@@ -52,14 +52,15 @@ func Cli(conf config.General) error {
 				util.ErrPrint(err)
 				break
 			}
-			if _, ok := http.M[ip]; !ok {
+			if _, ok := http.Targets[ip]; !ok {
 				util.ErrPrint(fmt.Errorf("invalid id"))
 				break
 			}
 			fmt.Println()
-			err = interact.Interact(http.M[ip].GetTarget())
+			err = interact.Interact(http.Targets[ip].GetTarget())
 			if err != nil {
-				return err
+				util.ErrPrint(err)
+				break
 			}
 		}
 	}
@@ -67,13 +68,13 @@ func Cli(conf config.General) error {
 
 func printTarget() {
 	fmt.Printf("%s\n", color.Green("[*] Targets:"))
-	for ip, x := range http.M {
+	for ip, x := range http.Targets {
 		fmt.Printf("%d - %s\n", x.GetId(), color.Yellow(ip))
 	}
 }
 
 func findId(id int) (string, error) {
-	for _, x := range http.M {
+	for _, x := range http.Targets {
 		if x.GetId() == id {
 			return x.GetTarget(), nil
 		}

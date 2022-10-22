@@ -21,9 +21,9 @@ type Http struct {
 	MalPath   []string `yaml:"malPath,flow"`
 }
 
-func GetConfig() (General, error) {
+func GetConfig(path string) (General, error) {
 	var conf General
-	filename, _ := filepath.Abs("C:\\Users\\yanng\\go\\Project_go\\GoStager\\cmd\\config\\conf.yml")
+	filename, err := filepath.Abs(path)
 	file, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return conf, err

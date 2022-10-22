@@ -11,7 +11,6 @@ import (
 
 	"io/ioutil"
 	"log"
-	"os"
 )
 
 type InitialChecks struct {
@@ -75,37 +74,25 @@ func ErrPrint(err error) {
 	}
 }
 
-// Recon does some basic recon on the target
-func Recon() []byte {
-	var iniCheck InitialChecks
-	// print machine name
-	iniCheck.Hostname, _ = os.Hostname()
-	//print username
-	iniCheck.Username = os.Getenv("USERNAME")
-	dir, _ := os.ReadDir("C:\\Program Files")
-	for _, file := range dir {
-		iniCheck.Dir = append(iniCheck.Dir, file.Name())
-	}
-	dir86, _ := os.ReadDir("C:\\Program Files (x86)")
-	for _, file := range dir86 {
-		iniCheck.Dir = append(iniCheck.Dir, file.Name())
-	}
-	j, _ := json.Marshal(iniCheck)
-	return j
-}
-
 // UnmarshalJSON unmarshal the json
-func UnmarshalJSON(j []byte) InitialChecks {
+func UnmarshalJSON(j []byte) (InitialChecks, error) {
 	var iniCheck InitialChecks
-	json.Unmarshal(j, &iniCheck)
-	return iniCheck
+	err := json.Unmarshal(j, &iniCheck)
+	if err != nil {
+		return InitialChecks{}, err
+	}
+	return iniCheck, nil
 }
 
-func PrintCookie(cookie []byte) {
-	j := UnmarshalJSON(cookie)
+func PrintCookie(cookie []byte) error {
+	j, err := UnmarshalJSON(cookie)
+	if err != nil {
+		return err
+	}
 	fmt.Printf("%s %s\n", color.Green("[+] Hostname:"), color.Yellow(j.Hostname))
 	fmt.Printf("%s %s\n", color.Green("[+] Username:"), color.Yellow(j.Username))
 	fmt.Print(color.Green("[+] To get more, use the recon command\n"))
+	return nil
 }
 
 func PrintRecon(i InitialChecks) {
@@ -124,7 +111,7 @@ func PrintRecon(i InitialChecks) {
 
 // relevantFiles get the relevant files
 func relevantFiles(s []string) []string {
-	files := []string{
+	var files = []string{
 		//default files in c:\program files
 		"Common Files",
 		"Internet Explorer",

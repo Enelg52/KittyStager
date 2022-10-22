@@ -2,6 +2,7 @@ package interact
 
 import (
 	"GoStager/cmd/http"
+	"GoStager/cmd/httpUtil"
 	"GoStager/cmd/util"
 	"fmt"
 	i "github.com/JoaoDanielRufino/go-input-autocomplete"
@@ -23,6 +24,10 @@ func Interact(ip string) error {
 		case "back":
 			return nil
 		case "shellcode":
+			if ip == "all targets" {
+				fmt.Println(color.Red("[-] You can't host shellcode on all targets"))
+				break
+			}
 			fmt.Printf("%s\n", color.Yellow("[*] Please enter the path to the shellcode"))
 			var path string
 			path, err := i.Read("Path: ")
@@ -30,7 +35,7 @@ func Interact(ip string) error {
 				util.ErrPrint(err)
 				break
 			}
-			err = http.HostShellcode(path, ip)
+			err = httpUtil.HostShellcode(path, ip)
 			if err != nil {
 				util.ErrPrint(err)
 				break
@@ -45,9 +50,9 @@ func Interact(ip string) error {
 				util.ErrPrint(err)
 				break
 			}
-			http.HostSleep(time, ip)
+			httpUtil.HostSleep(time, ip)
 		case "recon":
-			initChecks := http.M[ip].GetInitChecks()
+			initChecks := http.Targets[ip].GetInitChecks()
 			util.PrintRecon(initChecks)
 		}
 	}

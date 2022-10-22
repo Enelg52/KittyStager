@@ -5,15 +5,18 @@ import (
 	"GoStager/cmd/config"
 	"GoStager/cmd/http"
 	"GoStager/cmd/util"
+	"flag"
 	"fmt"
 	color "github.com/logrusorgru/aurora"
 )
 
 func main() {
+	path := flag.String("path", "C:\\Users\\yanng\\go\\Project_go\\GoStager\\cmd\\config\\conf.yml", "Path to the config file")
+	flag.Parse()
 	fmt.Println(color.Cyan("                     _\n                    / )\n                   ( (\n     A.-.A  .-\"\"-.  ) )\n    / , , \\/      \\/ /\n   =\\  t  ;=    /   /\n     `--,'  .\"\"|   /\n         || |  \\\\ \\\n        ((,_|  ((,_\\\n"))
 	fmt.Println(color.Cyan("KittyStager - A simple stager written in Go\n"))
 	// Get the config
-	conf, err := config.GetConfig()
+	conf, err := config.GetConfig(*path)
 	if err != nil {
 		util.ErrPrint(err)
 		return
@@ -39,9 +42,5 @@ func main() {
 	// Start the http server
 
 	go http.CreateHttpServer(conf)
-	err = cli.Cli(conf)
-	if err != nil {
-		util.ErrPrint(err)
-		return
-	}
+	cli.Cli(conf)
 }
