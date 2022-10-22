@@ -8,7 +8,8 @@
 
 
 KittyStager is a simple stage 0 C2. The purpose of this project is to be able to have some stage 0 templates and be 
-able to use the with any shellcode. I would not use this project in red team, at least not now.
+able to use the with any shellcode.
+I would not use this project in red team, at least not now.
 
 
 
