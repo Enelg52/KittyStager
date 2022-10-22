@@ -42,7 +42,6 @@ func ScToAES(path string, key string) ([]byte, error) {
 		return nil, err
 	}
 	t := http.DetectContentType(sc)
-	fmt.Println(t)
 	if t == "text/plain; charset=utf-8" {
 		aesPayload, _ := cryptoUtil.Encrypt(sc, byteKey)
 		return aesPayload, nil

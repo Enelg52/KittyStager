@@ -1,6 +1,8 @@
 # KittyStager
 
 
+![](/img/chat.png)
+
 
 KittyStager is a simple stage 0 C2. The purpose of this project is to be able to have some stage 0 templates and be 
 able to use the with any shellcode. I would not use this project in red team, at least not now.
@@ -28,7 +30,7 @@ able to use the with any shellcode. I would not use this project in red team, at
 
 ## Quick start
 How to compile
-```shell
+```
 go build -o kittyStager
 ./kittyStager
 
@@ -37,7 +39,7 @@ go build -o basickitten
 ./basickitten
 ```
 How to use :
-```shell
+```
 ~\go\Project_go\GoStager\cmd\kittyStager main ❯ go run .\main.go
                      _
                     / )
@@ -77,7 +79,6 @@ id: 1
 KittyStager - 127.0.0.1 🐈❯ shellcode
 [*] Please enter the path to the shellcode
 Path: ..\..\shellcode\shellcode.bin
-text/plain; charset=utf-8
 [+] Key generated is : TARGETTARGETTARGETTARGETTARGET
 [+] Shellcode hosted for 127.0.0.1 
 ```

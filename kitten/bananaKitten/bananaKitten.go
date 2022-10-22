@@ -7,7 +7,6 @@ import (
 	_ "embed"
 	b64 "encoding/base64"
 	"encoding/hex"
-	"fmt"
 	"golang.org/x/sys/windows"
 	"io/ioutil"
 	"net/http"
@@ -67,7 +66,6 @@ func request(cookie string, conf []string) []byte {
 	}
 	resp, _ := c.Do(req)
 	body, _ = ioutil.ReadAll(resp.Body)
-	fmt.Println(string(body))
 	return body
 }
 
