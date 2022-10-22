@@ -7,9 +7,10 @@
 </p>
 
 
-KittyStager is a simple stage 0 C2. The purpose of this project is to be able to have some stage 0 templates and be 
+KittyStager is a simple stage 0 C2. It is made of a web server to host the shellcode and an implant, called kitten.
+The purpose of this project is to be able to have a web server and some kitten and be 
 able to use the with any shellcode.
-I would not use this project in red team, at least not now.
+**I would not use this project in red team, at least not now.**
 
 
 
