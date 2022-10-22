@@ -5,5 +5,5 @@ Http:
   sleep: 5
   userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/102.0"
   malPath:
-    - "C:\\Users\\yanng\\go\\Project_go\\GoStager\\kitten\\basicKitten\\"
-    - "C:\\Users\\yanng\\go\\Project_go\\GoStager\\kitten\\bananaKitten\\"
+    - "kitten\\basicKitten\\"
+    - "kitten\\bananaKitten\\"
