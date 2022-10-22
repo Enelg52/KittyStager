@@ -1,7 +1,10 @@
 # KittyStager
 
 
-![](/img/chat.png)
+<p align="center">
+  <a href="" rel="noopener">
+ <img width=200px height=200px src="./img/chat.png"> </a>
+</p>
 
 
 KittyStager is a simple stage 0 C2. The purpose of this project is to be able to have some stage 0 templates and be 
