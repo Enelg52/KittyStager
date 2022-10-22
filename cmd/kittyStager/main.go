@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	path := flag.String("path", "cmd\\config\\conf.yml", "Path to the config file")
+	path := flag.String("p", "cmd\\config\\conf.yml", "Path to the config file")
 	flag.Parse()
 	fmt.Println(color.Cyan("                     _\n                    / )\n                   ( (\n     A.-.A  .-\"\"-.  ) )\n    / , , \\/      \\/ /\n   =\\  t  ;=    /   /\n     `--,'  .\"\"|   /\n         || |  \\\\ \\\n        ((,_|  ((,_\\\n"))
 	fmt.Println(color.Cyan("KittyStager - A simple stager written in Go\n"))

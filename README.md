@@ -16,7 +16,7 @@ I would not use this project in red team, at least not now.
 ## Content
 - [How it works](#how-it-works)
 - [Quick start](#quick-start)
-- [Kitten's](#Kitten)
+- [Kitten](#Kitten)
 - [Project structure](#project-structure)
 
 
@@ -44,7 +44,7 @@ go build -o basickitten
 ```
 How to use :
 ```
-~kittyStager ❯ go run .\main.go
+~kittyStager ❯.\kittyStager.exe -p path/to/config/file
                      _
                     / )
                    ( (
@@ -85,6 +85,19 @@ KittyStager - 127.0.0.1 🐈❯ shellcode
 Path: ..\..\shellcode\shellcode.bin
 [+] Key generated is : TARGETTARGETTARGETTARGETTARGET
 [+] Shellcode hosted for 127.0.0.1 
+```
+
+```
+~basicKitten ❯ .\basicKitten.exe
+
+  .#####.   mimikatz 2.2.0 (x64) #19041 Aug 10 2021 17:19:53
+ .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+ ## \ / ##       > https://blog.gentilkiwi.com/mimikatz
+ '## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )
+  '#####'        > https://pingcastle.com / https://mysmartlogon.com ***/
+
+mimikatz #
 ```
 
 ## [Kitten](/kitten/)
