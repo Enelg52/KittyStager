@@ -1,10 +1,10 @@
 package main
 
 import (
-	"GoStager/cmd/cli"
-	"GoStager/cmd/config"
-	"GoStager/cmd/http"
-	"GoStager/cmd/util"
+	"KittyStager/cmd/cli"
+	"KittyStager/cmd/config"
+	"KittyStager/cmd/http"
+	"KittyStager/cmd/util"
 	"flag"
 	"fmt"
 	color "github.com/logrusorgru/aurora"

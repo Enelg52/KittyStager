@@ -1,10 +1,10 @@
 package cli
 
 import (
-	"GoStager/cmd/config"
-	"GoStager/cmd/http"
-	"GoStager/cmd/interact"
-	"GoStager/cmd/util"
+	"KittyStager/cmd/config"
+	"KittyStager/cmd/http"
+	"KittyStager/cmd/interact"
+	"KittyStager/cmd/util"
 	"fmt"
 	i "github.com/JoaoDanielRufino/go-input-autocomplete"
 	"github.com/c-bata/go-prompt"

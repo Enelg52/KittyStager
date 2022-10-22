@@ -1,8 +1,8 @@
 package http
 
 import (
-	"GoStager/cmd/config"
-	"GoStager/cmd/util"
+	"KittyStager/cmd/config"
+	"KittyStager/cmd/util"
 	b64 "encoding/base64"
 	"fmt"
 	color "github.com/logrusorgru/aurora"

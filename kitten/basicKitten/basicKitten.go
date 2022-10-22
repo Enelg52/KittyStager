@@ -1,9 +1,9 @@
 package main
 
 import (
-	"GoStager/cmd/cryptoUtil"
-	"GoStager/cmd/malwareUtil"
-	"GoStager/cmd/util"
+	"KittyStager/cmd/cryptoUtil"
+	"KittyStager/cmd/malwareUtil"
+	"KittyStager/cmd/util"
 	_ "embed"
 	b64 "encoding/base64"
 	"encoding/hex"

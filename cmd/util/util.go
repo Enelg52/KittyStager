@@ -1,8 +1,8 @@
 package util
 
 import (
-	"GoStager/cmd/config"
-	"GoStager/cmd/cryptoUtil"
+	"KittyStager/cmd/config"
+	"KittyStager/cmd/cryptoUtil"
 	"encoding/json"
 	"errors"
 	"fmt"

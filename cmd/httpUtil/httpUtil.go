@@ -1,9 +1,9 @@
 package httpUtil
 
 import (
-	"GoStager/cmd/cryptoUtil"
-	"GoStager/cmd/http"
-	"GoStager/cmd/util"
+	"KittyStager/cmd/cryptoUtil"
+	"KittyStager/cmd/http"
+	"KittyStager/cmd/util"
 	"errors"
 	"fmt"
 	color "github.com/logrusorgru/aurora"
