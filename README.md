@@ -139,3 +139,7 @@ It contains all the util functions used to encrypt and decrypt the shellcode.
 It contains all the util functions used to interact with the server.
 #### [malwareUtil](/cmd/malwareUtil)
 It contains all the functions used only by the kittens
+
+## TODO
+- [ ] Add more kittens (vba, powershell, c#, c)
+- [ ] Https
