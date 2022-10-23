@@ -37,6 +37,7 @@ able to use the with any shellcode.
 
 ## Quick start
 How to compile
+The kittens are for windows only, but the server can be run on any OS.
 ```
 go build -o kittyStager
 ./kittyStager

