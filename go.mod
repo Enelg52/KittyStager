@@ -7,12 +7,13 @@ require (
 	github.com/JoaoDanielRufino/go-input-autocomplete v1.0.4
 	github.com/c-bata/go-prompt v0.2.6
 	github.com/logrusorgru/aurora v2.0.3+incompatible
+	github.com/timwhitez/Doge-Gabh v1.9.2
 	golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab
 	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
-	github.com/Binject/debug v0.0.0-20210101210738-1b03ff50b8a5 // indirect
+	github.com/Binject/debug v0.0.0-20211007083345-9605c99179ee // indirect
 	github.com/awgh/rawreader v0.0.0-20200626064944-56820a9c6da4 // indirect
 	github.com/eiannone/keyboard v0.0.0-20200508000154-caf4b762e807 // indirect
 	github.com/mattn/go-colorable v0.1.9 // indirect
