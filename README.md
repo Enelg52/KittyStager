@@ -154,6 +154,7 @@ This is the basic kitten, and it has the minimum to work. No fancy injection met
 #### [BananaKitten](/kitten/bananaKitten)
 `NtAllocateVirtualMemorySysid` -> `NtProtectVirtualMemorySysid` -> `NtCreateThreadExSysid` -> `NtWaitForSingleObject`
 This is the more advanced kitten. It will use bananaphone, a variant of hell's gate implemented in Go. [https://github.com/C-Sto/BananaPhone](https://github.com/C-Sto/BananaPhone)
+
 It also patches etw and has a sandbox escape mechanism, that check's if there is more than 1 Gb of ram. If not, it will exit.
 
 ### [cmd](/cmd)

