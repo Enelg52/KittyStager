@@ -9,7 +9,7 @@
 
 KittyStager is a simple stage 0 C2. It is made of a web server to host the shellcode and an implant, called kitten.
 The purpose of this project is to be able to have a web server and some implant for various usage and be 
-able to use it the with any shellcode.
+able to use it with any shellcode.
 
 KittyStager has :
 - A web server to host the shellcode
