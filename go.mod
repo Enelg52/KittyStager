@@ -5,9 +5,9 @@ go 1.19
 require (
 	github.com/C-Sto/BananaPhone v0.0.0-20220220002628-6585e5913761
 	github.com/JoaoDanielRufino/go-input-autocomplete v1.0.4
+	github.com/aus/gopherheaven v0.0.0-20210211024551-dbcb93e93e1c
 	github.com/c-bata/go-prompt v0.2.6
 	github.com/logrusorgru/aurora v2.0.3+incompatible
-	github.com/timwhitez/Doge-Gabh v1.9.2
 	golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab
 	gopkg.in/yaml.v3 v3.0.1
 )

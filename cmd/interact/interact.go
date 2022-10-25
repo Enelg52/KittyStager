@@ -13,8 +13,8 @@ import (
 	"strings"
 )
 
-func Interact(ip string) error {
-	in := fmt.Sprintf("KittyStager - %s 🐈❯ ", ip)
+func Interact(kittenName string) error {
+	in := fmt.Sprintf("KittyStager - %s 🐈❯ ", kittenName)
 	for {
 		t := prompt.Input(in, completer)
 		input := strings.Split(t, " ")
@@ -24,7 +24,7 @@ func Interact(ip string) error {
 		case "back":
 			return nil
 		case "shellcode":
-			if ip == "all targets" {
+			if kittenName == "all targets" {
 				fmt.Println(color.Red("[-] You can't host shellcode on all targets"))
 				break
 			}
@@ -35,7 +35,7 @@ func Interact(ip string) error {
 				util.ErrPrint(err)
 				break
 			}
-			err = httpUtil.HostShellcode(path, ip)
+			err = httpUtil.HostShellcode(path, kittenName)
 			if err != nil {
 				util.ErrPrint(err)
 				break
@@ -50,9 +50,9 @@ func Interact(ip string) error {
 				util.ErrPrint(err)
 				break
 			}
-			httpUtil.HostSleep(time, ip)
+			httpUtil.HostSleep(time, kittenName)
 		case "recon":
-			initChecks := http.Targets[ip].GetInitChecks()
+			initChecks := http.Targets[kittenName].GetInitChecks()
 			util.PrintRecon(initChecks)
 		}
 	}

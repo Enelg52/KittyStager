@@ -34,7 +34,7 @@ func Cli(conf config.General) {
 			printTarget()
 		case "interact":
 			printTarget()
-			fmt.Printf("%s\n", color.Yellow("\n[*] Please enter the id of the target"))
+			fmt.Printf("%s", color.Yellow("[*] Please enter the id of the target"))
 			id, err := i.Read("id: ")
 			if err != nil {
 				util.ErrPrint(err)
@@ -45,17 +45,17 @@ func Cli(conf config.General) {
 				util.ErrPrint(fmt.Errorf("invalid input"))
 				break
 			}
-			ip, err := findId(s)
+			kittenName, err := findId(s)
 			if err != nil {
 				util.ErrPrint(err)
 				break
 			}
-			if _, ok := http.Targets[ip]; !ok {
+			if _, ok := http.Targets[kittenName]; !ok {
 				util.ErrPrint(fmt.Errorf("invalid id"))
 				break
 			}
 			fmt.Println()
-			err = interact.Interact(http.Targets[ip].GetTarget())
+			err = interact.Interact(http.Targets[kittenName].GetTarget())
 			if err != nil {
 				util.ErrPrint(err)
 				break
@@ -66,9 +66,11 @@ func Cli(conf config.General) {
 
 func printTarget() {
 	fmt.Printf("%s\n", color.Green("[*] Targets:"))
-	for ip, x := range http.Targets {
-		fmt.Printf("%d - %s\n", x.GetId(), color.Yellow(ip))
+	fmt.Printf("%s\n", color.Green("Id:\tKitten name:\tIp:\t\tHostname:"))
+	for name, x := range http.Targets {
+		fmt.Printf("%d\t%s\t%s\t%s\n", x.GetId(), color.Yellow(name), color.Yellow(x.InitChecks.GetIp()), color.Yellow(x.InitChecks.GetHostname()))
 	}
+	fmt.Println()
 }
 
 func findId(id int) (string, error) {

