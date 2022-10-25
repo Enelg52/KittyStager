@@ -12,6 +12,8 @@ import (
 	"strconv"
 )
 
+var c config.General
+
 func completer(d prompt.Document) []prompt.Suggest {
 	s := []prompt.Suggest{
 		{Text: "exit", Description: "Exit the program"},
@@ -24,7 +26,14 @@ func completer(d prompt.Document) []prompt.Suggest {
 
 func Cli(conf config.General) {
 	for {
-		t := prompt.Input("KittyStager 🐈❯ ", completer)
+		t := prompt.Input("KittyStager 🐈❯ ", completer,
+			prompt.OptionTitle("KittyStager 🐈 "),
+			prompt.OptionPrefixTextColor(prompt.Blue),
+			prompt.OptionPreviewSuggestionTextColor(prompt.Green),
+			prompt.OptionSelectedSuggestionBGColor(prompt.LightGray),
+			prompt.OptionSelectedSuggestionTextColor(prompt.Blue),
+			prompt.OptionDescriptionBGColor(prompt.Blue),
+			prompt.OptionSuggestionBGColor(prompt.DarkGray))
 		switch t {
 		case "exit":
 			return
@@ -65,7 +74,7 @@ func Cli(conf config.General) {
 }
 
 func printTarget() {
-	fmt.Printf("%s\n", color.Green("[*] Targets:"))
+	fmt.Printf("\n%s\n", color.Green("[*] Targets:"))
 	fmt.Printf("%s\n", color.Green("Id:\tKitten name:\tIp:\t\tHostname:"))
 	for name, x := range http.Targets {
 		fmt.Printf("%d\t%s\t%s\t%s\n", x.GetId(), color.Yellow(name), color.Yellow(x.InitChecks.GetIp()), color.Yellow(x.InitChecks.GetHostname()))

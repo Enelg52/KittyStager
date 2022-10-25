@@ -128,7 +128,7 @@ func PrintCookie(cookie []byte) error {
 }
 
 func PrintRecon(i InitialChecks) {
-	fmt.Printf("%s %s\n", color.Green("[+] Kitten name:"), color.Yellow(i.GetKittenName()))
+	fmt.Printf("\n%s %s\n", color.Green("[+] Kitten name:"), color.Yellow(i.GetKittenName()))
 	fmt.Printf("%s %s\n", color.Green("[+] hostname:"), color.Yellow(i.GetHostname()))
 	fmt.Printf("%s %s\n", color.Green("[+] Username:"), color.Yellow(i.GetUsername()))
 	fmt.Printf("%s %s\n", color.Green("[+] IP:"), color.Yellow(i.GetIp()))
@@ -141,6 +141,7 @@ func PrintRecon(i InitialChecks) {
 			fmt.Printf("%v, ", color.Yellow(f[x]))
 		}
 	}
+	fmt.Println()
 }
 
 // relevantFiles get the relevant files

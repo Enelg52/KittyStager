@@ -16,7 +16,13 @@ import (
 func Interact(kittenName string) error {
 	in := fmt.Sprintf("KittyStager - %s 🐈❯ ", kittenName)
 	for {
-		t := prompt.Input(in, completer)
+		t := prompt.Input(in, completer,
+			prompt.OptionPrefixTextColor(prompt.Blue),
+			prompt.OptionPreviewSuggestionTextColor(prompt.Green),
+			prompt.OptionSelectedSuggestionBGColor(prompt.LightGray),
+			prompt.OptionSelectedSuggestionTextColor(prompt.Blue),
+			prompt.OptionDescriptionBGColor(prompt.Blue),
+			prompt.OptionSuggestionBGColor(prompt.DarkGray))
 		input := strings.Split(t, " ")
 		switch input[0] {
 		case "exit":
