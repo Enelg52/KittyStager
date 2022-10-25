@@ -7,10 +7,9 @@ import (
 	"errors"
 	"fmt"
 	color "github.com/logrusorgru/aurora"
-	"net/http"
+	http "net/http"
 
 	"io/ioutil"
-	"log"
 )
 
 type InitialChecks struct {
@@ -101,7 +100,7 @@ func GenerateConfig(conf config.General) error {
 // ErrPrint print the error
 func ErrPrint(err error) {
 	if err != nil {
-		log.Println(color.Red(err.Error()))
+		fmt.Printf("\n%s %s\n", color.Red("[-]"), color.Red(err.Error()))
 	}
 }
 
