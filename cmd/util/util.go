@@ -25,20 +25,40 @@ func (I *InitialChecks) GetHostname() string {
 	return I.Hostname
 }
 
+func (I *InitialChecks) SetHostname(h string) {
+	I.Hostname = h
+}
+
 func (I *InitialChecks) GetUsername() string {
 	return I.Username
+}
+
+func (I *InitialChecks) SetUsername(u string) {
+	I.Username = u
 }
 
 func (I *InitialChecks) GetDir() []string {
 	return I.Dir
 }
 
+func (I *InitialChecks) SetDir(d []string) {
+	I.Dir = d
+}
+
 func (I *InitialChecks) GetIp() string {
 	return I.Ip
 }
 
+func (I *InitialChecks) SetIp(ip string) {
+	I.Ip = ip
+}
+
 func (I *InitialChecks) GetKittenName() string {
 	return I.KittenName
+}
+
+func (I *InitialChecks) SetKittenName(k string) {
+	I.KittenName = k
 }
 
 // ScToAES cypher the shellcode with AES
@@ -100,18 +120,18 @@ func PrintCookie(cookie []byte) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%s %s\n", color.Green("[+] Hostname:"), color.Yellow(j.Hostname))
-	fmt.Printf("%s %s\n", color.Green("[+] Username:"), color.Yellow(j.Username))
-	fmt.Printf("%s %s\n", color.Green("[+] IP:"), color.Yellow(j.Ip))
+	fmt.Printf("%s %s\n", color.Green("[+] hostname:"), color.Yellow(j.GetHostname()))
+	fmt.Printf("%s %s\n", color.Green("[+] Username:"), color.Yellow(j.GetUsername()))
+	fmt.Printf("%s %s\n", color.Green("[+] IP:"), color.Yellow(j.GetIp()))
 	fmt.Print(color.Green("[+] To get more, use the recon command\n"))
 	return nil
 }
 
 func PrintRecon(i InitialChecks) {
-	fmt.Printf("%s %s\n", color.Green("[+] Kitten name:"), color.Yellow(i.KittenName))
-	fmt.Printf("%s %s\n", color.Green("[+] Hostname:"), color.Yellow(i.GetHostname()))
+	fmt.Printf("%s %s\n", color.Green("[+] Kitten name:"), color.Yellow(i.GetKittenName()))
+	fmt.Printf("%s %s\n", color.Green("[+] hostname:"), color.Yellow(i.GetHostname()))
 	fmt.Printf("%s %s\n", color.Green("[+] Username:"), color.Yellow(i.GetUsername()))
-	fmt.Printf("%s %s\n", color.Green("[+] IP:"), color.Yellow(i.Ip))
+	fmt.Printf("%s %s\n", color.Green("[+] IP:"), color.Yellow(i.GetIp()))
 	fmt.Print(color.Green("[+] Installed software : "))
 	f := relevantFiles(i.GetDir())
 	for x := range f {

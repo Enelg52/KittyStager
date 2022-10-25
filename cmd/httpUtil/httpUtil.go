@@ -9,7 +9,7 @@ import (
 	color "github.com/logrusorgru/aurora"
 )
 
-// HostShellcode Hosts the Shellcode
+// HostShellcode Hosts the shellcode
 func HostShellcode(path string, kittenName string) error {
 	var err error
 	if http.Targets[kittenName].InitChecks.GetHostname() == "" {
@@ -21,13 +21,13 @@ func HostShellcode(path string, kittenName string) error {
 		return err
 	}
 	fmt.Println(color.Green("[+] Key generated is : " + key))
-	http.Targets[kittenName].Shellcode = shellcode
-	fmt.Println(color.Green("[+] Shellcode hosted for " + kittenName))
+	http.Targets[kittenName].SetShellcode(shellcode)
+	fmt.Println(color.Green("[+] shellcode hosted for " + kittenName))
 	return error(nil)
 }
 
 // HostSleep Hosts the sleep time the same way as the shellcode
 func HostSleep(t int, kittenName string) {
-	http.Targets[kittenName].Shellcode = []byte(fmt.Sprintf("%d", t))
+	http.Targets[kittenName].SetShellcode([]byte(fmt.Sprintf("%d", t)))
 	fmt.Printf("%s %d%s %s%s\n", color.Green("[+] Sleep time set to"), color.Yellow(t), color.Yellow("s"), color.Green("on "), color.Yellow(kittenName))
 }

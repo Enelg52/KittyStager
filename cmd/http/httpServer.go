@@ -11,7 +11,7 @@ import (
 
 type kitten struct {
 	name       string
-	Shellcode  []byte
+	shellcode  []byte
 	id         int
 	InitChecks util.InitialChecks
 }
@@ -26,7 +26,11 @@ func (K *kitten) GetTarget() string {
 }
 
 func (K *kitten) GetShellcode() []byte {
-	return K.Shellcode
+	return K.shellcode
+}
+
+func (K *kitten) SetShellcode(sc []byte) {
+	K.shellcode = sc
 }
 
 func (K *kitten) GetId() int {
@@ -37,10 +41,14 @@ func (K *kitten) GetInitChecks() util.InitialChecks {
 	return K.InitChecks
 }
 
+func (K *kitten) SetInitChecks(c util.InitialChecks) {
+	K.InitChecks = c
+}
+
 func CreateHttpServer(conf config.General) {
 	Targets = map[string]*kitten{"all targets": {
 		name:      "all targets",
-		Shellcode: []byte(fmt.Sprintf("%d", conf.GetSleep())),
+		shellcode: []byte(fmt.Sprintf("%d", conf.GetSleep())),
 		id:        len(Targets),
 	}}
 	address := fmt.Sprintf("%s:%d", conf.GetHost(), conf.GetPort())
@@ -81,13 +89,13 @@ func logRequest(w http.ResponseWriter, r *http.Request) {
 		//Get recon data
 
 		Targets[c.KittenName] = &kitten{
-			name:       c.KittenName,
+			name:       c.GetKittenName(),
 			id:         len(Targets),
-			Shellcode:  Targets["all targets"].GetShellcode(), //Set the shellcode to the default sleep time
+			shellcode:  Targets["all targets"].GetShellcode(), //Set the shellcode to the default sleep time
 			InitChecks: c,
 		}
 
-		_, err = w.Write(Targets[c.KittenName].GetShellcode())
+		_, err = w.Write(Targets[c.GetKittenName()].GetShellcode())
 		if err != nil {
 			return
 		}
