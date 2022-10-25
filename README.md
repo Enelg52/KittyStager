@@ -90,13 +90,13 @@ Http:
 ```
 ### Example
 KittyStager :
-![](/img/kitty16.png)
-![](/img/kitty17.png)
-![](/img/kitty10.png)
-![](/img/kitty11.png)
-![](/img/kitty12.png)
-![](/img/kitty18.png)
-![](/img/kitty13.png)
+![](/img/Kitty16.png)
+![](/img/Kitty17.png)
+![](/img/Kitty10.png)
+![](/img/Kitty11.png)
+![](/img/Kitty12.png)
+![](/img/Kitty18.png)
+![](/img/Kitty13.png)
 
 Kitten :
 ```
