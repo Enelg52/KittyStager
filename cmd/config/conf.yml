@@ -7,3 +7,4 @@ Http:
   malPath:
     - "kitten/basicKitten/"
     - "kitten/bananaKitten/"
+    - "kitten/dllKitten/"

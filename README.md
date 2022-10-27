@@ -123,6 +123,12 @@ This is the basic kitten, and it has the minimum to work. No fancy injection met
 This is the more advanced kitten. It will use bananaphone, a variant of hell's gate implemented in Go. [https://github.com/C-Sto/BananaPhone](https://github.com/C-Sto/BananaPhone)
 
 It also patches etw and has a sandbox escape mechanism, that check's if there is more than 1 Gb of ram. If not, it will exit.
+#### [BananaKitten](/kitten/dllKitten)
+Same as BananaKitten, but as a dll. 
+
+Compile it with: `go build -buildmode=c-shared -ldflags="-w -s -H=windowsgui" -o dllKitten.dll`
+
+Run it with: `rundll32.exe .\dllKitten.dll,Init`
 
 ### [cmd](/cmd)
 #### [kittyStager](/cmd/kittyStager)

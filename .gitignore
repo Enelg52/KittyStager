@@ -4,6 +4,7 @@
 *.dll
 *.so
 *.dylib
+*.h
 
 # Test binary, built with `go test -c`
 *.test
@@ -17,4 +18,4 @@ go.work
 # idea files
 /.idea/
 /test/
-/kitten/heavenKitten/
+/kitten/tigerKitten/

@@ -69,9 +69,18 @@ func Interact(kittenName string) error {
 
 func PrintTarget() {
 	fmt.Printf("\n%s\n", color.Green("[*] Targets:"))
-	fmt.Printf("%s\n", color.Green("Id:\tKitten name:\tIp:\t\tHostname:\tLast seen:"))
+	fmt.Printf("%s\n", color.Green("Id:\tKitten name:\tIp:\t\tHostname:\t\tLast seen:\tSleep:"))
+	fmt.Printf("%s\n", color.Green("═══\t════════════\t═══\t\t═════════\t\t══════════\t══════"))
+
 	for name, x := range http.Targets {
-		fmt.Printf("%d\t%s\t%s\t%s\t%s\n", x.GetId(), color.Yellow(name), color.Yellow(x.InitChecks.GetIp()), color.Yellow(x.InitChecks.GetHostname()), color.Yellow(x.GetLastSeen()))
+		fmt.Printf("%d\t%s\t%s\t%s\t\t%s\t%s\n",
+			x.GetId(),
+			color.Yellow(name),
+			color.Yellow(x.InitChecks.GetIp()),
+			color.Yellow(x.InitChecks.GetHostname()),
+			color.Yellow(x.GetLastSeen()),
+			color.Yellow(x.GetShellcode()),
+		)
 	}
 	fmt.Println()
 }
