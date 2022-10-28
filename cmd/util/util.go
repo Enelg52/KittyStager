@@ -2,13 +2,9 @@ package util
 
 import (
 	"KittyStager/cmd/config"
-	"KittyStager/cmd/cryptoUtil"
 	"encoding/json"
-	"errors"
 	"fmt"
 	color "github.com/logrusorgru/aurora"
-	http "net/http"
-
 	"io/ioutil"
 )
 
@@ -20,68 +16,9 @@ type InitialChecks struct {
 	Dir        []string `json:"folders,flow"`
 }
 
-func (I *InitialChecks) GetHostname() string {
-	return I.Hostname
-}
-
-func (I *InitialChecks) SetHostname(h string) {
-	I.Hostname = h
-}
-
-func (I *InitialChecks) GetUsername() string {
-	return I.Username
-}
-
-func (I *InitialChecks) SetUsername(u string) {
-	I.Username = u
-}
-
-func (I *InitialChecks) GetDir() []string {
-	return I.Dir
-}
-
-func (I *InitialChecks) SetDir(d []string) {
-	I.Dir = d
-}
-
-func (I *InitialChecks) GetIp() string {
-	return I.Ip
-}
-
-func (I *InitialChecks) SetIp(ip string) {
-	I.Ip = ip
-}
-
-func (I *InitialChecks) GetKittenName() string {
-	return I.KittenName
-}
-
-func (I *InitialChecks) SetKittenName(k string) {
-	I.KittenName = k
-}
-
-// ScToAES cypher the shellcode with AES
-func ScToAES(path string, key string) ([]byte, error) {
-	if len(key) != 32 {
-		return nil, errors.New("the key needs to be 32 chars long")
-	}
-	byteKey := []byte(key)
-	sc, err := ioutil.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-	t := http.DetectContentType(sc)
-	// check if the file is a hex shellcode
-	if t == "text/plain; charset=utf-8" {
-		aesPayload, _ := cryptoUtil.Encrypt(sc, byteKey)
-		return aesPayload, nil
-		// check if the file is a binary
-	} else if t == "application/octet-stream" {
-		hexstring := fmt.Sprintf("%x ", sc)
-		aesPayload, _ := cryptoUtil.Encrypt([]byte(hexstring), byteKey)
-		return aesPayload, nil
-	}
-	return []byte{}, nil
+type Task struct {
+	Tag     string `json:"Tag"`
+	Payload []byte `json:"Payload"`
 }
 
 // GenerateConfig generate the config file for all the kitten
@@ -186,4 +123,44 @@ OUTER:
 		out = append(out, file)
 	}
 	return out
+}
+
+func (I *InitialChecks) GetHostname() string {
+	return I.Hostname
+}
+
+func (I *InitialChecks) SetHostname(h string) {
+	I.Hostname = h
+}
+
+func (I *InitialChecks) GetUsername() string {
+	return I.Username
+}
+
+func (I *InitialChecks) SetUsername(u string) {
+	I.Username = u
+}
+
+func (I *InitialChecks) GetDir() []string {
+	return I.Dir
+}
+
+func (I *InitialChecks) SetDir(d []string) {
+	I.Dir = d
+}
+
+func (I *InitialChecks) GetIp() string {
+	return I.Ip
+}
+
+func (I *InitialChecks) SetIp(ip string) {
+	I.Ip = ip
+}
+
+func (I *InitialChecks) GetKittenName() string {
+	return I.KittenName
+}
+
+func (I *InitialChecks) SetKittenName(k string) {
+	I.KittenName = k
 }

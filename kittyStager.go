@@ -4,6 +4,7 @@ import (
 	"KittyStager/cmd/cli"
 	"KittyStager/cmd/config"
 	"KittyStager/cmd/http"
+	"KittyStager/cmd/httpUtil"
 	"KittyStager/cmd/util"
 	"flag"
 	"fmt"
@@ -11,7 +12,7 @@ import (
 )
 
 func main() {
-	path := flag.String("p", "cmd\\config\\conf.yml", "Path to the config file")
+	path := flag.String("p", "cmd/config/conf.yml", "Path to the config file")
 	flag.Parse()
 	fmt.Println(color.Cyan("                     _\n                    / )\n                   ( (\n     A.-.A  .-\"\"-.  ) )\n    / , , \\/      \\/ /\n   =\\  t  ;=    /   /\n     `--,'  .\"\"|   /\n         || |  \\\\ \\\n        ((,_|  ((,_\\\n"))
 	fmt.Println(color.Cyan("KittyStager - A simple stager written in Go\n"))
@@ -42,5 +43,6 @@ func main() {
 	// Start the http server
 
 	go http.CreateHttpServer(conf)
+	go httpUtil.CheckAlive()
 	cli.Cli(conf)
 }

