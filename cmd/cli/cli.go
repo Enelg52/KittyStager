@@ -2,7 +2,7 @@ package cli
 
 import (
 	"KittyStager/cmd/config"
-	"KittyStager/cmd/http"
+	"KittyStager/cmd/httpUtil"
 	"KittyStager/cmd/interact"
 	"KittyStager/cmd/util"
 	"fmt"
@@ -26,7 +26,7 @@ func completer(d prompt.Document) []prompt.Suggest {
 
 func Cli(conf config.General) {
 	for {
-		t := prompt.Input("KittyStager 🐈❯ ", completer,
+		t := prompt.Input("KittyStager ❯ ", completer,
 			prompt.OptionTitle("KittyStager 🐈 "),
 			prompt.OptionPrefixTextColor(prompt.Blue),
 			prompt.OptionPreviewSuggestionTextColor(prompt.Green),
@@ -44,7 +44,7 @@ func Cli(conf config.General) {
 			interact.PrintTarget()
 		case "interact":
 			interact.PrintTarget()
-			fmt.Printf("%s", color.Yellow("[*] Please enter the id of the target"))
+			fmt.Printf("%s", color.Yellow("[*] Please enter the id of the kitten"))
 			id, err := i.Read("id: ")
 			if err != nil {
 				util.ErrPrint(err)
@@ -60,12 +60,16 @@ func Cli(conf config.General) {
 				util.ErrPrint(err)
 				break
 			}
-			if _, ok := http.Targets[kittenName]; !ok {
+			if _, ok := httpUtil.Targets[kittenName]; !ok {
 				util.ErrPrint(fmt.Errorf("invalid id"))
 				break
 			}
+			if !httpUtil.Targets[kittenName].GetAlive() {
+				util.ErrPrint(fmt.Errorf("this kitten is dead"))
+				break
+			}
 			fmt.Println()
-			err = interact.Interact(http.Targets[kittenName].GetTarget())
+			err = interact.Interact(httpUtil.Targets[kittenName].GetTarget())
 			if err != nil {
 				util.ErrPrint(err)
 				break
@@ -75,7 +79,7 @@ func Cli(conf config.General) {
 }
 
 func findId(id int) (string, error) {
-	for _, x := range http.Targets {
+	for _, x := range httpUtil.Targets {
 		if x.GetId() == id {
 			return x.GetTarget(), nil
 		}
