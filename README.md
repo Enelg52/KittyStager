@@ -20,6 +20,7 @@ able to use it with any shellcode.
 - [x] User agent whitelist to prevent unwanted connections
 - [x] A basic recon to get some information about the target (hostname, ip, program files...)
 - [x] An AES encryption to encrypt the shellcode with a none hardcoded key
+- [x] Supports hex and bin shellcode
 
 
 ***I would not use this project in red team, at least not now.***
