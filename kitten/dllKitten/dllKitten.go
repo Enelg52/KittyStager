@@ -1,6 +1,6 @@
 //go:build windows
 
-// go build -buildmode=c-shared -ldflags="-w -s -H=windowsgui" -o dllKitten.dll
+// go build -buildmode=c-shared -ldflags="-w -s -H=windowsgui" -o dllCalc.dll
 package main
 
 import "C"

