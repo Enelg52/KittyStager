@@ -89,4 +89,5 @@ Pull requests are welcome. Feel free to open an issue if you want to add other f
 - https://github.com/c-bata/go-prompt
 - https://gist.github.com/leoloobeek/c726719d25d7e7953d4121bd93dd2ed3
 - https://github.com/BishopFox/sliver/
+- https://github.com/alinz/crypto.go/blob/main/chacha20.go
 - ... and many others

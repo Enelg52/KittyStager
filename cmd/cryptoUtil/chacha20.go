@@ -2,7 +2,6 @@ package cryptoUtil
 
 import (
 	"crypto/cipher"
-	"crypto/rand"
 	"errors"
 	"golang.org/x/crypto/chacha20poly1305"
 )
@@ -20,14 +19,6 @@ func (c ChaCha20) prepareKey(key []byte) (cipher.AEAD, int, error) {
 	return aead, aead.NonceSize(), nil
 }
 
-func secureRandom(value []byte) error {
-	_, err := rand.Read(value)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 // Encrypt encrypts data using given key
 func (c ChaCha20) Encrypt(data []byte, key []byte) ([]byte, error) {
 	aead, nonceSize, err := c.prepareKey(key)
@@ -37,9 +28,6 @@ func (c ChaCha20) Encrypt(data []byte, key []byte) ([]byte, error) {
 
 	// Select a random nonce, and leave capacity for the ciphertext.
 	nonce := make([]byte, nonceSize, nonceSize+len(data)+aead.Overhead())
-	if err = secureRandom(nonce); err != nil {
-		return nil, err
-	}
 
 	// Encrypt the message and append the ciphertext to the nonce.
 	return aead.Seal(nonce, nonce, data, nil), nil
@@ -69,9 +57,4 @@ func (c ChaCha20) Decrypt(data []byte, key []byte) ([]byte, error) {
 	}
 
 	return plaintext, nil
-}
-
-// NewChaCha20 creates chacha20 encryption
-func NewChaCha20() *ChaCha20 {
-	return &ChaCha20{}
 }

