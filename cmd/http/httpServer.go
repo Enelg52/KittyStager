@@ -53,7 +53,6 @@ func logRequest(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("\n%s %s\n", color.Green("[+] Request from:"), color.Yellow(c.GetIp()))
 		fmt.Printf("%s %s\n", color.Green("[+] Kitten name:"), color.Yellow(c.GetKittenName()))
 		fmt.Printf("%s %s\n", color.Green("[+] User-Agent:"), color.Yellow(r.UserAgent()))
-		//Get recon data
 
 		httpUtil.Targets[c.KittenName] = &httpUtil.Kitten{
 			Name:       c.GetKittenName(),
@@ -63,7 +62,6 @@ func logRequest(w http.ResponseWriter, r *http.Request) {
 			Alive:      true,
 			InitChecks: c,
 		}
-
 		_, err = w.Write(httpUtil.Targets[c.GetKittenName()].GetPayload())
 		if err != nil {
 			return
@@ -82,6 +80,7 @@ func logRequest(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				return
 			}
+			httpUtil.Targets[kittenName].SetPayload(nil)
 			return
 		}
 	}

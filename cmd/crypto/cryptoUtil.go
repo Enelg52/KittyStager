@@ -1,4 +1,4 @@
-package cryptoUtil
+package crypto
 
 import (
 	"errors"

