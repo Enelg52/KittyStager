@@ -9,7 +9,7 @@ func Encrypt(payload []byte, key string) ([]byte, error) {
 	if len(key) != 32 {
 		return nil, errors.New("the key needs to be 32 chars long")
 	}
-	chacha20 := ChaCha20{}
+	chacha20 := NewChaCha20()
 	byteKey := []byte(key)
 	cypherPayload, _ := chacha20.Encrypt(payload, byteKey)
 	return cypherPayload, nil
@@ -20,7 +20,7 @@ func Decrypt(cypherText []byte, key []byte) ([]byte, error) {
 	if len(key) != 32 {
 		return nil, errors.New("the key needs to be 32 chars long")
 	}
-	chacha20 := ChaCha20{}
+	chacha20 := NewChaCha20()
 	byteKey := key
 	plainText, _ := chacha20.Decrypt(cypherText, byteKey)
 	return plainText, nil

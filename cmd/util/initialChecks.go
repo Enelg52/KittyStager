@@ -1,5 +1,7 @@
 package util
 
+import "encoding/json"
+
 type InitialChecks struct {
 	Hostname   string   `json:"hostname"`
 	Username   string   `json:"username"`
@@ -11,6 +13,20 @@ type InitialChecks struct {
 	Pid   int    `json:"pid"`
 	PName string `json:"pname"`
 	Path  string `json:"path"`
+}
+
+func NewInitialChecks() *InitialChecks {
+	return &InitialChecks{}
+}
+
+// InitUnmarshalJSON unmarshal the json
+func InitUnmarshalJSON(j []byte) (*InitialChecks, error) {
+	iniCheck := NewInitialChecks()
+	err := json.Unmarshal(j, &iniCheck)
+	if err != nil {
+		return &InitialChecks{}, err
+	}
+	return iniCheck, nil
 }
 
 func (I *InitialChecks) GetHostname() string {

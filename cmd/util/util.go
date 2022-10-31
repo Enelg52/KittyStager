@@ -5,14 +5,14 @@ import (
 	"encoding/json"
 	"fmt"
 	color "github.com/logrusorgru/aurora"
-	"io/ioutil"
+	"os"
 )
 
 // GenerateConfig generate the config file for all the kitten
 func GenerateConfig(conf config.General) error {
 	data := fmt.Sprintf("http://%s:%d%s,%s,%d", conf.GetHost(), conf.GetPort(), conf.GetEndpoint(), conf.GetUserAgent(), conf.GetSleep())
 	for x := range conf.GetMalPath() {
-		err := ioutil.WriteFile(conf.GetMalPathWithId(x)+"conf.txt", []byte(data), 0644)
+		err := os.WriteFile(conf.GetMalPathWithId(x)+"conf.txt", []byte(data), 0644)
 		if err != nil {
 			return err
 		}
@@ -28,24 +28,14 @@ func ErrPrint(err error) {
 	}
 }
 
-// UnmarshalJSON unmarshal the json
-func UnmarshalJSON(j []byte) (InitialChecks, error) {
-	var iniCheck InitialChecks
-	err := json.Unmarshal(j, &iniCheck)
-	if err != nil {
-		return InitialChecks{}, err
-	}
-	return iniCheck, nil
-}
-
 func PrintCookie(cookie []byte) error {
-	j, err := UnmarshalJSON(cookie)
+	initChecks, err := InitUnmarshalJSON(cookie)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%s %s\n", color.Green("[+] hostname:"), color.Yellow(j.GetHostname()))
-	fmt.Printf("%s %s\n", color.Green("[+] Username:"), color.Yellow(j.GetUsername()))
-	fmt.Printf("%s %s\n", color.Green("[+] IP:"), color.Yellow(j.GetIp()))
+	fmt.Printf("%s %s\n", color.Green("[+] hostname:"), color.Yellow(initChecks.GetHostname()))
+	fmt.Printf("%s %s\n", color.Green("[+] Username:"), color.Yellow(initChecks.GetUsername()))
+	fmt.Printf("%s %s\n", color.Green("[+] IP:"), color.Yellow(initChecks.GetIp()))
 	fmt.Print(color.Green("[+] To get more, use the recon command\n"))
 	return nil
 }

@@ -1,4 +1,4 @@
-package httpUtil
+package http
 
 import (
 	"KittyStager/cmd/util"
@@ -15,8 +15,16 @@ type Kitten struct {
 	Alive      bool
 }
 
-func (K *Kitten) GetTarget() string {
+func NewKitten() *Kitten {
+	return &Kitten{}
+}
+
+func (K *Kitten) GetName() string {
 	return K.Name
+}
+
+func (K *Kitten) SetName(name string) {
+	K.Name = name
 }
 
 func (K *Kitten) GetPayload() []byte {
