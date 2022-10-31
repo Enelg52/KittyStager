@@ -31,15 +31,15 @@ func Interact(kittenName string) error {
 		case "target":
 			PrintTarget()
 		case "payload":
-			if kittenName == "all targets" {
-				fmt.Println(color.Red("You can't host shellcode on all targets"))
-				break
-			}
 			fmt.Printf("%s\n", color.Yellow("[*] Please enter the path to the payload"))
 			var path string
 			path, err := i.Read("Path: ")
 			if err != nil {
 				util.ErrPrint(err)
+				break
+			}
+			if path == "" {
+				fmt.Printf("%s\n", color.Red("[!] Please enter a path"))
 				break
 			}
 			if strings.HasSuffix(path, ".dll") {

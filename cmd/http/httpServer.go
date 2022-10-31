@@ -49,7 +49,6 @@ func logRequest(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		c, err = util.UnmarshalJSON(out)
-
 		//If the beacon is not in the map, add it
 		fmt.Printf("\n%s %s\n", color.Green("[+] Request from:"), color.Yellow(c.GetIp()))
 		fmt.Printf("%s %s\n", color.Green("[+] Kitten name:"), color.Yellow(c.GetKittenName()))
@@ -60,7 +59,6 @@ func logRequest(w http.ResponseWriter, r *http.Request) {
 			Name:       c.GetKittenName(),
 			Id:         len(httpUtil.Targets),
 			LastSeen:   time.Now(),
-			Payload:    []byte(fmt.Sprintf("%d", defSleep)),
 			Sleep:      defSleep,
 			Alive:      true,
 			InitChecks: c,
