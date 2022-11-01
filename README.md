@@ -17,7 +17,7 @@ able to use it with any shellcode.
 - [x] Different implants for various usage
 - [x] User agent whitelist to prevent unwanted connections
 - [x] A basic recon to get some information about the target (hostname, ip, program files...)
-- [x] An AES encryption to encrypt the shellcode with a none hardcoded key
+- [x] A Chacha20 encryption to encrypt all the traffic with a none hardcoded key
 - [x] Supports hex and bin shellcode
 - [x] Shellcode Reflective DLL Injection
 
