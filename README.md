@@ -20,6 +20,11 @@ able to use it with any shellcode.
 - [x] A Chacha20 encryption to encrypt all the traffic with a none hardcoded key
 - [x] Supports hex and bin shellcode
 - [x] Shellcode Reflective DLL Injection
+- [x] Halo's gate
+- [x] Hell's gate
+- [x] Recycle gate
+- [x] ETW patching
+- [x] Sandbox detection
 
 
 ***I would not use this project in red team, at least not now.***

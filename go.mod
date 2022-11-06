@@ -3,11 +3,12 @@ module KittyStager
 go 1.19
 
 require (
-	github.com/C-Sto/BananaPhone v0.0.0-20220220002628-6585e5913761
+	github.com/C-Sto/BananaPhone v0.0.0-20220322014042-1265045cb6c5
 	github.com/JoaoDanielRufino/go-input-autocomplete v1.0.4
 	github.com/c-bata/go-prompt v0.2.6
 	github.com/fourcorelabs/wintoken v1.0.0
 	github.com/logrusorgru/aurora v2.0.3+incompatible
+	github.com/timwhitez/Doge-Gabh v1.9.2
 	golang.org/x/crypto v0.1.0
 	golang.org/x/sys v0.1.0
 	gopkg.in/yaml.v3 v3.0.1

@@ -1,8 +1,8 @@
 github.com/Binject/debug v0.0.0-20200830173345-f54480b6530f/go.mod h1:QzgxDLY/qdKlvnbnb65eqTedhvQPbaSP2NqIbcuKvsQ=
 github.com/Binject/debug v0.0.0-20211007083345-9605c99179ee h1:neBp9wDYVY4Uu1gGlrL+IL4JeZslz+hGEAjBXGAPWak=
 github.com/Binject/debug v0.0.0-20211007083345-9605c99179ee/go.mod h1:QzgxDLY/qdKlvnbnb65eqTedhvQPbaSP2NqIbcuKvsQ=
-github.com/C-Sto/BananaPhone v0.0.0-20220220002628-6585e5913761 h1:0144WWUvo86bVDEkxb3vmM92DCEsrkSYSd5gV1YlGKE=
-github.com/C-Sto/BananaPhone v0.0.0-20220220002628-6585e5913761/go.mod h1:QsEPWHZooj8uXL2YEdpQX+hDr00Plw7myenTiduBHRA=
+github.com/C-Sto/BananaPhone v0.0.0-20220322014042-1265045cb6c5 h1:gdE9IHf9tD2iVOeFBOFFt/W2EuGW0B83nkwqojW4k2w=
+github.com/C-Sto/BananaPhone v0.0.0-20220322014042-1265045cb6c5/go.mod h1:QsEPWHZooj8uXL2YEdpQX+hDr00Plw7myenTiduBHRA=
 github.com/JoaoDanielRufino/go-input-autocomplete v1.0.4 h1:ZsgP08f77C1Hizi5pfB9xNBG+d605s0z+PWuI5KLEEk=
 github.com/JoaoDanielRufino/go-input-autocomplete v1.0.4/go.mod h1:tB42IGOd4W3hzlAcw8JWf0mMnu94q4tPsjhT24MbcB4=
 github.com/awgh/rawreader v0.0.0-20200626064944-56820a9c6da4 h1:cIAK2NNf2yafdgpFRNJrgZMwvy61BEVpGoHc2n4/yWs=
@@ -34,6 +34,8 @@ github.com/pkg/term v1.2.0-beta.2 h1:L3y/h2jkuBVFdWiJvNfYfKmzcCnILw7mJWm2JQuMppw
 github.com/pkg/term v1.2.0-beta.2/go.mod h1:E25nymQcrSllhX42Ok8MRm1+hyBdHY0dCeiKZ9jpNGw=
 github.com/rivo/uniseg v0.2.0 h1:S1pD9weZBuJdFmowNwbpi7BJ8TNftyUImj/0WQi72jY=
 github.com/rivo/uniseg v0.2.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
+github.com/timwhitez/Doge-Gabh v1.9.2 h1:DcBzoTlcIbwtSg8Q6ubEU57qBo0fSGEamGx7hxAVwow=
+github.com/timwhitez/Doge-Gabh v1.9.2/go.mod h1:17QoN89jMf75zSSsk65bjx4+tmkR2NfWAyV3YT9Fhfc=
 golang.org/x/crypto v0.1.0 h1:MDRAIl0xIo9Io2xV565hzXHw3zVseKrJKodhohM5CjU=
 golang.org/x/crypto v0.1.0/go.mod h1:RecgLatLF4+eUMCP1PoPZQb+cVrJcOPbHkTkbkB9sbw=
 golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
