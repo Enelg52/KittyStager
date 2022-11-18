@@ -10,9 +10,22 @@ import (
 
 // GenerateConfig generate the config file for all the kitten
 func GenerateConfig(conf config.General) error {
-	data := fmt.Sprintf("http://%s:%d%s,%s,%d", conf.GetHost(), conf.GetPort(), conf.GetEndpoint(), conf.GetUserAgent(), conf.GetSleep())
+	malConf := NewMalConf()
+	malConf.SetHost(fmt.Sprintf("http://%s:%d", conf.GetHost(), conf.GetPort()))
+	malConf.SetEndPoint(conf.GetEndpoint())
+	malConf.SetUserA(conf.GetUserAgent())
+	malConf.SetSleep(conf.GetSleep())
+	malConf.SetReg1(conf.GetReg1())
+	malConf.SetReg2(conf.GetReg2())
+	malConf.SetAuth1(conf.GetAuth1())
+	malConf.SetAuth2(conf.GetAuth2())
+	data, err := MalConfMarshalJSON(malConf)
+	if err != nil {
+		return err
+	}
+	//data := fmt.Sprintf("http://%s:%d,%s,%s,%d,%s,%s,%s,%s", conf.GetHost(), conf.GetPort(), conf.GetEndpoint(), conf.GetUserAgent(), conf.GetSleep(), conf.GetReg1(), conf.GetReg2(), conf.GetAuth1(), conf.GetAuth2())
 	for x := range conf.GetMalPath() {
-		err := os.WriteFile(conf.GetMalPathWithId(x)+"conf.txt", []byte(data), 0644)
+		err := os.WriteFile(conf.GetMalPathWithId(x)+"conf.txt", data, 0644)
 		if err != nil {
 			return err
 		}
@@ -28,21 +41,24 @@ func ErrPrint(err error) {
 	}
 }
 
-func PrintCookie(cookie []byte) error {
-	initChecks, err := InitUnmarshalJSON(cookie)
+// PrintInit print the recon info when the kitten calls back
+func PrintInit(recon []byte) error {
+	initChecks, err := InitUnmarshalJSON(recon)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%s %s\n", color.Green("[+] hostname:"), color.Yellow(initChecks.GetHostname()))
+	fmt.Printf("%s %s\n", color.Green("[+] Hostname:"), color.Yellow(initChecks.GetHostname()))
+	fmt.Printf("%s %s\n", color.Green("[+] Domain:"), color.Yellow(initChecks.GetDomain()))
 	fmt.Printf("%s %s\n", color.Green("[+] Username:"), color.Yellow(initChecks.GetUsername()))
 	fmt.Printf("%s %s\n", color.Green("[+] IP:"), color.Yellow(initChecks.GetIp()))
 	fmt.Print(color.Green("[+] To get more, use the recon command\n"))
 	return nil
 }
 
+// PrintRecon print the recon info when the command recon is called
 func PrintRecon(i InitialChecks) {
 	fmt.Printf("\n%s %s\n", color.Green("[+] Kitten name:"), color.Yellow(i.GetKittenName()))
-	fmt.Printf("%s %s\n", color.Green("[+] hostname:"), color.Yellow(i.GetHostname()))
+	fmt.Printf("%s %s\n", color.Green("[+] Hostname:"), color.Yellow(i.GetHostname()))
 	fmt.Printf("%s %s\n", color.Green("[+] Username:"), color.Yellow(i.GetUsername()))
 	fmt.Printf("%s %s\n", color.Green("[+] IP:"), color.Yellow(i.GetIp()))
 	fmt.Printf("%s %s\n", color.Green("[+] Domain:"), color.Yellow(i.GetDomain()))

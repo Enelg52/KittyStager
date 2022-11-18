@@ -2,6 +2,7 @@ package util
 
 import "encoding/json"
 
+// InitialChecks is the struct that contains the initial recon
 type InitialChecks struct {
 	Hostname   string   `json:"hostname"`
 	Username   string   `json:"username"`

@@ -10,6 +10,7 @@ import (
 	"strings"
 )
 
+// completerCli is the completer for the main menu
 func completerCli(d prompt.Document) []prompt.Suggest {
 	s := []prompt.Suggest{
 		{Text: "exit", Description: "Exit the program"},
@@ -20,6 +21,7 @@ func completerCli(d prompt.Document) []prompt.Suggest {
 	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 }
 
+// completerInteract is the completer for the interact menu
 func completerInteract(d prompt.Document) []prompt.Suggest {
 	s := []prompt.Suggest{
 		{Text: "exit", Description: "Exit the program"},
@@ -33,6 +35,7 @@ func completerInteract(d prompt.Document) []prompt.Suggest {
 	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 }
 
+// Cli is the main menu
 func Cli(conf config.General) {
 	for {
 		t := prompt.Input("KittyStager ❯ ", completerCli,
@@ -60,6 +63,7 @@ func Cli(conf config.General) {
 	}
 }
 
+// Interact is the interact menu
 func Interact(kittenName string) error {
 	in := fmt.Sprintf("KittyStager - %s❯ ", kittenName)
 	for {

