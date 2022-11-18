@@ -2,7 +2,7 @@ Http:
   host: "127.0.0.1"
   port: 8080
   endpoint: "/legit"
-  sleep: 5
+  sleep: 1
   userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/102.0"
   malPath:
     - "kitten/basicKitten/"
@@ -10,3 +10,7 @@ Http:
     - "kitten/dllKitten/"
     - "kitten/haloKitten/"
     - "kitten/recycleKitten/"
+  reg1: "/reg1"
+  reg2: "/reg2"
+  auth1: "/auth1"
+  auth2: "/auth2"

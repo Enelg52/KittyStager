@@ -7,6 +7,7 @@ import (
 	"math"
 )
 
+// DLLToShellcode converts a DLL to shellcode
 func DllToShellcode(dllBytes []byte, functionName string) ([]byte, error) {
 
 	// functionHash is 0x10 by default, otherwise get the hash and convert to bytes
@@ -193,6 +194,7 @@ func ror(val uint32, rBits uint32, maxBits uint32) uint32 {
 	return ((val & exp) >> (rBits % maxBits)) | (val << (maxBits - (rBits % maxBits)) & exp)
 }
 
+// is64BitDLL checks if the DLL is 64 bit
 func is64BitDLL(dllBytes []byte) bool {
 	machineIA64 := uint16(512)
 	machineAMD64 := uint16(34404)

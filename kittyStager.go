@@ -8,6 +8,7 @@ import (
 	"flag"
 	"fmt"
 	color "github.com/logrusorgru/aurora"
+	"time"
 )
 
 func main() {
@@ -42,5 +43,7 @@ func main() {
 	// Start the http server
 	go http.CreateHttpServer(*conf)
 	go http.CheckAlive()
+	//wait for the http server to start
+	time.Sleep(200 * time.Millisecond)
 	cli.Cli(*conf)
 }

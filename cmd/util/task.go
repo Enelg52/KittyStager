@@ -2,6 +2,7 @@ package util
 
 import "encoding/json"
 
+// Task is the struct that contains the tasks
 type Task struct {
 	Tag     string `json:"Tag"`
 	Payload []byte `json:"Payload"`

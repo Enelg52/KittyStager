@@ -1,1 +1,1 @@
-http://127.0.0.1:8080/legit,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/102.0,5
+{"Host":"http://127.0.0.1:8080","Endpoint":"/legit","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/102.0","Sleep":1,"Reg1":"/reg1","Reg2":"/reg2","Auth1":"/auth1","Auth2":"/auth2","Cookie":""}

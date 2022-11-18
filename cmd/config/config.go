@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 )
 
+// General is the struct that contains the config
 type General struct {
 	Conf Http `yaml:"Http"`
 }
@@ -19,6 +20,10 @@ type Http struct {
 	Sleep     int      `yaml:"sleep"`
 	UserAgent string   `yaml:"userAgent"`
 	MalPath   []string `yaml:"malPath,flow"`
+	Reg1      string   `yaml:"reg1"`
+	Reg2      string   `yaml:"reg2"`
+	Auth1     string   `yaml:"auth1"`
+	Auth2     string   `yaml:"auth2"`
 }
 
 func NewConfig(path string) (*General, error) {
@@ -64,6 +69,22 @@ func (c *General) GetUserAgent() string {
 
 func (c *General) GetSleep() int {
 	return c.Conf.Sleep
+}
+
+func (c *General) GetReg1() string {
+	return c.Conf.Reg1
+}
+
+func (c *General) GetReg2() string {
+	return c.Conf.Reg2
+}
+
+func (c *General) GetAuth1() string {
+	return c.Conf.Auth1
+}
+
+func (c *General) GetAuth2() string {
+	return c.Conf.Auth2
 }
 
 func (c *General) CheckConfig() error {

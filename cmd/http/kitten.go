@@ -2,9 +2,11 @@ package http
 
 import (
 	"KittyStager/cmd/util"
+	"github.com/frekui/opaque"
 	"time"
 )
 
+// Kitten is a struct that contains all the information about a kitten
 type Kitten struct {
 	Name       string
 	Payload    []byte
@@ -13,6 +15,8 @@ type Kitten struct {
 	LastSeen   time.Time
 	InitChecks util.InitialChecks
 	Alive      bool
+	Key        string
+	Opaque     *opaque.User
 }
 
 func NewKitten() *Kitten {
@@ -73,4 +77,20 @@ func (K *Kitten) GetAlive() bool {
 
 func (K *Kitten) SetAlive(b bool) {
 	K.Alive = b
+}
+
+func (K *Kitten) GetKey() string {
+	return K.Key
+}
+
+func (K *Kitten) SetKey(key string) {
+	K.Key = key
+}
+
+func (K *Kitten) GetOpaque() *opaque.User {
+	return K.Opaque
+}
+
+func (K *Kitten) SetOpaque(u *opaque.User) {
+	K.Opaque = u
 }

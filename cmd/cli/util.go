@@ -11,6 +11,7 @@ import (
 	"strings"
 )
 
+// payload chose the payload to use
 func payload(kittenName string) {
 	fmt.Printf("%s\n", color.Yellow("[*] Please enter the path to the payload"))
 	var path string
@@ -41,6 +42,7 @@ func payload(kittenName string) {
 	}
 }
 
+// sleep change the sleep time of a target
 func sleep(in []string, kittenName string) {
 	if len(in) != 2 {
 		util.ErrPrint(fmt.Errorf("invalid input"))
@@ -57,6 +59,7 @@ func sleep(in []string, kittenName string) {
 	}
 }
 
+// interact switch to interactive mode
 func interact() {
 	printTarget()
 	if len(http.Targets) == 0 {
@@ -105,6 +108,7 @@ func interact() {
 	}
 }
 
+// printTarget print the targets
 func printTarget() {
 	fmt.Printf("\n%s\n", color.Green("[*] Targets:"))
 	fmt.Printf("%s\n", color.Green("Id:\tKitten name:\tIp:\t\tHostname:\t\tLast seen:\tSleep:\tAlive:"))
@@ -124,7 +128,7 @@ func printTarget() {
 				color.Yellow(e))
 
 		} else {
-			e = "No"
+			e = "No 💀"
 			fmt.Printf("%d\t%s\t\t%s\t%s\t\t%s\t%d\t%s\n",
 				x.GetId(),
 				color.Red(name),
@@ -139,6 +143,7 @@ func printTarget() {
 	fmt.Println()
 }
 
+// findId find the id of a target
 func findId(id int) (string, error) {
 	for _, x := range http.Targets {
 		if x.GetId() == id {
@@ -148,6 +153,7 @@ func findId(id int) (string, error) {
 	return "", fmt.Errorf("invalid id")
 }
 
+// printConfig print the config
 func printConfig(conf config.General) {
 	fmt.Printf("\n%s\t\t%s\n", color.Green("Host:"), color.Yellow(conf.GetHost()))
 	fmt.Printf("%s\t\t%d\n", color.Green("Port:"), color.Yellow(conf.GetPort()))
