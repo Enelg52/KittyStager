@@ -21,7 +21,7 @@ var (
 
 var PrivS *rsa.PrivateKey
 
-// CreateServer creates the HTTP server
+// CreateHttpServer creates the HTTP server
 func CreateHttpServer(conf config.General) {
 	PrivS, _ = rsa.GenerateKey(rand.Reader, 512)
 	Targets = make(map[string]*Kitten)
@@ -29,10 +29,15 @@ func CreateHttpServer(conf config.General) {
 	address := fmt.Sprintf("%s:%d", conf.GetHost(), conf.GetPort())
 	userA = conf.GetUserAgent()
 	fmt.Printf("%s %s\n\n", color.Green("[+] Started http server on"), color.Yellow(address))
+	//endpoint for all communication
 	http.HandleFunc(conf.GetEndpoint(), logRequest)
+	//endpoint 1 registration Opaque
 	http.HandleFunc(conf.GetReg1(), regHandler1)
+	//endpoint 2 registration Opaque
 	http.HandleFunc(conf.GetReg2(), regHandler2)
+	//endpoint 1 authentication Opaque
 	http.HandleFunc(conf.GetAuth1(), authHandler1)
+	//endpoint 2 authentication Opaque
 	http.HandleFunc(conf.GetAuth2(), authHandler2)
 	err := http.ListenAndServe(address, nil)
 	if err != nil {

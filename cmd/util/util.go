@@ -5,25 +5,28 @@ import (
 	"encoding/json"
 	"fmt"
 	color "github.com/logrusorgru/aurora"
+	"log"
 	"os"
 )
 
-// GenerateConfig generate the config file for all the kitten
+// GenerateConfig generate the config file for all the kittens
 func GenerateConfig(conf config.General) error {
-	malConf := NewMalConf()
-	malConf.SetHost(fmt.Sprintf("http://%s:%d", conf.GetHost(), conf.GetPort()))
-	malConf.SetEndPoint(conf.GetEndpoint())
-	malConf.SetUserA(conf.GetUserAgent())
-	malConf.SetSleep(conf.GetSleep())
-	malConf.SetReg1(conf.GetReg1())
-	malConf.SetReg2(conf.GetReg2())
-	malConf.SetAuth1(conf.GetAuth1())
-	malConf.SetAuth2(conf.GetAuth2())
+	malConf := NewMalConf(fmt.Sprintf("http://%s:%d",
+		conf.GetHost(),
+		conf.GetPort()),
+		conf.GetEndpoint(),
+		conf.GetUserAgent(),
+		conf.GetReg1(),
+		conf.GetReg2(),
+		conf.GetAuth1(),
+		conf.GetAuth2(),
+		"",
+		conf.GetSleep())
+
 	data, err := MalConfMarshalJSON(malConf)
 	if err != nil {
 		return err
 	}
-	//data := fmt.Sprintf("http://%s:%d,%s,%s,%d,%s,%s,%s,%s", conf.GetHost(), conf.GetPort(), conf.GetEndpoint(), conf.GetUserAgent(), conf.GetSleep(), conf.GetReg1(), conf.GetReg2(), conf.GetAuth1(), conf.GetAuth2())
 	for x := range conf.GetMalPath() {
 		err := os.WriteFile(conf.GetMalPathWithId(x)+"conf.txt", data, 0644)
 		if err != nil {
@@ -37,11 +40,11 @@ func GenerateConfig(conf config.General) error {
 // ErrPrint print the error
 func ErrPrint(err error) {
 	if err != nil {
-		fmt.Printf("\n%s %s\n", color.Red("[-]"), color.Red(err.Error()))
+		log.Printf("\n%s %s\n", color.Red("[-]"), color.Red(err.Error()))
 	}
 }
 
-// PrintInit print the recon info when the kitten calls back
+// PrintInit print the recon info when the kittens calls back
 func PrintInit(recon []byte) error {
 	initChecks, err := InitUnmarshalJSON(recon)
 	if err != nil {

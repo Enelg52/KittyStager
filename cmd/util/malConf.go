@@ -15,12 +15,16 @@ type MalConf struct {
 	Cookie   string `json:"Cookie"`
 }
 
-func NewMalConf() *MalConf {
+func NewMalConf(host, endpoint, userA, reg1, reg2, auth1, auth2, cookie string, sleep int) *MalConf {
+	return &MalConf{host, endpoint, userA, sleep, reg1, reg2, auth1, auth2, cookie}
+}
+
+func NewMalConfEmpty() *MalConf {
 	return &MalConf{}
 }
 
 func MalConfUnmarshalJSON(j []byte) (*MalConf, error) {
-	iniCheck := NewMalConf()
+	iniCheck := NewMalConfEmpty()
 	err := json.Unmarshal(j, &iniCheck)
 	if err != nil {
 		return &MalConf{}, err

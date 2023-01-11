@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// Kitten is a struct that contains all the information about a kitten
+// Kitten is a struct that contains all the information about a kittens
 type Kitten struct {
 	Name       string
 	Payload    []byte

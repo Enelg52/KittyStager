@@ -5,11 +5,11 @@ Http:
   sleep: 1
   userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/102.0"
   malPath:
-    - "kitten/basicKitten/"
-    - "kitten/bananaKitten/"
-    - "kitten/dllKitten/"
-    - "kitten/haloKitten/"
-    - "kitten/recycleKitten/"
+    - "kittens/basicKitten/"
+    - "kittens/bananaKitten/"
+    - "kittens/dllKitten/"
+    - "kittens/haloKitten/"
+    - "kittens/recycleKitten/"
   reg1: "/reg1"
   reg2: "/reg2"
   auth1: "/auth1"

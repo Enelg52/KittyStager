@@ -1,0 +1,11 @@
+Kittens:
+  - name: "BasicKitten"
+    path: "./kittens/basicKitten/"
+  - name: "BananaKitten"
+    path: "./kittens/bananaKitten"
+  - name: "DllKitten"
+    path: "./kittens/dllKitten"
+  - name: "HaloKitten"
+    path: "./kittens/haloKitten"
+  - name: "RecycleKitten"
+    path: "./kittens/recycleKitten"

@@ -17,6 +17,7 @@ func completerCli(d prompt.Document) []prompt.Suggest {
 		{Text: "config", Description: "Show config"},
 		{Text: "target", Description: "Show targets"},
 		{Text: "interact", Description: "Interact with a target"},
+		{Text: "build", Description: "Build a kittens with garble, description, signature"},
 	}
 	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 }
@@ -47,7 +48,8 @@ func Cli(conf config.General) {
 			prompt.OptionDescriptionBGColor(prompt.Blue),
 			prompt.OptionSuggestionBGColor(prompt.DarkGray),
 		)
-		switch t {
+		input := strings.Split(t, " ")
+		switch input[0] {
 		case "exit":
 			fmt.Println("Bye bye!")
 			return
@@ -57,6 +59,10 @@ func Cli(conf config.General) {
 			printTarget()
 		case "interact":
 			interact()
+		case "build":
+			//Only works on windows
+			err := genMalwareQuick()
+			util.ErrPrint(err)
 		default:
 			fmt.Println("Unknown command")
 		}

