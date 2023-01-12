@@ -8,13 +8,13 @@ type Task struct {
 	Payload []byte `json:"Payload"`
 }
 
-func NewTask(tag string, paylod []byte) *Task {
-	return &Task{Tag: tag, Payload: paylod}
+func NewTask() *Task {
+	return &Task{}
 }
 
 // TaskUnmarshalJSON unmarshal the json
 func TaskUnmarshalJSON(j []byte) (*Task, error) {
-	iniCheck := NewTask("", nil)
+	iniCheck := NewTask()
 	err := json.Unmarshal(j, &iniCheck)
 	if err != nil {
 		return &Task{}, err
