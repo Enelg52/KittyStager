@@ -58,10 +58,10 @@ go build -o KittyStager
 cd /kittens/basicKitten
 go build -o basicKitten.exe
 ```
-#### BasicKitten
+#### BananaKitten
 ```
 cd /kittens/bananaKitten
-go build -o basicKitten.exe
+go build -o bananaKitten.exe
 ```
 #### DllKitten
 ```
