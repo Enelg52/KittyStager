@@ -55,13 +55,13 @@ go build -o KittyStager
 ### Build the implants
 #### BasicKitten
 ```
-cd /kitten/basicKitten
+cd /kittens/basicKitten
 go build -o basicKitten.exe
 ```
-#### BasicKitten
+#### BananaKitten
 ```
-cd /kitten/bananaKitten
-go build -o basicKitten.exe
+cd /kittens/bananaKitten
+go build -o bananaKitten.exe
 ```
 #### DllKitten
 ```
