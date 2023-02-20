@@ -53,6 +53,10 @@ func (config *Config) GetSleep() int {
 	return config.Sleep
 }
 
+func (config *Config) SetSleep(i int) {
+	config.Sleep = i
+}
+
 func (config *Config) GetUserAgent() string {
 	return config.UserAgent
 }

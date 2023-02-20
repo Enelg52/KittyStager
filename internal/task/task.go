@@ -63,3 +63,7 @@ func (task *Task) GetTag() string {
 func (task *Task) GetPayload() []byte {
 	return task.Payload
 }
+
+func (task *Task) SetPayload(p []byte) {
+	task.Payload = p
+}

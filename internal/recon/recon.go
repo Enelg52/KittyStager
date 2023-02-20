@@ -69,3 +69,11 @@ func (recon *Recon) UnmarshallTask(j []byte) error {
 	}
 	return nil
 }
+
+func (recon *Recon) GetIp() string {
+	return recon.Ip
+}
+
+func (recon *Recon) GetHostname() string {
+	return recon.Hostname
+}

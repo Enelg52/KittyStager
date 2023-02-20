@@ -7,7 +7,9 @@ import (
 	"fmt"
 	i "github.com/JoaoDanielRufino/go-input-autocomplete"
 	"github.com/c-bata/go-prompt"
+	color "github.com/logrusorgru/aurora"
 	"os"
+	"reflect"
 	"strings"
 )
 
@@ -67,39 +69,47 @@ func Cli() error {
 			if err != nil {
 				return err
 			}
-			for k, v := range kittens {
-				if k != "" {
-					fmt.Printf("Name : %s\tAlive : %v\n", k, v.Alive)
-				}
+			err = printKittens(kittens)
+			if err != nil {
+				fmt.Printf("%s\n", color.Green(err))
+				break
 			}
 		case "interact":
 			kittens, err := getKittens()
 			if err != nil {
 				return err
 			}
-			for k, v := range kittens {
-				if k != "" {
-					fmt.Printf("Name : %s\tAlive : %v\n", k, v.Alive)
-				}
-			}
-
-			name, err := i.Read("Kitten name : ")
-			if err != nil {
-				return err
-			}
-			_, ok := kittens[name]
-			// If the key exists
-			if ok && len(name) != 0 {
-				err = interact(name)
+			//check if there is only one kitten
+			if len(kittens) == 2 {
+				key := reflect.ValueOf(kittens).MapKeys()
+				//get key
+				err := interact(key[1].String())
 				if err != nil {
 					return err
 				}
 			} else {
-				return errors.New("invalid name")
+				err = printKittens(kittens)
+				if err != nil {
+					fmt.Printf("%s\n", color.Green(err))
+					break
+				}
+				name, err := i.Read("Kitten name : ")
+				if err != nil {
+					return err
+				}
+				_, ok := kittens[name]
+				// If the key exists
+				if ok && len(name) != 0 {
+					err = interact(name)
+					if err != nil {
+						return err
+					}
+				} else {
+					return errors.New("invalid name")
+				}
 			}
-
 		case "logs":
-			err := getLogs()
+			err := printLogs()
 			if err != nil {
 				return err
 			}
@@ -184,15 +194,11 @@ func interact(kittenName string) error {
 				return err
 			}
 		case "info":
-			kittens, err := getKittens()
+			kitten, err := getKitten(kittenName)
 			if err != nil {
 				return err
 			}
-			j, err := json.MarshalIndent(kittens, "", "  ")
-			if err != nil {
-				return err
-			}
-			fmt.Println(string(j))
+			printKitten(*kitten)
 		default:
 			fmt.Println("Unknown command")
 		}

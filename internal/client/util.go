@@ -45,7 +45,16 @@ func getKittens() (map[string]*kitten.Kitten, error) {
 	return kittens, nil
 }
 
-func getLogs() error {
+func getKitten(name string) (*kitten.Kitten, error) {
+	kittens, err := getKittens()
+	if err != nil {
+		return nil, err
+	}
+	k := kittens[name]
+	return k, nil
+}
+
+func printLogs() error {
 	go exitLogs()
 	exit = false
 	for {
@@ -62,7 +71,7 @@ func getLogs() error {
 			screen.MoveTopLeft()
 			return nil
 		}
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(1 * time.Second)
 	}
 }
 

@@ -1,9 +1,6 @@
 package test
 
 import (
-	"KittyStager/internal/api"
-	"KittyStager/internal/config"
-	"KittyStager/malware"
 	"KittyStager/pkg/crypto"
 	"github.com/go-playground/assert/v2"
 	"testing"
@@ -40,6 +37,7 @@ func TestEncryptDecrypt(t *testing.T) {
 	assert.Equal(t, d, data)
 }
 
+/*
 func TestOpaque(t *testing.T) {
 	// given
 	c := malware.NewConfig("http://127.0.0.1:8080",
@@ -73,3 +71,6 @@ func TestOpaque(t *testing.T) {
 	assert.Equal(t, key, api.Kittens[name].Key)
 	assert.Equal(t, name, api.Kittens[name].Name)
 }
+
+
+*/

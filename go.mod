@@ -9,8 +9,10 @@ require (
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-playground/assert/v2 v2.0.1
 	github.com/inancgumus/screen v0.0.0-20190314163918-06e984b86ed3
+	github.com/logrusorgru/aurora v2.0.3+incompatible
 	golang.org/x/crypto v0.5.0
 	golang.org/x/sync v0.1.0
+	golang.org/x/sys v0.4.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 
@@ -34,7 +36,6 @@ require (
 	github.com/rivo/uniseg v0.4.2 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	golang.org/x/net v0.5.0 // indirect
-	golang.org/x/sys v0.4.0 // indirect
 	golang.org/x/term v0.4.0 // indirect
 	golang.org/x/text v0.6.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect

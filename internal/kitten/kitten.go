@@ -43,3 +43,23 @@ func (kitten *Kitten) SetRecon(recon *recon.Recon) {
 func (kitten *Kitten) GetRecon() *recon.Recon {
 	return kitten.Recon
 }
+
+func (kitten *Kitten) GetAlive() bool {
+	return kitten.Alive
+}
+
+func (kitten *Kitten) SetAlive(state bool) {
+	kitten.Alive = state
+}
+
+func (kitten *Kitten) GetLastSeen() time.Time {
+	return kitten.LastSeen
+}
+
+func (kitten *Kitten) SetLastSeen(t time.Time) {
+	kitten.LastSeen = t
+}
+
+func (kitten *Kitten) GetSleep() int {
+	return kitten.Sleep
+}
