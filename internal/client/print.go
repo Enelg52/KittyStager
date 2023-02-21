@@ -8,7 +8,7 @@ import (
 )
 
 func printKittens(kittens map[string]*kitten.Kitten) error {
-	if len(kittens) == 0 {
+	if len(kittens) < 2 {
 		return errors.New("No kittens to show")
 	}
 	fmt.Printf("%s\n\n", color.Green("[*] Kittens:"))
@@ -45,7 +45,7 @@ func printKittens(kittens map[string]*kitten.Kitten) error {
 	return nil
 }
 
-func printKitten(kitten kitten.Kitten) {
+func printKittenInfo(kitten kitten.Kitten) {
 	r := kitten.Recon
 	fmt.Printf("%s\n\n", color.Green("[*] Kitten:"))
 	fmt.Println("{")
@@ -77,27 +77,3 @@ func printKitten(kitten kitten.Kitten) {
 	fmt.Println("\t\t}")
 	fmt.Println("}")
 }
-
-/*
-{
-  "Name": "tdob",
-  "Sleep": 5,
-  "LastSeen": "2023-02-10T09:32:17.1776084+01:00",
-  "Alive": true,
-  "Key": "0tDREKihb8fGaNwdZvrfltLQ0RCooW/H",
-  "Tasks": [
-    {
-      "Tag": "sleep",
-      "Payload": "NQ=="
-    }
-  ],
-  "Recon": {
-    "hostname": "EnelgComputer",
-    "username": "",
-    "domain": "",
-    "ip": "192.168.183.36",
-    "pid": 0,
-    "pname": "",
-    "path": ""
-  }
-}*/

@@ -185,20 +185,23 @@ func interact(kittenName string) error {
 				return err
 			}
 		case "recon":
-			t := task.Task{
-				Tag:     "recon",
-				Payload: nil,
-			}
-			err := createTask(&t, kittenName)
-			if err != nil {
-				return err
-			}
+			/*
+				t := task.Task{
+					Tag:     "recon",
+					Payload: nil,
+				}
+				err := createTask(&t, kittenName)
+				if err != nil {
+					return err
+				}
+			
+			*/
 		case "info":
 			kitten, err := getKitten(kittenName)
 			if err != nil {
 				return err
 			}
-			printKitten(*kitten)
+			printKittenInfo(*kitten)
 		default:
 			fmt.Println("Unknown command")
 		}

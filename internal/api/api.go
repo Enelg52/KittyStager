@@ -133,11 +133,12 @@ func frontPostRecon(c *gin.Context) {
 	}
 	Kittens[name].SetRecon(r)
 }
+
 func frontPostReg(c *gin.Context) {
 	var t []*task.Task
 	sleep := strconv.Itoa(conf.GetSleep())
 	t = append(t, task.NewTask("sleep", []byte(sleep)))
-	t = append(t, task.NewTask("miniRecon", nil))
+	t = append(t, task.NewTask("recon", nil))
 	data, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		return
