@@ -1,7 +1,7 @@
 package test
 
 import (
-	"KittyStager/internal/recon"
+	"KittyStager/internal/task/recon"
 	"github.com/go-playground/assert/v2"
 	"testing"
 )

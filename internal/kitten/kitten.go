@@ -1,8 +1,8 @@
 package kitten
 
 import (
-	"KittyStager/internal/recon"
 	"KittyStager/internal/task"
+	"KittyStager/internal/task/recon"
 	"time"
 )
 

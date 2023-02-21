@@ -1,9 +1,7 @@
-[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
-
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
  - using env:	export GIN_MODE=release
  - using code:	gin.SetMode(gin.ReleaseMode)
 
-[GIN-debug] GET    /getLegit                 --> KittyStager/internal/api.frontGetTaskByName (3 handlers)
-[GIN-debug] POST   /postLegit                --> KittyStager/internal/api.frontPostRecon (3 handlers)
+[GIN-debug] GET    /getLegit/:name           --> KittyStager/internal/api.frontGetTask (3 handlers)
+[GIN-debug] POST   /postLegit/:name          --> KittyStager/internal/api.frontPostTask (3 handlers)
 [GIN-debug] POST   /reg                      --> KittyStager/internal/api.frontPostReg (3 handlers)

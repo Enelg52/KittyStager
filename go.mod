@@ -11,6 +11,7 @@ require (
 	github.com/go-playground/assert/v2 v2.0.1
 	github.com/inancgumus/screen v0.0.0-20190314163918-06e984b86ed3
 	github.com/logrusorgru/aurora v2.0.3+incompatible
+	github.com/mitchellh/go-ps v1.0.0
 	golang.org/x/crypto v0.5.0
 	golang.org/x/sync v0.1.0
 	golang.org/x/sys v0.4.0

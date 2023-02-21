@@ -1,7 +1,8 @@
 ## TODO
 
-Post task to /task/name
-Struct for result
+- [x] Post task to /task/name
+- [x] Struct for result
+- [ ] Check command result
 
 Commands :
 PS

