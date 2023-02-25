@@ -5,9 +5,8 @@ import (
 )
 
 func CheckAlive(name string) {
-	k := Kittens[name]
-
 	for {
+		k := Kittens[name]
 		time.Sleep(1 * time.Second)
 		if k.GetAlive() {
 			t := time.Since(k.GetLastSeen())

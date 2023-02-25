@@ -2,25 +2,6 @@
  - using env:	export GIN_MODE=release
  - using code:	gin.SetMode(gin.ReleaseMode)
 
-[GIN-debug] GET    /getLegit/:name           --> KittyStager/internal/api.frontGetTask (3 handlers)
-[GIN-debug] POST   /postLegit/:name          --> KittyStager/internal/api.frontPostTask (3 handlers)
-[GIN-debug] POST   /reg                      --> KittyStager/internal/api.frontPostReg (3 handlers)
-127.0.0.1 -      [21 Feb 23 11:07 CET] "POST      /reg 200"
-127.0.0.1 -      [21 Feb 23 11:07 CET] "POST      /reg 200"
-127.0.0.1 -      [21 Feb 23 11:07 CET] "POST      /reg 200"
-127.0.0.1 -      [21 Feb 23 11:07 CET] "POST      /reg 200"
-127.0.0.1 -      [21 Feb 23 11:07 CET] "GET /getLegit/idfd 200"
-127.0.0.1 -      [21 Feb 23 11:07 CET] "POST /postLegit/idfd 200"
-127.0.0.1 -      [21 Feb 23 11:07 CET] "GET /getLegit/idfd 200"
-127.0.0.1 -      [21 Feb 23 11:07 CET] "GET /getLegit/idfd 200"
-127.0.0.1 -      [21 Feb 23 11:07 CET] "GET /getLegit/idfd 200"
-127.0.0.1 -      [21 Feb 23 11:07 CET] "GET /getLegit/idfd 200"
-127.0.0.1 -      [21 Feb 23 11:07 CET] "GET /getLegit/idfd 200"
-127.0.0.1 -      [21 Feb 23 11:07 CET] "GET /getLegit/idfd 200"
-127.0.0.1 -      [21 Feb 23 11:08 CET] "GET /getLegit/idfd 200"
-127.0.0.1 -      [21 Feb 23 11:08 CET] "GET /getLegit/idfd 200"
-127.0.0.1 -      [21 Feb 23 11:08 CET] "GET /getLegit/idfd 200"
-127.0.0.1 -      [21 Feb 23 11:08 CET] "GET /getLegit/idfd 200"
-127.0.0.1 -      [21 Feb 23 11:08 CET] "GET /getLegit/idfd 200"
-127.0.0.1 -      [21 Feb 23 11:08 CET] "GET /getLegit/idfd 200"
-127.0.0.1 -      [21 Feb 23 11:08 CET] "GET /getLegit/idfd 200"
+[GIN-debug] GET    /getLegit/:name           --> KittyStager/server/api.frontGetTask (3 handlers)
+[GIN-debug] POST   /postLegit/:name          --> KittyStager/server/api.frontPostResult (3 handlers)
+[GIN-debug] POST   /reg                      --> KittyStager/server/api.frontPostReg (3 handlers)

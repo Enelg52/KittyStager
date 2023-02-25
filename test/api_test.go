@@ -1,9 +1,9 @@
 package test
 
 import (
-	"KittyStager/internal/api"
 	"KittyStager/internal/config"
 	"KittyStager/internal/kitten"
+	"KittyStager/server/api"
 	"encoding/json"
 	"fmt"
 	"github.com/go-playground/assert/v2"

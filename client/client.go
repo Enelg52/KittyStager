@@ -1,7 +1,7 @@
 package main
 
 import (
-	"KittyStager/internal/client"
+	"KittyStager/client/cli"
 	"github.com/inancgumus/screen"
 	"log"
 )
@@ -9,7 +9,7 @@ import (
 func main() {
 	screen.Clear()
 	screen.MoveTopLeft()
-	err := client.Cli()
+	err := cli.Cli()
 	if err != nil {
 		log.Fatal(err)
 	}

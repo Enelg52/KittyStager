@@ -6,6 +6,7 @@ require (
 	github.com/JoaoDanielRufino/go-input-autocomplete v1.0.4
 	github.com/c-bata/go-prompt v0.2.6
 	github.com/frekui/opaque v0.2.0
+	github.com/gin-gonic/autotls v0.0.5
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-ole/go-ole v1.2.6
 	github.com/go-playground/assert/v2 v2.0.1

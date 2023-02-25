@@ -1,7 +1,7 @@
 package recon
 
 import (
-	"KittyStager/pkg/crypto"
+	"KittyStager/internal/crypto"
 	"encoding/json"
 )
 

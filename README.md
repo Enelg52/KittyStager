@@ -1,75 +1,69 @@
-## TODO
+<h1 align="center">
+    KittyStager
+</h1>
 
-- [x] Post task to /task/name
-- [x] Struct for result
-- [ ] Check command result
+<p align="center">
+  <a href="" rel="noopener">
+ <img width=150px height=150px src="./img/chat.png"> </a>
+</p>
 
-Commands :
-PS
-```go
-package main
 
-import (
-	"fmt"
-	ps "github.com/mitchellh/go-ps"
-)
+KittyStager is a stage 0 C2. It is made of an API, a client and a malware. The purpose of the API is to deliver some 
+basic tasks and shellcode for the malware to inject in memory. The client also connects to the API and is used to interact 
+with the malware by creating the tasks for the API. The purpose of KittyStager is to drop a simple stage 0 on the target
+and to get enough information to adapt the payload to the target. Because the stage 0 is ment to be as stealth as possible,
+I will not add some shell exec capabilities. 
 
-func main() {
-	processList, err := ps.Processes()
-	if err != nil {
-		return
-	}
-	// map ages
-	for x := range processList {
-		var process ps.Process
-		process = processList[x]
-		fmt.Printf("%5d\t%5d\t%s\n", process.PPid(), process.Pid(), process.Executable())
-	}
-}
+**This project is made for educational purpose only. I am not responsible for any damage caused by this project.**
 
-```
-WMI-AV
-```go
-package main
 
-import (
-	"github.com/go-ole/go-ole"
-	"github.com/go-ole/go-ole/oleutil"
-)
+## Features
+- A simple cli to interact with the implant
+- API :
+    - [x] A web server to host your kittens
+    - [ ] User agent whitelist to prevent unwanted connections
+- Reconnaissance :
+    - [x] Hostname, domain, pid, ip...
+    - [x] AV or EDR solution
+    - [x] Process list
+- Encryption :
+    - [x] Key exchange with Opaque
+    - [x] Chacha20 encryption
+- Malware capabilities :
+    - [x] Standard injection
+    - [ ] ETW patching
+- Sandbox :
+    - [ ] Check ram
+    - [ ] Check a none existing website
+- Payload :
+    - [x] Raw shellcode
+    - [x] Hex shellcode
+    - [ ] Dll
+    - [ ] Pe
 
-func main() {
-	// init COM, oh yeah
-	err := ole.CoInitialize(0)
-	if err != nil {
-		return
-	}
-	defer ole.CoUninitialize()
+Some of the settings can be changed in the [config](config.yaml) file
 
-	unknown, _ := oleutil.CreateObject("WbemScripting.SWbemLocator")
-	defer unknown.Release()
+## Architecture
+The projet is divided in 3 parts : 
+- The [client](client)
+- The [server](server)
+- The [kitten](kitten)
 
-	wmi, _ := unknown.QueryInterface(ole.IID_IDispatch)
-	defer wmi.Release()
+The crypto part, kitten, config, tasks struct are in [internal](internal).  
 
-	// service is a SWbemServices
-	serviceRaw, _ := oleutil.CallMethod(wmi, "ConnectServer", nil, "root/SecurityCenter2")
-	service := serviceRaw.ToIDispatch()
-	defer service.Release()
+## Contributing
 
-	// result is a SWBemObjectSet
-	resultRaw, _ := oleutil.CallMethod(service, "ExecQuery", "SELECT * FROM AntiVirusProduct")
-	result := resultRaw.ToIDispatch()
-	defer result.Release()
+Pull requests are welcome. Feel free to open an issue if you want to add other features.
 
-	countVar, _ := oleutil.GetProperty(result, "Count")
-	count := int(countVar.Val)
+## Contact
+Enelg#9993 on discord
 
-	for i := 0; i < count; i++ {
-		itemRaw, _ := oleutil.CallMethod(result, "ItemIndex", i)
-		item := itemRaw.ToIDispatch()
-		asString, _ := oleutil.GetProperty(item, "displayName")
-		println(asString.ToString())
-	}
-}
-```
-https://fourcore.io/blogs/manipulating-windows-tokens-with-golang
+## Credits
+- https://github.com/C-Sto/BananaPhone
+- https://github.com/timwhitez/Doge-Gabh
+- https://github.com/c-bata/go-prompt
+- https://gist.github.com/leoloobeek/c726719d25d7e7953d4121bd93dd2ed3
+- https://github.com/BishopFox/sliver/
+- https://github.com/alinz/crypto.go/blob/main/chacha20.go
+- https://github.com/frekui/opaque
+- ... and many others

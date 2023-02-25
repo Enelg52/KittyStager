@@ -1,7 +1,7 @@
 package task
 
 import (
-	"KittyStager/pkg/crypto"
+	"KittyStager/internal/crypto"
 	"encoding/json"
 )
 
