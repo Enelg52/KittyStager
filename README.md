@@ -39,9 +39,9 @@ I will not add some shell exec capabilities.
     - [x] Raw shellcode
     - [x] Hex shellcode
     - [ ] Dll
-    - [ ] Pe
+    - [ ] PE
 
-Some of the settings can be changed in the [config](config.yaml) file
+Some settings can be changed in the [config](config.yaml) file
 
 ## Architecture
 The projet is divided in 3 parts : 

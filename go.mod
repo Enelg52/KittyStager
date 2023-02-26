@@ -3,16 +3,17 @@ module KittyStager
 go 1.19
 
 require (
+	github.com/C-Sto/BananaPhone v0.0.0-20220220002628-6585e5913761
 	github.com/JoaoDanielRufino/go-input-autocomplete v1.0.4
 	github.com/c-bata/go-prompt v0.2.6
 	github.com/frekui/opaque v0.2.0
-	github.com/gin-gonic/autotls v0.0.5
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-ole/go-ole v1.2.6
 	github.com/go-playground/assert/v2 v2.0.1
 	github.com/inancgumus/screen v0.0.0-20190314163918-06e984b86ed3
 	github.com/logrusorgru/aurora v2.0.3+incompatible
 	github.com/mitchellh/go-ps v1.0.0
+	github.com/timwhitez/Doge-Gabh v1.9.2
 	golang.org/x/crypto v0.5.0
 	golang.org/x/sync v0.1.0
 	golang.org/x/sys v0.4.0
@@ -20,6 +21,8 @@ require (
 )
 
 require (
+	github.com/Binject/debug v0.0.0-20211007083345-9605c99179ee // indirect
+	github.com/awgh/rawreader v0.0.0-20200626064944-56820a9c6da4 // indirect
 	github.com/eiannone/keyboard v0.0.0-20200508000154-caf4b762e807 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect

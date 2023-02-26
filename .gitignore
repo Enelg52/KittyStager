@@ -17,3 +17,6 @@ go.work
 
 # idea files
 /.idea/
+
+# Private
+/priv/

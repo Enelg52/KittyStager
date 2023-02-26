@@ -5,3 +5,12 @@
 [GIN-debug] GET    /getLegit/:name           --> KittyStager/server/api.frontGetTask (3 handlers)
 [GIN-debug] POST   /postLegit/:name          --> KittyStager/server/api.frontPostResult (3 handlers)
 [GIN-debug] POST   /reg                      --> KittyStager/server/api.frontPostReg (3 handlers)
+127.0.0.1 -      [26 Feb 23 16:18 CET] "GET /getLegit/ 404"
+127.0.0.1 -      [26 Feb 23 16:18 CET] "POST      /reg 200"
+127.0.0.1 -      [26 Feb 23 16:18 CET] "POST      /reg 200"
+127.0.0.1 -      [26 Feb 23 16:18 CET] "POST      /reg 200"
+127.0.0.1 -      [26 Feb 23 16:18 CET] "POST      /reg 200"
+127.0.0.1 -      [26 Feb 23 16:18 CET] "GET /getLegit/cyem 200"
+127.0.0.1 -      [26 Feb 23 16:18 CET] "POST /postLegit/cyem 200"
+127.0.0.1 -      [26 Feb 23 16:18 CET] "GET /getLegit/cyem 200"
+127.0.0.1 -      [26 Feb 23 16:18 CET] "GET /getLegit/cyem 200"
