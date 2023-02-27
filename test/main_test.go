@@ -5,6 +5,8 @@ import (
 	"testing"
 )
 
+// I should write more tests...
+
 func TestMain(m *testing.M) {
 	taskBeforeAll()
 	cryptoBeforeAll()

@@ -22,19 +22,22 @@ I will not add some shell exec capabilities.
 - API :
     - [x] A web server to host your kittens
     - [ ] User agent whitelist to prevent unwanted connections
+    - [x] HTTPS
 - Reconnaissance :
     - [x] Hostname, domain, pid, ip...
-    - [x] AV or EDR solution
+    - [x] AV or EDR solution with wmi
     - [x] Process list
 - Encryption :
     - [x] Key exchange with Opaque
     - [x] Chacha20 encryption
 - Malware capabilities :
-    - [x] Standard injection
-    - [ ] ETW patching
+    - [x] Create thread injection
+    - [x] Bananaphone (Hell's gate variant)
+    - [x] Hell's gate
+    - [x] ETW patching
 - Sandbox :
-    - [ ] Check ram
-    - [ ] Check a none existing website
+    - [x] Check ram
+    - [x] Check a none existing website
 - Payload :
     - [x] Raw shellcode
     - [x] Hex shellcode
@@ -42,6 +45,12 @@ I will not add some shell exec capabilities.
     - [ ] PE
 
 Some settings can be changed in the [config](config.yaml) file
+
+### HTTPS
+```
+openssl req  -new  -newkey rsa:2048  -nodes  -keyout localhost.key  -out localhost.csr
+openssl  x509  -req  -days 365  -in localhost.csr  -signkey localhost.key  -out localhost.crt
+```
 
 ## Architecture
 The projet is divided in 3 parts : 

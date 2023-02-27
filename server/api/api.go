@@ -2,7 +2,7 @@ package api
 
 import (
 	"KittyStager/internal/config"
-	crypto2 "KittyStager/internal/crypto"
+	"KittyStager/internal/crypto"
 	"KittyStager/internal/kitten"
 	"KittyStager/internal/task"
 	"KittyStager/internal/task/recon"
@@ -20,12 +20,12 @@ var (
 	conf    *config.Config
 	tasks   []*task.Task
 	g       errgroup.Group
-	chacha  *crypto2.ChaCha20
+	chacha  *crypto.ChaCha20
 )
 
 func init() {
 	Kittens = make(map[string]*kitten.Kitten)
-	chacha = crypto2.NewChaCha20()
+	chacha = crypto.NewChaCha20()
 }
 
 func Api(config *config.Config) error {
@@ -68,14 +68,16 @@ func Api(config *config.Config) error {
 	back.POST("task/:name", backCreateTask)
 	//frontend
 	g.Go(func() error {
-		fmt.Printf("[*] Listening on %s\n", addr)
-		return front.Run(addr)
-		//return autotls.Run(front, "google.com")
-		//return front.RunTLS(addr)
+		fmt.Printf("[*] Listening on %s://%s\n", conf.GetProtocol(), addr)
+		if conf.GetProtocol() == "https" {
+			return front.RunTLS(addr, conf.GetCert(), conf.GetKey())
+		} else {
+			return front.Run(addr)
+		}
 	})
 	//backend
 	g.Go(func() error {
-		fmt.Printf("[*] Listening on %s\n", localAddr)
+		fmt.Printf("[*] Listening on http://%s\n", localAddr)
 		return back.Run(localAddr)
 	})
 
@@ -156,7 +158,7 @@ func frontPostReg(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	dataToReturn, name, key := crypto2.HandleAuth(data)
+	dataToReturn, name, key := crypto.HandleAuth(data)
 	_, err = c.Writer.Write(dataToReturn)
 	if err != nil {
 		return

@@ -10,7 +10,7 @@ import (
 
 func main() {
 	conf, _ := config.NewConfig("config.yaml")
-	host := fmt.Sprintf("%s:%s", conf.GetHost(), conf.GetPort())
+	host := fmt.Sprintf("%s://%s:%d", conf.GetProtocol(), conf.GetHost(), conf.GetPort())
 	malConf := malware.NewConfig(host,
 		conf.GetEndpoint,
 		conf.GetPostEndpoint(),

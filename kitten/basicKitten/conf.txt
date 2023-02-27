@@ -1,1 +1,1 @@
-{"Host":"http://127.0.0.1:8080","GetEndpoint":"getLegit","PostEndpoint":"postLegit","RegEndpoint":"reg","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/102.0","Sleep":5,"Name":""}
+{"Host":"https://127.0.0.1:8080","GetEndpoint":"getLegit","PostEndpoint":"postLegit","RegEndpoint":"reg","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/102.0","Sleep":2,"Name":""}

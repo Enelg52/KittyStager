@@ -14,6 +14,9 @@ type Config struct {
 	OpaqueEndpoint string `yaml:"opaqueEndpoint"`
 	Sleep          int    `yaml:"sleep"`
 	UserAgent      string `yaml:"userAgent"`
+	Protocol       string `json:"Protocol"`
+	Key            string `json:"Key"`
+	Cert           string `json:"Cert"`
 }
 
 func NewConfig(path string) (*Config, error) {
@@ -59,4 +62,15 @@ func (config *Config) SetSleep(i int) {
 
 func (config *Config) GetUserAgent() string {
 	return config.UserAgent
+}
+
+func (config *Config) GetProtocol() string {
+	return config.Protocol
+}
+
+func (config *Config) GetKey() string {
+	return config.Key
+}
+func (config *Config) GetCert() string {
+	return config.Cert
 }
