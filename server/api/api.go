@@ -36,13 +36,14 @@ func Api(config *config.Config) error {
 	if err != nil {
 		return err
 	}
+	gin.SetMode(gin.ReleaseMode)
 	gin.DefaultWriter = io.MultiWriter(f)
 	front := gin.New()
 	front.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
 		// your custom format
 		return fmt.Sprintf("%s - %4s [%s] \"%s %9s %d\"\n",
 			param.ClientIP,
-			param.Request.Header.Get("Cookie"),
+			param.Request.URL,
 			param.TimeStamp.Format(time.RFC822),
 			param.Method,
 			param.Path,
@@ -50,9 +51,8 @@ func Api(config *config.Config) error {
 		)
 	}))
 	front.Use(gin.Recovery())
-	//gin.SetMode(gin.ReleaseMode)
-	//front := gin.Default()
 	front.GET(fmt.Sprintf("%s/:name", conf.GetGetEndpoint()), frontGetTask)
+	front.Static(fmt.Sprintf("/%s", conf.GetWebUpload()), fmt.Sprintf("./%s", conf.GetLocalUpload()))
 	front.POST(fmt.Sprintf("%s/:name", conf.GetPostEndpoint()), frontPostResult)
 	front.POST(conf.GetOpaqueEndpoint(), frontPostReg)
 	addr := fmt.Sprintf("%s:%d", conf.GetHost(), conf.GetPort())

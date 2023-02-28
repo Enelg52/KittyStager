@@ -3,7 +3,6 @@ package cli
 import (
 	"KittyStager/internal/task"
 	"encoding/json"
-	"errors"
 	"fmt"
 	i "github.com/JoaoDanielRufino/go-input-autocomplete"
 	"github.com/c-bata/go-prompt"
@@ -34,6 +33,7 @@ func completerInteract(d prompt.Document) []prompt.Suggest {
 		{Text: "ps", Description: "Get process list"},
 		{Text: "av", Description: "Get AV/EDR with wmi"},
 		{Text: "info", Description: "Show the kitten info"},
+		{Text: "kill", Description: "Exit the kitten"},
 		{Text: "exit", Description: "Exit the program"},
 	}
 	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
@@ -58,27 +58,31 @@ func Cli() error {
 		case "config":
 			config, err := getConfig()
 			if err != nil {
-				return err
+				fmt.Println("[!] Error",err)
+				break
 			}
 			j, err := json.MarshalIndent(config, "", "  ")
 			if err != nil {
-				return err
+				fmt.Println("[!] Error",err)
+				break
 			}
 			fmt.Println(string(j))
 		case "kittens":
 			kittens, err := getKittens()
 			if err != nil {
-				return err
+				fmt.Println("[!] Error",err)
+				break
 			}
 			err = printKittens(kittens)
 			if err != nil {
-				fmt.Printf("%s\n", color.Green(err))
+				fmt.Printf("%s\n", color.BrightGreen(err))
 				break
 			}
 		case "interact":
 			kittens, err := getKittens()
 			if err != nil {
-				return err
+				fmt.Println("[!] Error",err)
+				break
 			}
 			//check if there is only one kitten directly interact
 			if len(kittens) == 2 {
@@ -88,19 +92,21 @@ func Cli() error {
 					if kittens[key[j].String()].Alive {
 						err := interact(key[j].String())
 						if err != nil {
-							return err
+							fmt.Println("[!] Error",err)
+							break
 						}
 					}
 				}
 			} else {
 				err = printKittens(kittens)
 				if err != nil {
-					fmt.Printf("%s\n", color.Green(err))
+					fmt.Printf("%s\n", color.BrightGreen(err))
 					break
 				}
 				name, err := i.Read("Kitten name : ")
 				if err != nil {
-					return err
+					fmt.Println("[!] Error",err)
+					break
 				}
 				_, ok := kittens[name]
 				// If the key exists
@@ -110,13 +116,15 @@ func Cli() error {
 						return err
 					}
 				} else {
-					return errors.New("invalid name")
+					fmt.Println("[!] Invalid input")
+					break
 				}
 			}
 		case "logs":
 			err := printLogs()
 			if err != nil {
-				return err
+				fmt.Println("[!] Error",err)
+				break
 			}
 		case "build":
 			fmt.Println("TODO")
@@ -128,6 +136,7 @@ func Cli() error {
 
 // interact menu
 func interact(kittenName string) error {
+	go checkAlive(kittenName)
 	in := fmt.Sprintf("KittyStager - %s❯ ", kittenName)
 	for {
 		t := prompt.Input(in, completerInteract,
@@ -147,18 +156,20 @@ func interact(kittenName string) error {
 		case "task":
 			t, err := getTask(kittenName)
 			if err != nil {
-				return err
+				fmt.Println("[!] Error",err)
+				break
 			}
 			printTasks(t)
 		case "shellcode":
 			fmt.Printf("%s\n", "Please enter the path to the shellcode")
-			var path string
+			//var path string
 			path, err := i.Read("Path: ")
 			if err != nil {
 				return err
 			}
 			if path == "" {
-				return errors.New("please enter a path")
+				fmt.Println("[!] Please enter a path")
+				break
 			}
 			shellcode, err := newShellcode(path)
 			if err != nil {
@@ -174,8 +185,8 @@ func interact(kittenName string) error {
 			}
 		case "sleep":
 			if len(input) != 2 {
-				fmt.Println(len(in))
-				return errors.New("invalid input")
+				fmt.Println("[!] Please enter a path")
+				break
 			}
 			t := task.Task{
 				Tag:     "sleep",
@@ -183,7 +194,8 @@ func interact(kittenName string) error {
 			}
 			err := createTask(&t, kittenName)
 			if err != nil {
-				return err
+				fmt.Println("[!] Error",err)
+				break
 			}
 		case "ps":
 			t := task.Task{
@@ -192,7 +204,8 @@ func interact(kittenName string) error {
 			}
 			err := createTask(&t, kittenName)
 			if err != nil {
-				return err
+				fmt.Println("[!] Error",err)
+				break
 			}
 			go checkForResponse(kittenName)
 		case "av":
@@ -202,15 +215,27 @@ func interact(kittenName string) error {
 			}
 			err := createTask(&t, kittenName)
 			if err != nil {
-				return err
+				fmt.Println("[!] Error",err)
+				break
 			}
 			go checkForResponse(kittenName)
 		case "info":
 			kitten, err := getKitten(kittenName)
 			if err != nil {
-				return err
+				fmt.Println("[!] Error",err)
+				break
 			}
 			printKittenInfo(*kitten)
+		case "kill":
+			t := task.Task{
+				Tag:     "kill",
+				Payload: nil,
+			}
+			err := createTask(&t, kittenName)
+			if err != nil {
+				fmt.Println("[!] Error",err)
+				break
+			}
 		default:
 			fmt.Println("Unknown command")
 		}

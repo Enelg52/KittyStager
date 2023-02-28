@@ -18,6 +18,7 @@ func main() {
 		conf.GetUserAgent(),
 		"",
 		conf.GetSleep(),
+		conf.GetJitter(),
 	)
 	c, err := malConf.MarshallConfig()
 	if err != nil {

@@ -8,21 +8,17 @@
 </p>
 
 
-KittyStager is a stage 0 C2. It is made of an API, a client and a malware. The purpose of the API is to deliver some 
-basic tasks and shellcode for the malware to inject in memory. The client also connects to the API and is used to interact 
-with the malware by creating the tasks for the API. The purpose of KittyStager is to drop a simple stage 0 on the target
-and to get enough information to adapt the payload to the target. Because the stage 0 is ment to be as stealth as possible,
-I will not add some shell exec capabilities. 
+KittyStager is a stage 0 C2 comprising an API, client, and malware. The API is responsible for delivering basic tasks and shellcode to be injected into memory by the malware. The client also connects to the API and allows for interaction with the malware by creating tasks. The goal of KittyStager is to deploy a simple stage 0 payload onto the target system and gather enough information to adapt the payload to the specific target. As the stage 0 payload is intended to be as stealthy as possible, it does not include any command execution capabilities.
 
-**This project is made for educational purpose only. I am not responsible for any damage caused by this project.**
+> **This project is made for educational purpose only. I am not responsible for any damage caused by this project.**
 
 
 ## Features
 - A simple cli to interact with the implant
 - API :
     - [x] A web server to host your kittens
-    - [ ] User agent whitelist to prevent unwanted connections
     - [x] HTTPS
+    - [x] Yours files in /upload are available on /upload
 - Reconnaissance :
     - [x] Hostname, domain, pid, ip...
     - [x] AV or EDR solution with wmi
@@ -33,8 +29,9 @@ I will not add some shell exec capabilities.
 - Malware capabilities :
     - [x] Create thread injection
     - [x] Bananaphone (Hell's gate variant)
-    - [x] Hell's gate
+    - [x] Halo's gate
     - [x] ETW patching
+    - [x] Sleep with jitter
 - Sandbox :
     - [x] Check ram
     - [x] Check a none existing website
@@ -44,12 +41,46 @@ I will not add some shell exec capabilities.
     - [ ] Dll
     - [ ] PE
 
-Some settings can be changed in the [config](config.yaml) file
+> Some settings can be changed in the [config](config.yaml) file
 
-### HTTPS
+## Quick start
+### 1. Clone repository
+```
+git clone https://github.com/Enelg52/KittyStager.git
+cd KittyStager 
+```
+### 2. Config file
+Edit the config [file](config.yaml) :
+- Check the IP/port
+- HTTPS/HTTP
+- Sleep time
+
+#### HTTPS
+How to generate certificate for https with openssl
 ```
 openssl req  -new  -newkey rsa:2048  -nodes  -keyout localhost.key  -out localhost.csr
 openssl  x509  -req  -days 365  -in localhost.csr  -signkey localhost.key  -out localhost.crt
+```
+
+### 3. Server
+Build the server :
+```
+cd server
+go build
+```
+Start the server
+```
+./server.exe
+```
+### 4. Client
+Build the client
+```
+cd client
+go build
+```
+Start the server
+```
+./client.exe
 ```
 
 ## Architecture

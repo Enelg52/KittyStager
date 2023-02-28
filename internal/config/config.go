@@ -13,10 +13,13 @@ type Config struct {
 	PostEndpoint   string `yaml:"postEndpoint"`
 	OpaqueEndpoint string `yaml:"opaqueEndpoint"`
 	Sleep          int    `yaml:"sleep"`
+	Jitter          int    `yaml:"jitter"`
 	UserAgent      string `yaml:"userAgent"`
-	Protocol       string `json:"Protocol"`
-	Key            string `json:"Key"`
-	Cert           string `json:"Cert"`
+	Protocol       string `yaml:"protocol"`
+	Key            string `yaml:"key"`
+	Cert           string `yaml:"cert"`
+	LocalUpload    string `yaml:"localUpload"`
+	WebUpload      string `yaml:"webUpload"`
 }
 
 func NewConfig(path string) (*Config, error) {
@@ -56,6 +59,10 @@ func (config *Config) GetSleep() int {
 	return config.Sleep
 }
 
+func (config *Config) GetJitter() int {
+	return config.Jitter
+}
+
 func (config *Config) SetSleep(i int) {
 	config.Sleep = i
 }
@@ -73,4 +80,12 @@ func (config *Config) GetKey() string {
 }
 func (config *Config) GetCert() string {
 	return config.Cert
+}
+
+func (config *Config) GetLocalUpload() string {
+	return config.LocalUpload
+}
+
+func (config *Config) GetWebUpload() string {
+	return config.WebUpload
 }

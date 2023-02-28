@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/inancgumus/screen"
+	color "github.com/logrusorgru/aurora"
 	"io"
 	"net/http"
 	"os"
@@ -176,4 +177,18 @@ func checkForResponse(name string) error {
 		printAV(t)
 	}
 	return nil
+}
+
+func checkAlive(name string) error {
+	for {
+		i, err := getKitten(name)
+		if err != nil {
+			return err
+		}
+		if !i.GetAlive() {
+			fmt.Printf("\n%s%s%s\n", color.BrightRed("[!] Kitten "),color.BrightRed(name),color.BrightRed(" died..."))
+			return nil
+		}
+		time.Sleep(1 * time.Second)
+	}
 }

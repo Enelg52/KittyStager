@@ -10,6 +10,7 @@ postEndpoint: postLegit
 opaqueEndpoint: reg
 # Sleep time
 sleep: 2
+jitter: 0
 # User-agent
 userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/102.0
 # Protocol http or https
@@ -17,3 +18,6 @@ protocol: https
 # Path to certificate if HTTPS
 key: cert/localhost.key
 cert: cert/localhost.crt
+# Upload path
+localUpload: upload
+webUpload: upload

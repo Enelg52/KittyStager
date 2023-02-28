@@ -119,9 +119,9 @@ func printKittens(kittens map[string]*kitten.Kitten) error {
 	if len(kittens) < 2 {
 		return errors.New("No kittens to show")
 	}
-	fmt.Printf("%s\n\n", color.Green("[*] Kittens:"))
-	fmt.Printf("%s\n", color.Green("Name:\tIp:\t\tHostname:\t\tLast seen:\tSleep:\tAlive:"))
-	fmt.Printf("%s\n", color.Green("═════\t═══\t\t═════════\t\t══════════\t══════\t══════"))
+	fmt.Printf("%s\n\n", color.BrightGreen("[*] Kittens:"))
+	fmt.Printf("%s\n", color.BrightGreen("Name:\tIp:\t\tHostname:\t\tLast seen:\tSleep:\tAlive:"))
+	fmt.Printf("%s\n", color.BrightGreen("═════\t═══\t\t═════════\t\t══════════\t══════\t══════"))
 
 	for name, k := range kittens {
 		var e string
@@ -141,12 +141,12 @@ func printKittens(kittens map[string]*kitten.Kitten) error {
 			} else {
 				e = "No 💀"
 				fmt.Printf("%s\t%s\t%s\t\t%s\t%d\t%s\n",
-					color.Red(name),
-					color.Red(r.GetIp()),
-					color.Red(r.GetHostname()),
-					color.Red(k.GetLastSeen().Format("15:04:05")),
-					color.Red(k.GetSleep()),
-					color.Red(e))
+					color.BrightRed(name),
+					color.BrightRed(r.GetIp()),
+					color.BrightRed(r.GetHostname()),
+					color.BrightRed(k.GetLastSeen().Format("15:04:05")),
+					color.BrightRed(k.GetSleep()),
+					color.BrightRed(e))
 			}
 		}
 	}
@@ -156,19 +156,19 @@ func printKittens(kittens map[string]*kitten.Kitten) error {
 
 func printKittenInfo(kitten kitten.Kitten) {
 	r := kitten.Recon
-	fmt.Printf("%s\n\n", color.Green("[*] Kitten:"))
-	fmt.Printf("%s:\t\t%s\n", color.Green("Name"), kitten.Name)
-	fmt.Printf("%s:\t\t%d\n", color.Green("Sleep"), kitten.Sleep)
-	fmt.Printf("%s:\t%s\n", color.Green("LastSeen"), kitten.LastSeen.Format("15:04:05"))
-	fmt.Printf("%s:\t\t%v\"\n", color.Green("Alive"), kitten.GetAlive())
-	fmt.Printf("%s:\t\t%s\n", color.Green("Key"), kitten.Key)
-	fmt.Printf("%s:\t%s\n", color.Green("Hostname"), r.Hostname)
-	fmt.Printf("%s:\t%s\n", color.Green("Username"), r.Username)
-	fmt.Printf("%s:\t\t%s\n", color.Green("Domain"), r.Domain)
-	fmt.Printf("%s:\t\t%s\n", color.Green("Ip"), r.Ip)
-	fmt.Printf("%s:\t\t%d\n", color.Green("Pid"), r.Pid)
-	fmt.Printf("%s:\t\t%s\n", color.Green("Pname"), r.PName)
-	fmt.Printf("%s:\t\t%s\n", color.Green("Path"), r.Path)
+	fmt.Printf("%s\n\n", color.BrightGreen("[*] Kitten:"))
+	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Name"), kitten.Name)
+	fmt.Printf("%s:\t\t%d\n", color.BrightGreen("Sleep"), kitten.Sleep)
+	fmt.Printf("%s:\t%s\n", color.BrightGreen("LastSeen"), kitten.LastSeen.Format("15:04:05"))
+	fmt.Printf("%s:\t\t%v\n", color.BrightGreen("Alive"), kitten.GetAlive())
+	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Key"), kitten.Key)
+	fmt.Printf("%s:\t%s\n", color.BrightGreen("Hostname"), r.Hostname)
+	fmt.Printf("%s:\t%s\n", color.BrightGreen("Username"), r.Username)
+	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Domain"), r.Domain)
+	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Ip"), r.Ip)
+	fmt.Printf("%s:\t\t%d\n", color.BrightGreen("Pid"), r.Pid)
+	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Pname"), r.PName)
+	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Path"), r.Path)
 
 }
 
@@ -181,14 +181,14 @@ func printPS(t *task.Task, pid int) error {
 	sort.Slice(prlist.Process, func(p, q int) bool {
 		return prlist.Process[p].Pid < prlist.Process[q].Pid
 	})
-	fmt.Printf("\n%5s\t%5s\t%s\n", color.Green("Ppid:"), color.Green("Pid:"), color.Green("Name:"))
-	fmt.Printf("%s\t%s\t%s\n", color.Green("═════"), color.Green("═════"), color.Green("═════"))
+	fmt.Printf("\n%5s\t%5s\t%s\n", color.BrightGreen("Ppid:"), color.BrightGreen("Pid:"), color.BrightGreen("Name:"))
+	fmt.Printf("%s\t%s\t%s\n", color.BrightGreen("═════"), color.BrightGreen("═════"), color.BrightGreen("═════"))
 	for _, p := range prlist.Process {
 		//highlight the current process in green
 		if p.Pid == pid {
-			fmt.Printf("%5d\t%5d\t%s\n", color.Green(p.Ppid), color.Green(p.Pid), color.Green(p.Name))
+			fmt.Printf("%5d\t%5d\t%s\n", color.BrightGreen(p.Ppid), color.BrightGreen(p.Pid), color.BrightGreen(p.Name))
 		} else if contains(av, p.Name) {
-			fmt.Printf("%5d\t%5d\t%s\n", color.Red(p.Ppid), color.Red(p.Pid), color.Red(p.Name))
+			fmt.Printf("%5d\t%5d\t%s\n", color.BrightRed(p.Ppid), color.BrightRed(p.Pid), color.BrightRed(p.Name))
 		} else {
 			fmt.Printf("%5d\t%5d\t%s\n", p.Ppid, p.Pid, p.Name)
 		}
@@ -197,14 +197,14 @@ func printPS(t *task.Task, pid int) error {
 }
 
 func printAV(t *task.Task) {
-	fmt.Printf("\n%s\n\n", color.Green("[*] AV/EDR:"))
+	fmt.Printf("\n%s\n\n", color.BrightGreen("[*] AV/EDR:"))
 	fmt.Printf("%s\n", string(t.Payload))
 }
 
 func printTasks(t []*task.Task) {
-	fmt.Printf("%s\n\n", color.Green("[*] Tasks:"))
-	fmt.Printf("%s\n", color.Green("ID:\tTag:\tPayload:"))
-	fmt.Printf("%s\n", color.Green("═══\t════\t════════"))
+	fmt.Printf("%s\n\n", color.BrightGreen("[*] Tasks:"))
+	fmt.Printf("%s\n", color.BrightGreen("ID:\tTag:\tPayload:"))
+	fmt.Printf("%s\n", color.BrightGreen("═══\t════\t════════"))
 
 	for i, b := range t {
 		fmt.Printf("%2d\t%s\t", i, b.Tag)
