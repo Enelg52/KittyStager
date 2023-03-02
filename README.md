@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="" rel="noopener">
- <img width=150px height=150px src="./img/chat.png"> </a>
+ <img width=150px height=150px src="./img/black-cat.png"> </a>
 </p>
 
 
