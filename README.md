@@ -92,29 +92,29 @@ The client will connect to `127.0.0.1:1337`. If your not on the server, you will
 ./client
 ```
 ### List kittens
-![img.png](img.png)
+![img.png](img/img.png)
 ### Get logs
-![img_1.png](img_1.png)
+![img_1.png](img/img_1.png)
 ### Print config
-![img_2.png](img_2.png)
+![img_2.png](img/img_2.png)
 ### Interact with a kitten
-![img_4.png](img_4.png)
+![img_4.png](img/img_4.png)
 ### Get tasks
-![img_3.png](img_3.png)
+![img_3.png](img/img_3.png)
 ### Inject shellcode
-![img_5.png](img_5.png)
+![img_5.png](img/img_5.png)
 ### Change sleep time
-![img_6.png](img_6.png)
+![img_6.png](img/img_6.png)
 ### Get process list
-![img_7.png](img_7.png)
+![img_7.png](img/img_7.png)
 ### Get AV/EDR with wmi
-![img_8.png](img_8.png)
+![img_8.png](img/img_8.png)
 ### Get privileges & integrity level
-![img_9.png](img_9.png)
+![img_9.png](img/img_9.png)
 ### Get kitten infos
-![img_10.png](img_10.png)
+![img_10.png](img/img_10.png)
 ### Kill kitten
-![img_11.png](img_11.png)
+![img_11.png](img/img_11.png)
 
 ## Architecture
 The projet is divided in 3 parts : 
