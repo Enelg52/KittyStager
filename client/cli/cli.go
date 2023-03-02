@@ -15,6 +15,7 @@ import (
 func completerCli(d prompt.Document) []prompt.Suggest {
 	s := []prompt.Suggest{
 		{Text: "exit", Description: "Exit the program"},
+		{Text: "help", Description: "Print the help menu"},
 		{Text: "config", Description: "Show config"},
 		{Text: "logs", Description: "Get api logs"},
 		{Text: "kittens", Description: "Show kittens"},
@@ -27,11 +28,13 @@ func completerCli(d prompt.Document) []prompt.Suggest {
 func completerInteract(d prompt.Document) []prompt.Suggest {
 	s := []prompt.Suggest{
 		{Text: "back", Description: "Go back to the main menu"},
-		{Text: "task", Description: "Get the tasks for the target"},
+		{Text: "help", Description: "Print the help menu"},
+		{Text: "tasks", Description: "Get the tasks for the target"},
 		{Text: "shellcode", Description: "Inject shellcode in new process"},
 		{Text: "sleep", Description: "Set sleep time"},
 		{Text: "ps", Description: "Get process list"},
 		{Text: "av", Description: "Get AV/EDR with wmi"},
+		{Text: "priv", Description: "Get privileges and integrity level"},
 		{Text: "info", Description: "Show the kitten info"},
 		{Text: "kill", Description: "Exit the kitten"},
 		{Text: "exit", Description: "Exit the program"},
@@ -40,6 +43,8 @@ func completerInteract(d prompt.Document) []prompt.Suggest {
 }
 
 func Cli() error {
+	go checkConn()
+	go checkKitten()
 	for {
 		t := prompt.Input("KittyStager ❯ ", completerCli,
 			prompt.OptionTitle("KittyStager 🐈 "),
@@ -58,19 +63,20 @@ func Cli() error {
 		case "config":
 			config, err := getConfig()
 			if err != nil {
-				fmt.Println("[!] Error",err)
+				fmt.Println("[!] Error", err)
 				break
 			}
 			j, err := json.MarshalIndent(config, "", "  ")
 			if err != nil {
-				fmt.Println("[!] Error",err)
+				fmt.Println("[!] Error", err)
 				break
 			}
-			fmt.Println(string(j))
+			fmt.Printf("%s\n\n", color.BrightGreen("[*] Config:"))
+			fmt.Println(color.BrightWhite(string(j)))
 		case "kittens":
 			kittens, err := getKittens()
 			if err != nil {
-				fmt.Println("[!] Error",err)
+				fmt.Println("[!] Error", err)
 				break
 			}
 			err = printKittens(kittens)
@@ -81,7 +87,7 @@ func Cli() error {
 		case "interact":
 			kittens, err := getKittens()
 			if err != nil {
-				fmt.Println("[!] Error",err)
+				fmt.Println("[!] Error", err)
 				break
 			}
 			//check if there is only one kitten directly interact
@@ -92,7 +98,7 @@ func Cli() error {
 					if kittens[key[j].String()].Alive {
 						err := interact(key[j].String())
 						if err != nil {
-							fmt.Println("[!] Error",err)
+							fmt.Println("[!] Error", err)
 							break
 						}
 					}
@@ -105,7 +111,7 @@ func Cli() error {
 				}
 				name, err := i.Read("Kitten name : ")
 				if err != nil {
-					fmt.Println("[!] Error",err)
+					fmt.Println("[!] Error", err)
 					break
 				}
 				_, ok := kittens[name]
@@ -123,11 +129,13 @@ func Cli() error {
 		case "logs":
 			err := printLogs()
 			if err != nil {
-				fmt.Println("[!] Error",err)
+				fmt.Println("[!] Error", err)
 				break
 			}
 		case "build":
 			fmt.Println("TODO")
+		case "help":
+			printHelpMain()
 		default:
 			fmt.Println("Unknown command")
 		}
@@ -153,10 +161,10 @@ func interact(kittenName string) error {
 			os.Exit(0)
 		case "back":
 			return nil
-		case "task":
+		case "tasks":
 			t, err := getTask(kittenName)
 			if err != nil {
-				fmt.Println("[!] Error",err)
+				fmt.Println("[!] Error", err)
 				break
 			}
 			printTasks(t)
@@ -185,7 +193,7 @@ func interact(kittenName string) error {
 			}
 		case "sleep":
 			if len(input) != 2 {
-				fmt.Println("[!] Please enter a path")
+				fmt.Println("[!] Please enter a valid time")
 				break
 			}
 			t := task.Task{
@@ -194,7 +202,7 @@ func interact(kittenName string) error {
 			}
 			err := createTask(&t, kittenName)
 			if err != nil {
-				fmt.Println("[!] Error",err)
+				fmt.Println("[!] Error", err)
 				break
 			}
 		case "ps":
@@ -204,7 +212,7 @@ func interact(kittenName string) error {
 			}
 			err := createTask(&t, kittenName)
 			if err != nil {
-				fmt.Println("[!] Error",err)
+				fmt.Println("[!] Error", err)
 				break
 			}
 			go checkForResponse(kittenName)
@@ -215,14 +223,25 @@ func interact(kittenName string) error {
 			}
 			err := createTask(&t, kittenName)
 			if err != nil {
-				fmt.Println("[!] Error",err)
+				fmt.Println("[!] Error", err)
+				break
+			}
+			go checkForResponse(kittenName)
+		case "priv":
+			t := task.Task{
+				Tag:     "priv",
+				Payload: nil,
+			}
+			err := createTask(&t, kittenName)
+			if err != nil {
+				fmt.Println("[!] Error", err)
 				break
 			}
 			go checkForResponse(kittenName)
 		case "info":
 			kitten, err := getKitten(kittenName)
 			if err != nil {
-				fmt.Println("[!] Error",err)
+				fmt.Println("[!] Error", err)
 				break
 			}
 			printKittenInfo(*kitten)
@@ -233,9 +252,11 @@ func interact(kittenName string) error {
 			}
 			err := createTask(&t, kittenName)
 			if err != nil {
-				fmt.Println("[!] Error",err)
+				fmt.Println("[!] Error", err)
 				break
 			}
+		case "help":
+			printHelpInt()
 		default:
 			fmt.Println("Unknown command")
 		}

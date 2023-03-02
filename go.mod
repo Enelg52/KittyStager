@@ -6,6 +6,7 @@ require (
 	github.com/C-Sto/BananaPhone v0.0.0-20220220002628-6585e5913761
 	github.com/JoaoDanielRufino/go-input-autocomplete v1.0.4
 	github.com/c-bata/go-prompt v0.2.6
+	github.com/fourcorelabs/wintoken v1.0.0
 	github.com/frekui/opaque v0.2.0
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-ole/go-ole v1.2.6
@@ -13,6 +14,7 @@ require (
 	github.com/inancgumus/screen v0.0.0-20190314163918-06e984b86ed3
 	github.com/logrusorgru/aurora v2.0.3+incompatible
 	github.com/mitchellh/go-ps v1.0.0
+	github.com/olekukonko/tablewriter v0.0.5
 	github.com/timwhitez/Doge-Gabh v1.9.2
 	golang.org/x/crypto v0.5.0
 	golang.org/x/sync v0.1.0

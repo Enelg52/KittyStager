@@ -3,12 +3,12 @@ package cli
 import (
 	"KittyStager/internal/kitten"
 	"KittyStager/internal/task"
+	"KittyStager/internal/task/priv"
 	"KittyStager/internal/task/ps"
 	"errors"
 	"fmt"
 	color "github.com/logrusorgru/aurora"
 	"sort"
-	"strings"
 )
 
 // https://github.com/ZephrFish/edr-checker/blob/master/Invoke-EDRChecker.ps1
@@ -120,6 +120,7 @@ func printKittens(kittens map[string]*kitten.Kitten) error {
 		return errors.New("No kittens to show")
 	}
 	fmt.Printf("%s\n\n", color.BrightGreen("[*] Kittens:"))
+
 	fmt.Printf("%s\n", color.BrightGreen("Name:\tIp:\t\tHostname:\t\tLast seen:\tSleep:\tAlive:"))
 	fmt.Printf("%s\n", color.BrightGreen("═════\t═══\t\t═════════\t\t══════════\t══════\t══════"))
 
@@ -130,12 +131,12 @@ func printKittens(kittens map[string]*kitten.Kitten) error {
 			if k.GetAlive() {
 				e = "Yes"
 				fmt.Printf("%s\t%s\t%s\t\t%s\t%d\t%s\n",
-					name,
-					r.GetIp(),
-					r.GetHostname(),
-					k.GetLastSeen().Format("15:04:05"),
-					k.GetSleep(),
-					e,
+					color.BrightWhite(name),
+					color.BrightWhite(r.GetIp()),
+					color.BrightWhite(r.GetHostname()),
+					color.BrightWhite(k.GetLastSeen().Format("15:04:05")),
+					color.BrightWhite(k.GetSleep()),
+					color.BrightWhite(e),
 				)
 
 			} else {
@@ -150,6 +151,7 @@ func printKittens(kittens map[string]*kitten.Kitten) error {
 			}
 		}
 	}
+
 	fmt.Println()
 	return nil
 }
@@ -157,18 +159,18 @@ func printKittens(kittens map[string]*kitten.Kitten) error {
 func printKittenInfo(kitten kitten.Kitten) {
 	r := kitten.Recon
 	fmt.Printf("%s\n\n", color.BrightGreen("[*] Kitten:"))
-	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Name"), kitten.Name)
-	fmt.Printf("%s:\t\t%d\n", color.BrightGreen("Sleep"), kitten.Sleep)
-	fmt.Printf("%s:\t%s\n", color.BrightGreen("LastSeen"), kitten.LastSeen.Format("15:04:05"))
-	fmt.Printf("%s:\t\t%v\n", color.BrightGreen("Alive"), kitten.GetAlive())
-	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Key"), kitten.Key)
-	fmt.Printf("%s:\t%s\n", color.BrightGreen("Hostname"), r.Hostname)
-	fmt.Printf("%s:\t%s\n", color.BrightGreen("Username"), r.Username)
-	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Domain"), r.Domain)
-	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Ip"), r.Ip)
-	fmt.Printf("%s:\t\t%d\n", color.BrightGreen("Pid"), r.Pid)
-	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Pname"), r.PName)
-	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Path"), r.Path)
+	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Name"), color.BrightWhite(kitten.Name))
+	fmt.Printf("%s:\t\t%d\n", color.BrightGreen("Sleep"), color.BrightWhite(kitten.Sleep))
+	fmt.Printf("%s:\t%s\n", color.BrightGreen("LastSeen"), color.BrightWhite(kitten.LastSeen.Format("15:04:05")))
+	fmt.Printf("%s:\t\t%v\n", color.BrightGreen("Alive"), color.BrightWhite(kitten.GetAlive()))
+	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Key"), color.BrightWhite(kitten.Key))
+	fmt.Printf("%s:\t%s\n", color.BrightGreen("Hostname"), color.BrightWhite(r.Hostname))
+	fmt.Printf("%s:\t%s\n", color.BrightGreen("Username"), color.BrightWhite(r.Username))
+	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Domain"), color.BrightWhite(r.Domain))
+	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Ip"), color.BrightWhite(r.Ip))
+	fmt.Printf("%s:\t\t%d\n", color.BrightGreen("Pid"), color.BrightWhite(r.Pid))
+	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Pname"), color.BrightWhite(r.PName))
+	fmt.Printf("%s:\t\t%s\n", color.BrightGreen("Path"), color.BrightWhite(r.Path))
 
 }
 
@@ -190,7 +192,7 @@ func printPS(t *task.Task, pid int) error {
 		} else if contains(av, p.Name) {
 			fmt.Printf("%5d\t%5d\t%s\n", color.BrightRed(p.Ppid), color.BrightRed(p.Pid), color.BrightRed(p.Name))
 		} else {
-			fmt.Printf("%5d\t%5d\t%s\n", p.Ppid, p.Pid, p.Name)
+			fmt.Printf("%5d\t%5d\t%s\n", color.BrightWhite(p.Ppid), color.BrightWhite(p.Pid), color.BrightWhite(p.Name))
 		}
 	}
 	return nil
@@ -198,7 +200,7 @@ func printPS(t *task.Task, pid int) error {
 
 func printAV(t *task.Task) {
 	fmt.Printf("\n%s\n\n", color.BrightGreen("[*] AV/EDR:"))
-	fmt.Printf("%s\n", string(t.Payload))
+	fmt.Printf("%s\n", color.BrightWhite(string(t.Payload)))
 }
 
 func printTasks(t []*task.Task) {
@@ -207,21 +209,58 @@ func printTasks(t []*task.Task) {
 	fmt.Printf("%s\n", color.BrightGreen("═══\t════\t════════"))
 
 	for i, b := range t {
-		fmt.Printf("%2d\t%s\t", i, b.Tag)
+		fmt.Printf("%2d\t%s\t", color.BrightWhite(i), color.BrightWhite(b.Tag))
 		if len(b.Payload) > 10 {
-			fmt.Printf("%s...\n", b.Payload[:10])
+			fmt.Printf("%s...\n", color.BrightWhite(b.Payload[:10]))
 		} else {
-			fmt.Printf("%s\n", string(b.Payload))
+			fmt.Printf("%s\n", color.BrightWhite(string(b.Payload)))
 		}
 	}
 }
 
-func contains(s []string, str string) bool {
-	for _, v := range s {
-		if strings.Contains(strings.ToLower(str), v) {
-			return true
-		}
+func printPriv(t *task.Task) {
+	p := priv.NewPrivileges(nil, "")
+	err := p.UnmarshallPrivileges(t.Payload)
+	if err != nil {
+		fmt.Println("[!] Error", err)
+		return
 	}
+	fmt.Printf("\n%s\n\n", color.BrightGreen("[*] Privileges:"))
+	fmt.Printf("%s\n", color.BrightGreen("Privileges:"))
+	fmt.Printf("%s\n", color.BrightGreen("═══════════"))
+	for _, pr := range p.Priv {
+		fmt.Println(color.BrightWhite(pr))
+	}
+	fmt.Printf("\n%s\n", color.BrightGreen("Integrity:"))
+	fmt.Printf("%s\n", color.BrightGreen("══════════"))
+	fmt.Println(color.BrightWhite(p.Integrity))
+}
 
-	return false
+func printHelpInt() {
+	fmt.Printf("%s\n\n", color.BrightGreen("Help :"))
+	fmt.Printf("\n%5s\t%5s\n", color.BrightGreen("Command:"), color.BrightGreen("Description:"))
+	fmt.Printf("%s\t%s\n", color.BrightGreen("════════"), color.BrightGreen("════════════"))
+	fmt.Printf("%s\n", color.BrightWhite("back\t\tGo back to the main menu\n"+
+		"help\t\tPrint the help menu\n"+
+		"tasks\t\tGet all the current tasks for the current kitten\n"+
+		"shellcode\tInject shellcode in new process\n"+
+		"sleep\t\tSet sleep time\n"+
+		"ps\t\tGet process list\n"+
+		"av\t\tGet AV/EDR with wmi\n"+
+		"priv\t\tGet privileges and integrity level\n"+
+		"info\t\tShow all the kitten info\n"+
+		"kill\t\tKill the kitten :(\n"+
+		"exit\t\tExit the client"))
+}
+
+func printHelpMain() {
+	fmt.Printf("%s\n\n", color.BrightGreen("Help :"))
+	fmt.Printf("\n%5s\t%5s\n", color.BrightGreen("Command:"), color.BrightGreen("Description:"))
+	fmt.Printf("%s\t%s\n", color.BrightGreen("════════"), color.BrightGreen("════════════"))
+	fmt.Printf("%s\n", color.BrightWhite("exit\t\tExit the client\n"+
+		"help\t\tPrint the help menu\n"+
+		"config\t\tShow the server config\n"+
+		"logs\t\tDisplay the log in real time\n"+
+		"kittens\t\tShow all kittens\n"+
+		"interact\tInteract with a kitten\n"))
 }

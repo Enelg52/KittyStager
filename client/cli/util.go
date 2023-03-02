@@ -13,6 +13,8 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
+	"sync"
 	"time"
 )
 
@@ -25,6 +27,8 @@ var (
 func init() {
 	host = "http://127.0.0.1:1337"
 }
+
+var mutex = &sync.Mutex{}
 
 func getConfig() (*config.Config, error) {
 	var conf *config.Config
@@ -90,7 +94,7 @@ func exitLogs() {
 }
 
 func createTask(task *task.Task, name string) error {
-	fmt.Println("[*] New job created for", name)
+	fmt.Printf("%s %s\n", color.BrightGreen("[*] New job created for"), color.BrightGreen(name))
 	marshalledTask, err := task.MarshallTask()
 	if err != nil {
 		return err
@@ -175,20 +179,68 @@ func checkForResponse(name string) error {
 		}
 	case "av":
 		printAV(t)
+	case "priv":
+		printPriv(t)
 	}
 	return nil
 }
 
 func checkAlive(name string) error {
+
 	for {
+		mutex.Lock()
 		i, err := getKitten(name)
+		mutex.Unlock()
 		if err != nil {
 			return err
 		}
 		if !i.GetAlive() {
-			fmt.Printf("\n%s%s%s\n", color.BrightRed("[!] Kitten "),color.BrightRed(name),color.BrightRed(" died..."))
+			fmt.Printf("\n%s%s%s\n", color.BrightRed("[!] Kitten "), color.BrightRed(name), color.BrightRed(" died..."))
 			return nil
 		}
 		time.Sleep(1 * time.Second)
 	}
+}
+
+func checkConn() {
+	for {
+		_, err := getRequest(host)
+		if err != nil {
+			fmt.Printf("\n%s\n", color.BrightRed("[!] Unable to connect to the server"))
+		}
+		time.Sleep(1 * time.Second)
+	}
+}
+
+func checkKitten() {
+	// mutex is used to block all other go routine do access this func
+	mutex.Lock()
+	k, err := getKittens()
+	mutex.Unlock()
+	if err != nil {
+		return
+	}
+	s := len(k)
+	for {
+		mutex.Lock()
+		k, err := getKittens()
+		mutex.Unlock()
+		if err != nil {
+			return
+		}
+		if len(k) > s {
+			fmt.Printf("\n%s\n", color.BrightGreen("[*] New Kitten checked-in"))
+			s++
+		}
+		time.Sleep(2 * time.Second)
+	}
+}
+
+func contains(s []string, str string) bool {
+	for _, v := range s {
+		if strings.Contains(strings.ToLower(str), v) {
+			return true
+		}
+	}
+	return false
 }

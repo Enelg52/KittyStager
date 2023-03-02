@@ -38,8 +38,6 @@ KittyStager is a stage 0 C2 comprising an API, client, and malware. The API is r
 - Payload :
     - [x] Raw shellcode
     - [x] Hex shellcode
-    - [ ] Dll
-    - [ ] PE
 
 > Some settings can be changed in the [config](config.yaml) file
 
@@ -58,30 +56,65 @@ Edit the config [file](config.yaml) :
 #### HTTPS
 How to generate certificate for https with openssl
 ```
-openssl req  -new  -newkey rsa:2048  -nodes  -keyout localhost.key  -out localhost.csr
-openssl  x509  -req  -days 365  -in localhost.csr  -signkey localhost.key  -out localhost.crt
+$ openssl req  -new  -newkey rsa:2048  -nodes  -keyout localhost.key  -out localhost.csr
+$ openssl  x509  -req  -days 365  -in localhost.csr  -signkey localhost.key  -out localhost.crt
 ```
 
-### 3. Server
+### build
 Build the server :
 ```
 cd server
 go build
 ```
-Start the server
-```
-./server.exe
-```
-### 4. Client
 Build the client
 ```
 cd client
 go build
 ```
-Start the server
+### 5. Kitten
+The server need to be running
 ```
-./client.exe
+cd kitten/basicKitten
+env GOOS=windows GOARCH=amd64 go build -o basicKitten.exe
 ```
+Then start the kitten on the target and enjoy !
+
+## Usage
+start server
+```
+ ./server -h
+Usage of server:
+  -p string
+        Path to the config file (default "config.yaml")
+```
+The client will connect to `127.0.0.1:1337`. If your not on the server, you will need to use an ssh tunnel.
+```
+./client
+```
+### List kittens
+![img.png](img.png)
+### Get logs
+![img_1.png](img_1.png)
+### Print config
+![img_2.png](img_2.png)
+### Interact with a kitten
+![img_4.png](img_4.png)
+### Get tasks
+![img_3.png](img_3.png)
+### Inject shellcode
+![img_5.png](img_5.png)
+### Change sleep time
+![img_6.png](img_6.png)
+### Get process list
+![img_7.png](img_7.png)
+### Get AV/EDR with wmi
+![img_8.png](img_8.png)
+### Get privileges & integrity level
+![img_9.png](img_9.png)
+### Get kitten infos
+![img_10.png](img_10.png)
+### Kill kitten
+![img_11.png](img_11.png)
 
 ## Architecture
 The projet is divided in 3 parts : 
