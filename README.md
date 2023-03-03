@@ -60,7 +60,7 @@ $ openssl req  -new  -newkey rsa:2048  -nodes  -keyout localhost.key  -out local
 $ openssl  x509  -req  -days 365  -in localhost.csr  -signkey localhost.key  -out localhost.crt
 ```
 
-### build
+### 3. build
 Build the server :
 ```
 cd server
@@ -71,13 +71,12 @@ Build the client
 cd client
 go build
 ```
-### 5. Kitten
 The server need to be running
 ```
 cd kitten/basicKitten
 env GOOS=windows GOARCH=amd64 go build -o basicKitten.exe
 ```
-Then start the kitten on the target and enjoy !
+Then start the server, the client and run the kitten on the target.
 
 ## Usage
 start server
