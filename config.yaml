@@ -1,0 +1,23 @@
+# IP to host the web server
+host: 127.0.0.1
+# Port
+port: 8080
+# Endpoint to get a task
+getEndpoint: getLegit
+# Endpoint to post the result
+postEndpoint: postLegit
+# Endpoint for opaque key exchange
+opaqueEndpoint: reg
+# Sleep time
+sleep: 2
+jitter: 0
+# User-agent
+userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/102.0
+# Protocol http or https
+protocol: https
+# Path to certificate if HTTPS
+key: cert/localhost.key
+cert: cert/localhost.crt
+# Upload path
+localUpload: upload
+webUpload: upload
