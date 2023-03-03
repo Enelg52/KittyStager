@@ -2,7 +2,6 @@ package main
 
 import (
 	"KittyStager/internal/config"
-	"KittyStager/kitten/malware"
 	"KittyStager/server/api"
 	"flag"
 	"fmt"
@@ -15,7 +14,7 @@ func main() {
 	flag.Parse()
 	conf, _ := config.NewConfig(*path)
 	host := fmt.Sprintf("%s://%s:%d", conf.GetProtocol(), conf.GetHost(), conf.GetPort())
-	malConf := malware.NewConfig(host,
+	malConf := api.NewConfig(host,
 		conf.GetEndpoint,
 		conf.GetPostEndpoint(),
 		conf.GetOpaqueEndpoint(),
