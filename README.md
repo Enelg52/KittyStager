@@ -60,7 +60,7 @@ $ openssl req  -new  -newkey rsa:2048  -nodes  -keyout localhost.key  -out local
 $ openssl  x509  -req  -days 365  -in localhost.csr  -signkey localhost.key  -out localhost.crt
 ```
 
-### 3. build
+### 3. Build
 Build the server :
 ```
 cd server
