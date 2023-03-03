@@ -13,13 +13,14 @@ type Config struct {
 	PostEndpoint   string `yaml:"postEndpoint"`
 	OpaqueEndpoint string `yaml:"opaqueEndpoint"`
 	Sleep          int    `yaml:"sleep"`
-	Jitter          int    `yaml:"jitter"`
+	Jitter         int    `yaml:"jitter"`
 	UserAgent      string `yaml:"userAgent"`
 	Protocol       string `yaml:"protocol"`
 	Key            string `yaml:"key"`
 	Cert           string `yaml:"cert"`
 	LocalUpload    string `yaml:"localUpload"`
 	WebUpload      string `yaml:"webUpload"`
+	malPath        string `yaml:"malPath"`
 }
 
 func NewConfig(path string) (*Config, error) {
@@ -88,4 +89,8 @@ func (config *Config) GetLocalUpload() string {
 
 func (config *Config) GetWebUpload() string {
 	return config.WebUpload
+}
+
+func (config *Config) GetMalPath() string {
+	return config.malPath
 }

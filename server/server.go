@@ -28,7 +28,7 @@ func main() {
 		fmt.Println("[!] Error", err)
 		return
 	}
-	err = os.WriteFile("kitten/basicKitten/conf.txt", c, 0644)
+	err = os.WriteFile(conf.GetMalPath(), c, 0644)
 	if err != nil {
 		fmt.Println("[!] Error", err)
 		return
