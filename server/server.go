@@ -25,10 +25,12 @@ func main() {
 	)
 	c, err := malConf.MarshallConfig()
 	if err != nil {
+		fmt.Println("[!] Error", err)
 		return
 	}
 	err = os.WriteFile("kitten/basicKitten/conf.txt", c, 0644)
 	if err != nil {
+		fmt.Println("[!] Error", err)
 		return
 	}
 	fmt.Println(color.BrightCyan("                     _\n                    / )\n                   ( (\n     A.-.A  .-\"\"-.  ) )\n    / , , \\/      \\/ /\n   =\\  t  ;=    /   /\n     `--,'  .\"\"|   /\n         || |  \\\\ \\\n        ((,_|  ((,_\\\n"))
@@ -36,6 +38,7 @@ func main() {
 	fmt.Println("[*] Running...")
 	err = api.Api(conf)
 	if err != nil {
+		fmt.Println("[!] Error", err)
 		return
 	}
 }
