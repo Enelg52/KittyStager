@@ -20,7 +20,7 @@ type Config struct {
 	Cert           string `yaml:"cert"`
 	LocalUpload    string `yaml:"localUpload"`
 	WebUpload      string `yaml:"webUpload"`
-	malPath        string `yaml:"malPath"`
+	MalPath        string `yaml:"malPath"`
 }
 
 func NewConfig(path string) (*Config, error) {
@@ -92,5 +92,5 @@ func (config *Config) GetWebUpload() string {
 }
 
 func (config *Config) GetMalPath() string {
-	return config.malPath
+	return config.MalPath
 }
