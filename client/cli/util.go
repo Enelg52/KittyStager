@@ -223,13 +223,18 @@ func checkKitten() {
 	s := len(k)
 	for {
 		mutex.Lock()
-		k, err := getKittens()
+		newk, err := getKittens()
 		mutex.Unlock()
 		if err != nil {
 			return
 		}
-		if len(k) > s {
-			fmt.Printf("\n%s\n", color.BrightGreen("[*] New Kitten checked-in"))
+		if len(newk) > s {
+			for i := range newk{
+				_, ok := k[i]
+				if !ok {
+					fmt.Printf("\n%s\"%s\"\n", color.BrightGreen("[*] New Kitten checked-in: "), color.BrightGreen(i))
+				}
+			}
 			s++
 		}
 		time.Sleep(2 * time.Second)

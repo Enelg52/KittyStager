@@ -22,4 +22,4 @@ cert: cert/localhost.crt
 localUpload: upload
 webUpload: upload
 # Malware path
-malPath: ../kitten/basicKitten/conf.txt
+malPath: kitten/basicKitten/conf.txt

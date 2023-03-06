@@ -10,7 +10,8 @@ import (
 )
 
 func main() {
-	path := flag.String("p", "../config.yaml", "Path to the config file")
+	os.Chdir("../")
+	path := flag.String("p", "config.yaml", "Path to the config file")
 	flag.Parse()
 	conf, _ := config.NewConfig(*path)
 	host := fmt.Sprintf("%s://%s:%d", conf.GetProtocol(), conf.GetHost(), conf.GetPort())

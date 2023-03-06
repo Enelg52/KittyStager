@@ -229,7 +229,7 @@ func printPriv(t *task.Task) {
 	fmt.Printf("%s\n", color.BrightGreen("Privileges:"))
 	fmt.Printf("%s\n", color.BrightGreen("═══════════"))
 	for _, pr := range p.Priv {
-		fmt.Println(color.BrightWhite(pr))
+		fmt.Printf("%-29s\t%#v\t%s\n", color.BrightWhite(pr.GetName()), color.BrightWhite(pr.GetEnable()), color.BrightWhite(pr.GetDescription()))
 	}
 	fmt.Printf("\n%s\n", color.BrightGreen("Integrity:"))
 	fmt.Printf("%s\n", color.BrightGreen("══════════"))
