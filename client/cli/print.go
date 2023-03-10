@@ -262,5 +262,6 @@ func printHelpMain() {
 		"config\t\tShow the server config\n"+
 		"logs\t\tDisplay the log in real time\n"+
 		"kittens\t\tShow all kittens\n"+
+		"build\t\tWrite a kitten code in /output\n"+
 		"interact\tInteract with a kitten\n"))
 }

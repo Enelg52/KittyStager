@@ -22,3 +22,4 @@ func newShellcode(path string) ([]byte, error) {
 	}
 	return nil, nil
 }
+

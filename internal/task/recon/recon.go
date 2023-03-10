@@ -30,7 +30,7 @@ func NewRecon(host, user, domain, ip, pName, path string, pid int) *Recon {
 
 func (recon *Recon) EncryptTask(key []byte) ([]byte, error) {
 	c := crypto.NewChaCha20()
-	m, err := recon.MarshallTask()
+	m, err := recon.MarshallRecon()
 	if err != nil {
 		return nil, err
 	}
@@ -47,14 +47,14 @@ func (recon *Recon) DecryptTask(cypherText []byte, key []byte) error {
 	if err != nil {
 		return err
 	}
-	err = recon.UnmarshallTask(d)
+	err = recon.UnmarshallRecon(d)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (recon *Recon) MarshallTask() ([]byte, error) {
+func (recon *Recon) MarshallRecon() ([]byte, error) {
 	t, err := json.Marshal(recon)
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func (recon *Recon) MarshallTask() ([]byte, error) {
 	return t, nil
 }
 
-func (recon *Recon) UnmarshallTask(j []byte) error {
+func (recon *Recon) UnmarshallRecon(j []byte) error {
 	err := json.Unmarshal(j, &recon)
 	if err != nil {
 		return err

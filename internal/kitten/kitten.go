@@ -74,10 +74,14 @@ func (kitten *Kitten) GetResult() *task.Task {
 	return kitten.Result
 }
 
-func (kitten *Kitten) GetName() string {
-	return kitten.Name
-}
-
 func (kitten *Kitten) SetResult(t *task.Task) {
 	kitten.Result = t
+}
+
+func (kitten *Kitten) GetKey() string {
+	return kitten.Key
+}
+
+func (kitten *Kitten) GetName() string {
+	return kitten.Name
 }

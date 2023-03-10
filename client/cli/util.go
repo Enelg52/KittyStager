@@ -30,9 +30,9 @@ func init() {
 
 var mutex = &sync.Mutex{}
 
-func getConfig() (*config.Config, error) {
+func GetConfig() (*config.Config, error) {
 	var conf *config.Config
-	b, err := getRequest(fmt.Sprintf("%s/conf", host))
+	b, err := GetRequest(fmt.Sprintf("%s/conf", host))
 	if err != nil {
 		return nil, err
 	}
@@ -40,10 +40,9 @@ func getConfig() (*config.Config, error) {
 	return conf, nil
 }
 
-func getKittens() (map[string]*kitten.Kitten, error) {
-	//var kittens map[string]*kitten.Kitten
+func GetKittens() (map[string]*kitten.Kitten, error) {
 	kittens = make(map[string]*kitten.Kitten)
-	b, err := getRequest(fmt.Sprintf("%s/kittensList", host))
+	b, err := GetRequest(fmt.Sprintf("%s/kittensList", host))
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +51,7 @@ func getKittens() (map[string]*kitten.Kitten, error) {
 }
 
 func getKitten(name string) (*kitten.Kitten, error) {
-	kittens, err := getKittens()
+	kittens, err := GetKittens()
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +65,7 @@ func printLogs() error {
 	for {
 		screen.Clear()
 		screen.MoveTopLeft()
-		b, err := getRequest(fmt.Sprintf("%s/logs", host))
+		b, err := GetRequest(fmt.Sprintf("%s/logs", host))
 		if err != nil {
 			return err
 		}
@@ -93,7 +92,7 @@ func exitLogs() {
 	}
 }
 
-func createTask(task *task.Task, name string) error {
+func CreateTask(task *task.Task, name string) error {
 	fmt.Printf("%s %s\n", color.BrightGreen("[*] New job created for"), color.BrightGreen(name))
 	marshalledTask, err := task.MarshallTask()
 	if err != nil {
@@ -106,9 +105,9 @@ func createTask(task *task.Task, name string) error {
 	return nil
 }
 
-func getTask(name string) ([]*task.Task, error) {
+func GetTask(name string) ([]*task.Task, error) {
 	var t []*task.Task
-	b, err := getRequest(fmt.Sprintf("%s/task/%s", host, name))
+	b, err := GetRequest(fmt.Sprintf("%s/task/%s", host, name))
 	if err != nil {
 		return nil, err
 	}
@@ -116,7 +115,7 @@ func getTask(name string) ([]*task.Task, error) {
 	return t, nil
 }
 
-func getRequest(url string) ([]byte, error) {
+func GetRequest(url string) ([]byte, error) {
 	var body []byte
 	c := http.Client{Timeout: time.Duration(3) * time.Second}
 	req, err := http.NewRequest("GET", url, nil)
@@ -157,7 +156,7 @@ func checkForResponse(name string) error {
 	var b []byte
 	var err error
 	for {
-		b, err = getRequest(fmt.Sprintf("%s/result/%s", host, name))
+		b, err = GetRequest(fmt.Sprintf("%s/result/%s", host, name))
 		if err != nil {
 			return err
 		}
@@ -204,7 +203,7 @@ func checkAlive(name string) error {
 
 func checkConn() {
 	for {
-		_, err := getRequest(host)
+		_, err := GetRequest(host)
 		if err != nil {
 			fmt.Printf("\n%s\n", color.BrightRed("[!] Unable to connect to the server"))
 		}
@@ -215,7 +214,7 @@ func checkConn() {
 func checkKitten() {
 	// mutex is used to block all other go routine do access this func
 	mutex.Lock()
-	k, err := getKittens()
+	k, err := GetKittens()
 	mutex.Unlock()
 	if err != nil {
 		return
@@ -223,22 +222,32 @@ func checkKitten() {
 	s := len(k)
 	for {
 		mutex.Lock()
-		newk, err := getKittens()
+		newKitten, err := GetKittens()
 		mutex.Unlock()
 		if err != nil {
 			return
 		}
-		if len(newk) > s {
-			for i := range newk{
+		if len(newKitten) > s {
+			for i := range newKitten {
 				_, ok := k[i]
-				if !ok {
-					fmt.Printf("\n%s\"%s\"\n", color.BrightGreen("[*] New Kitten checked-in: "), color.BrightGreen(i))
+				if !ok && i != "" {
+					fmt.Printf("\n%s %s %s\n", color.BrightGreen("[*] New Kitten"), color.BrightWhite(i), color.BrightGreen("checked-in."))
 				}
 			}
-			s++
+			mutex.Lock()
+			k, _ = GetKittens()
+			mutex.Unlock()
 		}
 		time.Sleep(2 * time.Second)
 	}
+}
+
+func Build() error {
+	_, err := GetRequest(fmt.Sprintf("%s/build", host))
+	if err != nil {
+		return err
+	}
+	return err
 }
 
 func contains(s []string, str string) bool {

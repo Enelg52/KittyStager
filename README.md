@@ -38,6 +38,11 @@ KittyStager is a stage 0 C2 comprising an API, client, and malware. The API is r
 - Payload :
     - [x] Raw shellcode
     - [x] Hex shellcode
+- Build :
+  - [x] Generate the kitten from the config file
+  - [ ] Compile the kitten with go & garble
+  - [ ] Sign the kitten with a copied certificate
+  - [ ] Generate description
 
 > Some settings can be changed in the [config](config.yaml) file
 

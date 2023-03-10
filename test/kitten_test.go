@@ -10,35 +10,48 @@ import (
 )
 
 var (
-	name      string
-	sleep     int
-	lastSeen  time.Time
-	kittenKey string
-	//Opaque     *opaque.User
+	kittenName   string
+	kittenSleep  int
+	lastSeen     time.Time
+	kittenAlive  bool
+	kittenKey    string
+	kittenRecon  *recon.Recon
+	kittenResult *task.Task
+
+	kittenTask *task.Task
 )
 
-func kittenBeforeAll() {
-	name = "test"
-	sleep = 5
+func init() {
+	kittenName = "test"
+	kittenSleep = 5
 	lastSeen = time.Now()
+	kittenAlive = true
 	kittenKey = "asdfasd"
-	//Opaque     *opaque.User
+	kittenTask = task.NewTask("test", []byte("tasks"))
+	kittenRecon = recon.NewRecon("host", "user", "domain", "ip", "pName", "path", 1000)
+	kittenResult = task.NewTask("test", []byte("kittenResult"))
 }
 
 func TestKittenSetGet(t *testing.T) {
 	t.Parallel()
 	// given
-	kit := kitten.NewKitten(name, sleep, lastSeen, kittenKey)
-	rec := recon.NewRecon(Hostname, Username, Domain, Ip, PName, Path, Pid)
-	tas := task.NewTask(Tag, Payload)
-	tSlice := make([]*task.Task, 0)
-	taskSlice := append(tSlice, tas)
+	kit := kitten.NewKitten(kittenName, kittenSleep, lastSeen, kittenKey)
+
 	// when
-	kit.SetRecon(rec)
-	kit.SetTask(tas)
-	recon2 := kit.GetRecon()
-	task2 := kit.GetTasks()
+	kit.SetTask(kittenTask)
+	kit.SetRecon(kittenRecon)
+	kit.SetSleep(kittenSleep)
+	kit.SetLastSeen(lastSeen)
+	kit.SetAlive(kittenAlive)
+	kit.SetResult(kittenResult)
 	// then
-	assert.Equal(t, rec, recon2)
-	assert.Equal(t, taskSlice[0], task2[0])
+	assert.Equal(t, kit.GetRecon(), kittenRecon)
+	tasks := kit.GetTasks()
+	assert.Equal(t, tasks[0], kittenTask)
+	assert.Equal(t, kit.GetAlive(), kittenAlive)
+	assert.Equal(t, kit.GetLastSeen(), lastSeen)
+	assert.Equal(t, kit.GetSleep(), kittenSleep)
+	assert.Equal(t, kit.GetKey(), kittenKey)
+	assert.Equal(t, kit.GetName(), kittenName)
+	assert.Equal(t, kit.GetResult(), kittenResult)
 }

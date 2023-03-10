@@ -1,37 +1,41 @@
 package config
 
 import (
+	"errors"
+	"fmt"
 	"gopkg.in/yaml.v2"
-	"log"
 	"os"
 )
 
 type Config struct {
-	Host           string `yaml:"host"`
-	Port           int    `yaml:"port"`
-	GetEndpoint    string `yaml:"getEndpoint"`
-	PostEndpoint   string `yaml:"postEndpoint"`
-	OpaqueEndpoint string `yaml:"opaqueEndpoint"`
-	Sleep          int    `yaml:"sleep"`
-	Jitter         int    `yaml:"jitter"`
-	UserAgent      string `yaml:"userAgent"`
-	Protocol       string `yaml:"protocol"`
-	Key            string `yaml:"key"`
-	Cert           string `yaml:"cert"`
-	LocalUpload    string `yaml:"localUpload"`
-	WebUpload      string `yaml:"webUpload"`
-	MalPath        string `yaml:"malPath"`
+	Host           string   `yaml:"host"`
+	Port           int      `yaml:"port"`
+	GetEndpoint    string   `yaml:"getEndpoint"`
+	PostEndpoint   string   `yaml:"postEndpoint"`
+	OpaqueEndpoint string   `yaml:"opaqueEndpoint"`
+	Sleep          int      `yaml:"sleep"`
+	Jitter         int      `yaml:"jitter"`
+	UserAgent      string   `yaml:"userAgent"`
+	Protocol       string   `yaml:"protocol"`
+	Key            string   `yaml:"key"`
+	Cert           string   `yaml:"cert"`
+	LocalUpload    string   `yaml:"localUpload"`
+	WebUpload      string   `yaml:"webUpload"`
+	MalPath        []string `yaml:"malPath,flow"`
+	Injection      string   `yaml:"injection"`
+	ExecType       string   `yaml:"execType"`
+	Obfuscation    bool     `yaml:"obfuscation"`
 }
 
 func NewConfig(path string) (*Config, error) {
 	var conf Config
 	file, err := os.ReadFile(path)
 	if err != nil {
-		return &conf, err
+		return nil, errors.New(fmt.Sprintf("Error while opening the config file: %s", err))
 	}
 	err = yaml.Unmarshal(file, &conf)
 	if err != nil {
-		log.Fatal(err)
+		return nil, errors.New(fmt.Sprintf("Error while unmarshalling the config file: %s", err))
 	}
 	return &conf, nil
 }
@@ -91,6 +95,18 @@ func (config *Config) GetWebUpload() string {
 	return config.WebUpload
 }
 
-func (config *Config) GetMalPath() string {
+func (config *Config) GetMalPath() []string {
 	return config.MalPath
+}
+
+func (config *Config) GetInjection() string {
+	return config.Injection
+}
+
+func (config *Config) GetExecType() string {
+	return config.ExecType
+}
+
+func (config *Config) GetObfuscation() bool {
+	return config.Obfuscation
 }

