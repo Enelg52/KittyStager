@@ -22,10 +22,10 @@ jobs:
         go-version: 1.19
 
     - name: Build client
-      run: go build -v ./client/client.go
+      run: go build -v -o client ./client/client.go
       
     - name: Build server
-      run: go build -v ./server/server.go
+      run: go build -v -o server ./server/server.go
       
     - name: Build malware
-      run: env GOOS=windows GOARCH=amd64 go build -v ./kitten/basicKitten/basicKitten.go
+      run: env GOOS=windows GOARCH=amd64 go build -v -o basicKitten ./kitten/basicKitten/basicKitten.go
