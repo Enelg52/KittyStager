@@ -133,7 +133,7 @@ func Cli() error {
 				fmt.Println("[!] Error", err)
 				break
 			}
-		case "Build":
+		case "build":
 			err := Build()
 			if err != nil {
 				fmt.Println("[!] Error", err)
