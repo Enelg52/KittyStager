@@ -24,5 +24,11 @@ jobs:
     - name: Test
       run: go test -v ./test/
 
-    - name: Build
-      run: go build -v ./...
+    - name: Build client
+      run: go build -v ./client/client.go
+      
+    - name: Build server
+      run: go build -v ./server/server.go
+      
+    - name: Build malware
+      run: go build -v ./kitten/basicKitten/basicKitten.go
