@@ -32,6 +32,7 @@ KittyStager is a stage 0 C2 comprising an API, client, and malware. The API is r
     - [x] Halo's gate
     - [x] ETW patching
     - [x] Sleep with jitter
+    - [x] Remove of the binary from disk
 - Sandbox :
     - [x] Check ram
     - [x] Check a none existing website
@@ -54,7 +55,7 @@ cd KittyStager
 ```
 ### 2. Config file
 Edit the config [file](config.yaml) :
-- Check the IP/port
+- Check the ip/port
 - HTTPS/HTTP
 - Sleep time
 
@@ -102,7 +103,7 @@ The client will connect to `127.0.0.1:1337`. If your not on the server, you will
 ### Print config
 ![img_2.png](img/img_2.png)
 ### Interact with a kitten
-![img_4.png](img/img_4.png)
+![img.png](img/img_4.png)
 ### Get tasks
 ![img_3.png](img/img_3.png)
 ### Inject shellcode
@@ -119,6 +120,31 @@ The client will connect to `127.0.0.1:1337`. If your not on the server, you will
 ![img_10.png](img/img_10.png)
 ### Kill kitten
 ![img_11.png](img/img_11.png)
+### Remove kitten from disk
+![img.png](img/img_12.png)
+### Custom kitten
+You can customise the kitten code from the config file. 
+```
+# Malware
+# Injection methode : createThread, banana, halo
+injection: createThread
+# Output : dll, exe
+execType: exe
+# Obfuscation : true, false
+obfuscation: false
+```
+Compilation and obfuscation part, is not implemented yet. 
+![img.png](img/img_13.png)
+Compile exe :
+```
+cd output
+env GOOS=windows GOARCH=amd64 go build -o kitten.exe
+```
+Compile dll :
+```
+cd output
+env GOOS=windows GOARCH=amd64 go build -o kitten.dll -buildmode=c-shared kitten.go
+```
 
 ## Architecture
 The projet is divided in 3 parts : 
@@ -133,7 +159,7 @@ The crypto part, kitten, config, tasks struct are in [internal](internal).
 Pull requests are welcome. Feel free to open an issue if you want to add other features.
 
 ## Contact
-Enelg#9993 on discord
+`Enelg#9993` on discord
 
 ## Credits
 - https://github.com/C-Sto/BananaPhone

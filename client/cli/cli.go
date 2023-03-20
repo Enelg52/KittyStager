@@ -8,7 +8,6 @@ import (
 	"github.com/c-bata/go-prompt"
 	color "github.com/logrusorgru/aurora"
 	"os"
-	"reflect"
 	"strings"
 )
 
@@ -38,6 +37,7 @@ func completerInteract(d prompt.Document) []prompt.Suggest {
 		{Text: "priv", Description: "Get privileges and integrity level"},
 		{Text: "info", Description: "Show the kitten info"},
 		{Text: "kill", Description: "Exit the kitten"},
+		{Text: "remove", Description: "Remove the kitten from disk and exit"},
 		{Text: "exit", Description: "Exit the program"},
 	}
 	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
@@ -86,46 +86,13 @@ func Cli() error {
 				break
 			}
 		case "interact":
-			kittens, err := GetKittens()
-			if err != nil {
-				fmt.Println("[!] Error", err)
-				break
+			if len(input) != 2 {
+				input = append(input, "No input")
 			}
-			//check if there is only one kitten directly interact
-			if len(kittens) == 2 {
-				key := reflect.ValueOf(kittens).MapKeys()
-				//get key
-				for j := range key {
-					if kittens[key[j].String()].Alive {
-						err := interact(key[j].String())
-						if err != nil {
-							fmt.Println("[!] Error", err)
-							break
-						}
-					}
-				}
-			} else {
-				err = printKittens(kittens)
-				if err != nil {
-					fmt.Printf("%s\n", color.BrightGreen(err))
-					break
-				}
-				name, err := i.Read("Kitten name : ")
-				if err != nil {
-					fmt.Println("[!] Error", err)
-					break
-				}
-				_, ok := kittens[name]
-				// If the key exists
-				if ok && len(name) != 0 {
-					err = interact(name)
-					if err != nil {
-						return err
-					}
-				} else {
-					fmt.Println("[!] Invalid input")
-					break
-				}
+			err := choseKitten(input[1])
+			if err != nil {
+				fmt.Printf("%s\n", color.BrightGreen(err))
+				break
 			}
 		case "logs":
 			err := printLogs()
@@ -135,6 +102,7 @@ func Cli() error {
 			}
 		case "build":
 			err := Build()
+			fmt.Println(color.BrightGreen("[*] The new kitten has been written to /output"))
 			if err != nil {
 				fmt.Println("[!] Error", err)
 				break
@@ -253,6 +221,16 @@ func interact(kittenName string) error {
 		case "kill":
 			t := task.Task{
 				Tag:     "kill",
+				Payload: nil,
+			}
+			err := CreateTask(&t, kittenName)
+			if err != nil {
+				fmt.Println("[!] Error", err)
+				break
+			}
+		case "remove":
+			t := task.Task{
+				Tag:     "remove",
 				Payload: nil,
 			}
 			err := CreateTask(&t, kittenName)

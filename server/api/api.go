@@ -180,7 +180,7 @@ func frontPostReg(c *gin.Context) {
 		Recon:    nil,
 	}
 	Kittens[kitty.Name] = &kitty
-	go CheckAlive(name)
+	go checkAlive(name)
 }
 
 // ------------------------

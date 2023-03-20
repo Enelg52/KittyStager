@@ -1,6 +1,6 @@
 ---
 # IP to host the web server
-host: 127.0.0.1
+host: 10.10.10.1
 # Port
 port: 8080
 # Endpoint to get a task

@@ -4,7 +4,8 @@ import (
 	"time"
 )
 
-func CheckAlive(name string) {
+// Need some bug fix
+func checkAlive(name string) {
 	for {
 		k := Kittens[name]
 		time.Sleep(1 * time.Second)
@@ -15,5 +16,6 @@ func CheckAlive(name string) {
 				k.SetAlive(false)
 			}
 		}
+		return
 	}
 }

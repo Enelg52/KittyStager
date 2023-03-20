@@ -7,12 +7,14 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/inancgumus/screen"
 	color "github.com/logrusorgru/aurora"
 	"io"
 	"net/http"
 	"os"
+	"reflect"
 	"strings"
 	"sync"
 	"time"
@@ -257,4 +259,58 @@ func contains(s []string, str string) bool {
 		}
 	}
 	return false
+}
+
+func choseKitten(in string) error {
+	kittens, err := GetKittens()
+	if err != nil {
+		return err
+	}
+	//check if there is only one kitten directly interact
+	if len(kittens) == 2 {
+		key := reflect.ValueOf(kittens).MapKeys()
+		//get key
+		for j := range key {
+			if key[j].String() != "" {
+				err := interact(key[j].String())
+				if err != nil {
+					return err
+				}
+				return nil
+			}
+		}
+	}
+	_, ok := kittens[in]
+	if ok {
+		err := interact(in)
+		if err != nil {
+			return err
+		}
+		return nil
+	} else {
+		return errors.New("this kitten name is not valid")
+	}
+	/*
+		} else {
+			err = printKittens(kittens)
+			if err != nil {
+				return err
+			}
+			name, err := i.Read("Kitten name : ")
+			if err != nil {
+				return err
+			}
+			_, ok := kittens[name]
+			// If the key exists
+			if ok && len(name) != 0 {
+				err = interact(name)
+				if err != nil {
+					return err
+				}
+			} else {
+				return err
+			}
+		}
+	*/
+	return nil
 }
