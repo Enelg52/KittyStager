@@ -141,9 +141,10 @@ cd output
 env GOOS=windows GOARCH=amd64 go build -o kitten.exe
 ```
 Compile dll :
+You need to change the `execType` in config.yaml
 ```
 cd output
-env GOOS=windows GOARCH=amd64 go build -o kitten.dll -buildmode=c-shared kitten.go
+ env GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC="x86_64-w64-mingw32-gcc" go build -o basickitten.dll -buildmode=c-shared kitten.go
 ```
 
 ## Architecture
